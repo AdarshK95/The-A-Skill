@@ -5,6 +5,13 @@ _Index maintained by `/A.start-project` and `/A.projects`. Each project's own `.
 | Project | Path | Areas | Depends on | Provides | Started | Last active |
 | --- | --- | --- | --- | --- | --- | --- |
 
+## Mirrors
+
+_Workspaces that keep a local copy of the method (`.a/mirror/`) because their IDE cannot permanently allow reads outside the workspace. `/A.skill-update` refreshes each after updating the global install._
+
+| Workspace root | Mirror commit | Created |
+| --- | --- | --- |
+
 ## How they connect
 
 _Drawn from the Depends on column. An arrow A → B means A uses something B provides. No arrow means no documented dependency — and that is the statement._

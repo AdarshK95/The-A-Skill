@@ -25,4 +25,4 @@ Each folder holds one `SKILL.md`. Every command's wrapper (in `../commands/`) po
 | `skill-update/` | /A.skill-update — check for a newer release of the skill; update after confirmation |
 | `tracker/` | /A.tracker — the project overview diagram |
 
-Counts for verifying an install: **20 skill folders**, **14 reference files** in `core/references/`, **35 markdown files** under `skills/` including this one. The installer prints the number it copied.
+Counts for verifying an install: **20 skill folders**, **15 reference files** in `core/references/`, **36 markdown files** under `skills/` including this one. The installer prints the number it copied.

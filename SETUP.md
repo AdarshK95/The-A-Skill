@@ -24,7 +24,19 @@ Project-level install (`install.sh --project DIR` / `install.ps1 -Project DIR`) 
 
 In any chat:
 
-> Install https://github.com/AdarshK95/The-A-Skill following its SETUP.md. Clone it to a temporary folder, run its install script (global, the default), then tell me what was installed. Do not run /A.start-project; I will.
+> Install https://github.com/AdarshK95/The-A-Skill following its SETUP.md. Clone it to a temporary folder, run its install script (global, the default), then report as SETUP.md says.
+
+The agent runs section B, then reports **exactly in this shape** — not a list of what is missing:
+
+> **Installation complete.** The A Skill <version> (commit <short>) is installed for this machine (<n> skill files, <n> commands for Claude Code, <n> for Copilot).
+>
+> To see the `/A.*` shortcuts in VS Code I need to do two things, with your approval: add `<copilot folder>` to the setting `chat.promptFilesLocations`, and reload the window. Shall I? (Claude Code needs nothing.)
+>
+> The IDE will also ask before I read the method files, because they live under your user folder, outside the workspace. I'll look for a setting that allows it permanently; if there isn't one, I'll test the prompt once with you; and only then suggest keeping a copy of the method inside this workspace — with your approval at each step.
+>
+> One idea to know: the skill remembers work **per project**. In any folder you want to work in, run `/A.start-project` once; everything done there — board, logs, decisions — becomes that project's memory, separate from every other project. `/A.projects` shows them all.
+
+On yes, the agent adds the setting (in the user `settings.json`, an entry `"<folder>": true` under `chat.promptFilesLocations`), runs **Developer: Reload Window**, and confirms the `/A.help` entry appears. Then it follows `skills/core/references/ide-permissions.md` in order: search the IDE settings for a permanent allowance; if none, trigger the prompt once and ask the user what it shows; only if nothing permanent exists, propose a local mirror of the method under `<workspace>/.a/mirror/`. Nothing is set or copied without a yes. The agent does **not** run `/A.start-project`; the user does. An agent that cannot run scripts copies the files listed above by hand and reports the same way.
 
 ### B — script
 
@@ -69,7 +81,7 @@ Plugin commands are namespaced by Claude Code: `/a:A.plan` instead of `/A.plan`.
 
 ## Then
 
-1. **Copilot in VS Code only:** Settings → search `promptFilesLocations` → add the Copilot commands folder the installer printed (`~/.a/commands/copilot`) → Reload Window. Claude Code needs nothing.
+1. **Copilot in VS Code only:** Settings → search `promptFilesLocations` → add the Copilot commands folder the installer printed (`~/.a/commands/copilot`) → Reload Window. The IDE will then ask before reading the method files, which live under your user folder; the agent resolves this with you (`skills/core/references/ide-permissions.md`): a permanent allowance in the IDE if one exists, otherwise a local mirror of the method in the workspace. Claude Code needs nothing.
 2. Open your workspace as you normally do — a single project, a parent folder holding several, or a multi-root workspace all work. Start a **new chat**.
 3. Run `/A.start-project`. It looks for existing projects in the workspace (root and up to three levels down), tells you what it found, and asks where to create the new one before it writes anything. `/A.start-project <folder>` names the folder directly. It asks about your areas, where docs should live, date format, and whether this project depends on or provides something to another project. It creates only what is missing and registers the project in `~/.a/projects.md`.
 4. Run `/A.help` to confirm the commands resolve.

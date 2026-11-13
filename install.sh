@@ -26,6 +26,7 @@ printf "repository: https://github.com/AdarshK95/The-A-Skill\ninstalled: %s\nsco
 for f in "$SRC"/commands/claude/A.*.md; do sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$f" > "$DEST/.claude/commands/$(basename "$f")"; done
 for f in "$SRC"/commands/copilot/A.*.prompt.md; do sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$f" > "$COPILOT_DIR/$(basename "$f")"; done
 
+if grep -rl "{{SKILLS_ROOT}}" "$DEST/.claude/commands" "$COPILOT_DIR" >/dev/null 2>&1; then echo "ERROR: a command file still has an unfilled {{SKILLS_ROOT}}; install incomplete."; exit 1; fi
 n_skills=$(find "$DEST/.a/skills" -type f -name '*.md' | wc -l | tr -d ' ')
 n_claude=$(ls "$DEST/.claude/commands"/A.*.md 2>/dev/null | wc -l | tr -d ' ')
 n_copilot=$(ls "$COPILOT_DIR"/A.*.prompt.md 2>/dev/null | wc -l | tr -d ' ')
@@ -40,7 +41,10 @@ if [ "$GLOBAL" = 1 ]; then
   echo "To see the /A.* shortcuts in VS Code (Copilot), two steps remain:"
   echo "  1. Settings -> chat.promptFilesLocations -> add: $COPILOT_DIR"
   echo "  2. Developer: Reload Window"
-  echo "Claude Code needs nothing. (Agents: ask the user for approval, then do both and confirm /A.help appears.)"
+  echo "  3. The IDE will ask before reading the method files (they live in $DEST/.a, outside your workspace)."
+  echo "     Agents: follow $DEST/.a/skills/core/references/ide-permissions.md — search the IDE settings for a permanent"
+  echo "     allowance first; if none, test the prompt once with the user; if still nothing permanent, offer a local mirror of the method inside the workspace. Ask before each change."
+  echo "Claude Code needs nothing. (Agents: ask the user for approval, do 1 and 2, confirm /A.help appears, then do 3.)"
   echo
   echo "The skill remembers work PER PROJECT: in any folder you want to work in, run /A.start-project once."
   echo "Everything done there (board, logs, decisions) becomes that project's memory, separate from every other project. /A.projects shows them all."

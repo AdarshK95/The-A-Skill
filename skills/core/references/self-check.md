@@ -16,3 +16,4 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 8. The tier's signals each name a file or a decision.
 9. Assumptions and parked clarifications are listed, not buried.
 10. The chat summary fits one screen and names the decisions the user must make.
+14. The plan does what the user asked, as asked. Where it does not, the report says so and why, and asks — it does not substitute.

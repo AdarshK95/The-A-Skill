@@ -33,7 +33,8 @@ Releases are not always numbered: the version can stay the same while the reposi
 1. Fetch the release to a temporary folder (`git clone --depth 1`, or the archive when git is unavailable).
 2. Show the user the fetched `install.ps1` / `install.sh` if it differs from the one in `.a/templates` (or in one line say it is unchanged), then run it against this project (`powershell -ExecutionPolicy Bypass -File install.ps1` on Windows — or, when Group Policy refuses even that, from inside the fetched folder: `& ([scriptblock]::Create((Get-Content .\install.ps1 -Raw)))`, `sh install.sh` elsewhere). It writes only `.a/skills`, `.a/templates`, `.a/registry.md`, `.a/VERSION`, `.a/SOURCE`, `.claude/commands/A.*`, `.github/prompts/A.*`. No installer possible → copy exactly those paths by hand.
 3. If `.a/project.md` exists and its `schema_version` is older than the one `../core/references/config-schema.md` expects: list the keys added or renamed with their defaults and **ask again** before writing any of them.
-4. Remove the temporary folder.
-5. Report: `<old version> (<old commit>) → <new version> (<new commit>)`, the installer's file counts, any config keys the user should set, and that a **new chat** is needed before the updated commands load.
+4. Refresh every mirror listed under `## Mirrors` in `~/.a/projects.md`: copy `skills` and `templates` again, update its `MIRROR` file's commit. A mirror whose workspace no longer exists is reported, not deleted.
+5. Remove the temporary folder.
+6. Report: `<old version> (<old commit>) → <new version> (<new commit>)`, the installer's file counts, any config keys the user should set, and that a **new chat** is needed before the updated commands load.
 
 "No" or anything other than a clear yes → "Not updated. You're still on <installed>." and stop.

@@ -35,6 +35,7 @@ Get-ChildItem "$Src\commands\copilot" -Filter "A.*.prompt.md" | ForEach-Object {
   (Get-Content $_.FullName -Raw) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot | Set-Content (Join-Path $CopilotDir $_.Name) -NoNewline
 }
 
+if (Get-ChildItem (Join-Path $Dest ".claude\commands"),$CopilotDir -Filter "A.*" -File | Select-String -Pattern "{{SKILLS_ROOT}}" -List) { throw "A command file still has an unfilled {{SKILLS_ROOT}}; install incomplete." }
 $nSkills  = (Get-ChildItem (Join-Path $Dest ".a\skills") -Recurse -Filter *.md -File).Count
 $nClaude  = (Get-ChildItem (Join-Path $Dest ".claude\commands") -Filter "A.*.md" -File).Count
 $nCopilot = (Get-ChildItem $CopilotDir -Filter "A.*.prompt.md" -File).Count
@@ -50,7 +51,10 @@ if ($Global) {
   Write-Host "To see the /A.* shortcuts in VS Code (Copilot), two steps remain:"
   Write-Host "  1. Settings -> chat.promptFilesLocations -> add: $CopilotDir"
   Write-Host "  2. Developer: Reload Window"
-  Write-Host "Claude Code needs nothing. (Agents: ask the user for approval, then do both and confirm /A.help appears.)"
+  Write-Host "  3. The IDE will ask before reading the method files (they live in $Dest\.a, outside your workspace)."
+  Write-Host "     Agents: follow $Dest\.a\skills\core\references\ide-permissions.md - search the IDE settings for a permanent"
+  Write-Host "     allowance first; if none, test the prompt once with the user; if still nothing permanent, offer a local mirror of the method inside the workspace. Ask before each change."
+  Write-Host "Claude Code needs nothing. (Agents: ask the user for approval, do 1 and 2, confirm /A.help appears, then do 3.)"
   Write-Host ""
   Write-Host "The skill remembers work PER PROJECT: in any folder you want to work in, run /A.start-project once."
   Write-Host "Everything done there (board, logs, decisions) becomes that project's memory, separate from every other project. /A.projects shows them all."
