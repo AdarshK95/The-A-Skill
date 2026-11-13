@@ -17,13 +17,18 @@ Copy-Item -Force "$Src\VERSION"              (Join-Path $Dest ".a\VERSION")
 Copy-Item -Force "$Src\commands\claude\A.*.md"          (Join-Path $Dest ".claude\commands")
 Copy-Item -Force "$Src\commands\copilot\A.*.prompt.md"  (Join-Path $Dest ".github\prompts")
 
-Write-Host "Installed:"
-Write-Host "  .a\skills, .a\templates, .a\registry.md         (the method)"
-Write-Host "  .claude\commands\A.*.md                          (Claude Code: /A.plan, /A.bugfix, ...)"
-Write-Host "  .github\prompts\A.*.prompt.md                    (Copilot in VS Code: /A.plan, /A.bugfix, ...)"
+$nSkills  = (Get-ChildItem (Join-Path $Dest ".a\skills") -Recurse -Filter *.md -File).Count
+$nClaude  = (Get-ChildItem (Join-Path $Dest ".claude\commands") -Filter "A.*.md" -File).Count
+$nCopilot = (Get-ChildItem (Join-Path $Dest ".github\prompts") -Filter "A.*.prompt.md" -File).Count
+$ver = (Get-Content (Join-Path $Dest ".a\VERSION")).Trim()
+Write-Host "Installed (version $ver):"
+Write-Host "  .a\skills                     $nSkills files   (the method)"
+Write-Host "  .claude\commands\A.*.md       $nClaude files   (Claude Code: /A.plan, /A.bugfix, ...)"
+Write-Host "  .github\prompts\A.*.prompt.md $nCopilot files   (Copilot in VS Code: /A.plan, /A.bugfix, ...)"
 Write-Host ""
+Write-Host "Open THIS project folder as the workspace root (not a parent folder), start a new chat."
 if (-not (Test-Path (Join-Path $Dest ".a\project.md"))) {
-  Write-Host "Next: open the project in your agent, start a new chat, and run /A.init"
+  Write-Host "REQUIRED before first use: run /A.init  (creates .a\project.md; nothing works without it)"
 } else {
   Write-Host "Config .a\project.md already present; method updated. Run /A.help to check."
 }

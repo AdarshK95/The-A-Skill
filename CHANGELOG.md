@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.5 — 13 Nov 26
+
+From the first agent-install run (Copilot in VS Code, passed):
+- Installer prints the version and the number of files written per location; its last line says `/A.init` is **required**, and that the project folder itself must be the workspace root.
+- SETUP: same two points in "Then"; the agent-install section says installing does not set the project up and the agent should not run `/A.init` unasked.
+- `skills/README.md`: index of the skill folders with counts, so an agent browsing `skills/` finds a map instead of a missing `skills/SKILL.md`.
+
 ## 0.5.4 — 13 Nov 26
 
 - lean.md: the ladder applies to tools and checks handed to the user, not only to code — prefer an existing tool (`git status`, a diff) over a custom script. Self-check item 13 added.

@@ -22,7 +22,7 @@ In a chat opened at your project root:
 
 > Install https://github.com/AdarshK95/The-A-Skill into this project following its SETUP.md. Clone it to a temporary folder, run its install script against this project, then tell me what was installed.
 
-The agent runs section B. If it cannot run scripts, it copies the files listed above by hand.
+The agent runs section B, then stops. Installing does not set the project up: `/A.init` is a separate, required step that you run yourself (the agent should not run it unless asked, because it makes decisions about where your documentation lives). If the agent cannot run scripts, it copies the files listed above by hand.
 
 ### B — script
 
@@ -55,9 +55,12 @@ Plugin commands are namespaced by Claude Code: `/a:A.plan` instead of `/A.plan`.
 
 ## Then
 
-1. Start a **new chat** (hosts load commands at startup; in VS Code, Reload Window also works).
-2. Run `/A.init`. Answer its questions: your project's areas, where docs should live, date format if you have one.
-3. Run `/A.help` to confirm the commands resolve.
+1. Open the **project folder itself** as the workspace root. The commands live in that folder's `.github/prompts` and `.claude/commands`; from a parent folder or a multi-root workspace they are not visible.
+2. Start a **new chat** (hosts load commands at startup; in VS Code, Reload Window also works).
+3. Run `/A.init` — **required**, not optional: it creates `.a/project.md`, and every command stops without it. Answer its questions: your project's areas, where docs should live, date format if you have one.
+4. Run `/A.help` to confirm the commands resolve.
+
+The installer prints the number of files it wrote in each location; compare with the counts in `skills/README.md` to confirm nothing was dropped.
 
 ## Verify
 
