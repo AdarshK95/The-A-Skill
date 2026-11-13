@@ -20,6 +20,9 @@ Whether the request is sound as stated, what the code already supports, what it 
 [bugfix] The root cause, stated in one sentence, and why that and not the nearer symptom.
 [review] For each reviewer comment: correct / incorrect / known and deferred — with the evidence for each verdict.
 
+### Known facts *(if any)*
+Artifacts from the ledger that bear on this work, cited by file — measured facts the plan relies on instead of re-measuring.
+
 ### Reuse candidates
 The reuse search (`lean.md`): one row per new need — candidate `path:symbol`, match (exact / close / pattern / none), decision. Never empty: a need with no candidate says so and why.
 

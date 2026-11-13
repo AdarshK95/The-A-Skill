@@ -17,12 +17,12 @@ A FIX adds what a *human* reader of the plan needs. Context that only a zero-con
 
 ## Recording
 
-Under `## Findings` in the activity file, one line per finding:
+Under `## Findings` in the activity file, each finding in its reviewer shape (severity · confidence · summary · where · now · gap, from `goldfish-lenses.md`) followed by its verdict line. Compact form when the shape is already in the lens report:
 
 ```
 - [Blocker] <source lens or reviewer>: <finding> → FIX: <change>
 - [Major] impact: callers of parseRange in report/*.ts unaccounted → CONTEST: all three call through normalizeRange (lib/range.ts:normalizeRange), which the plan changes
-- [Nit] style: ... → DECLINE: cosmetic, tracked in open items
+- [Low] style: ... → DECLINE: cosmetic, tracked in open items
 ```
 
 Every ESCALATE becomes a row in the report's *Decisions needed from you*, in the full shape — what came up and why, the options and what each means, suggested — never a bare question (`communication.md › Decisions arrive with their context`). Every DECLINE of a Blocker or Major becomes an open item in the status header count.

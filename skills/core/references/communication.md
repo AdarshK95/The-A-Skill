@@ -39,7 +39,7 @@ Everything the agent does is recorded in the event log. Only three kinds of thin
 | Housekeeping | silent | one clause ("checks done") | narrated |
 | Interrupts | blocking findings only | Majors too | any finding |
 
-**Report by exception.** Anything that is as it should be is not mentioned. A chat reply is about ten lines unless the content is the deliverable (a plan summary, a decision list). Shape: what it means → what you decide → where the detail is. No narration between tool calls; the host shows the calls.
+**Report by exception.** Anything that is as it should be is not mentioned. **Silence is a valid output**: a review that found nothing worth the user's time, a status with nothing pending, a realign that removed nothing — each is reported in one line, and that line is the whole report. Nothing is added to have something to say. A chat reply is about ten lines unless the content is the deliverable (a plan summary, a decision list). Shape: what it means → what you decide → where the detail is. No narration between tool calls; the host shows the calls.
 
 ## Reports and answers in chat
 

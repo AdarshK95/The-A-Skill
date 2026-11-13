@@ -15,7 +15,7 @@ Ideas this method absorbed, pinned to where they came from. The skill carries it
 | Deep modules, the deletion test, accept dependencies don't create them, one adapter is a hypothetical seam | Matt Pocock codebase-design (Ousterhout) | skills/codebase-design/SKILL.md | 13 Nov 26 |
 | Dotted command names (`/x.y`) via per-host command files | Spec Kit | generated `.claude/commands/speckit.*.md`, `.github/prompts/speckit.*.prompt.md` | 13 Nov 26 |
 
-Adopted in 0.5.7 (peer review): EGM's synthesizer idea as "synthesis before resolution" (de-duplicate across lenses, order by severity, Nits as a count), EGM's "do not add context only to satisfy a reviewer", EGM's gate option to edit the document by hand and have the agent re-read it; Spec Kit's rule that a constitution violation is the highest severity; Ponytail's "never stall on an answer you can default"; the code-review-tool field's severity-plus-confidence thresholds so only high-signal findings reach the human.
+Adopted in 0.5.7 (peer review): EGM's synthesizer idea as "synthesis before resolution" (de-duplicate across lenses, order by severity, Lows as a count), EGM's "do not add context only to satisfy a reviewer", EGM's gate option to edit the document by hand and have the agent re-read it; Spec Kit's rule that a constitution violation is the highest severity; Ponytail's "never stall on an answer you can default"; the code-review-tool field's severity-plus-confidence thresholds so only high-signal findings reach the human.
 
 Adopted in 0.4.0: the full Ponytail rule set (the half that was missing: when not to be lean, deletion over addition, fewest files, edge-case-correct stdlib choice), the code-simplifier pass, check-before-write reuse search, deep-module modularity rules — in `lean.md`.
 

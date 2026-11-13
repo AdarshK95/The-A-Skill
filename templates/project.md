@@ -21,6 +21,8 @@ time_format: 12h
 filename_date_format: YYYY-MM-DD
 tracker_label: Work item
 lessons_log: docs/lessons.md
+artifacts_folder: docs/artifacts/
+artifacts_ledger: docs/artifacts/ARTIFACTS.md
 deferred_decisions_log: docs/deferred-decisions.md
 always_on_files: CLAUDE.md, AGENTS.md, .github/copilot-instructions.md
 close_updates: implementation_log, api_docs, ledger

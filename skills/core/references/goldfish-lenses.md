@@ -2,7 +2,18 @@
 
 Each lens is a prompt for a reviewer that has **not** seen the working conversation. Give it: the activity file (at least the `## Report` section), the project files the report cites, and the constitution. Nothing else. It reads, it reports, it changes nothing.
 
-The reviewer returns findings as a list, each tagged **Blocker** (the plan cannot proceed as written), **Major** (must be addressed or explicitly accepted), or **Nit**, and each with a **confidence** (`high` — pointed at in the files; `medium` — inferred from them; `low` — suspected). Any finding that contradicts the project's constitution is a Blocker regardless of the lens. A finding names the exact text or file it is about. A reviewer that cannot read a file it needs returns `INCOMPLETE: <file>` instead of a verdict.
+The reviewer returns findings as a list, each tagged **Blocker** (the plan cannot proceed as written), **Major** (must be addressed or explicitly accepted), or **Low** (worth knowing, never worth a discussion), and each with a **confidence** (`high` — pointed at in the files; `medium` — inferred from them; `low` — suspected). Any finding that contradicts the project's constitution is a Blocker regardless of the lens. **"No findings" is a complete and valid review**: a reviewer that found nothing says so in one line and stops; it does not manufacture Lows to have something to say.
+
+Each finding has one shape, so it can be scanned, compared across lenses, and acted on without re-reading the plan:
+
+```
+[Blocker|Major|Low · confidence] <one-line summary>
+Where: <path:symbol or report section>
+Now: <the existing text or code, quoted briefly>
+Gap: <what is wrong or missing, as a fact>
+```
+
+No proposed rewrite — the author resolves; the reviewer names the gap. A finding names the exact text or file it is about. A reviewer that cannot read a file it needs returns `INCOMPLETE: <file>` instead of a verdict.
 
 The same questions, asked by the implementer of their own work during Implement, are `build-check.md`; this file is the independent version.
 
@@ -10,7 +21,7 @@ Spawn one fresh subagent per lens where the host allows. Otherwise run the lens 
 
 Shared preamble for every lens:
 
-> You are reviewing a plan you did not write, for a codebase you are seeing for the first time. You have the plan, the files it cites, and the project's standing rules. Read everything you were given before writing. Report only what you can point at in those files. Tag each finding Blocker, Major or Nit. Do not propose rewrites; name the gap.
+> You are reviewing a plan you did not write, for a codebase you are seeing for the first time. You have the plan, the files it cites, and the project's standing rules. Read everything you were given before writing. Report only what you can point at in those files. Tag each finding Blocker, Major or Low. Do not propose rewrites; name the gap.
 
 ## zoom-out
 
@@ -46,7 +57,7 @@ A comprehension finding is never contested by the author: if a cold reader could
 
 ## Synthesis before resolution
 
-When a group has more than one lens, merge their findings before resolving: drop duplicates (the same gap found by two lenses is one finding, credited to both), group by the part of the plan they concern, order by severity then confidence. Resolve Blockers and Majors; Nits are applied silently when trivial and otherwise listed, never discussed. Low-confidence findings are verified against the code before they get a verdict, and dropped with one line if the code does not bear them out. This is what keeps a five-lens group from producing twenty threads for the user: the user sees the merged, ordered result — Blockers and Majors only — and the Nits as a count.
+When a group has more than one lens, merge their findings before resolving: drop duplicates (the same gap found by two lenses is one finding, credited to both), group by the part of the plan they concern, order by severity then confidence. Resolve Blockers and Majors; Lows are applied silently when trivial and otherwise listed, never discussed. Low-confidence findings are verified against the code before they get a verdict, and dropped with one line if the code does not bear them out. This is what keeps a five-lens group from producing twenty threads for the user: the user sees the merged, ordered result — Blockers and Majors only — and the Lows as a count.
 
 ## Rounds (L and XL)
 

@@ -22,7 +22,7 @@ The ladder shortens the solution, never the reading.
 
 Duplicate *purpose* is the risk, not duplicate text: agents re-implement rather than copy. Before any new function, endpoint, component, query, helper or config path is proposed:
 
-1. **Index.** Read the codebase map (`map_folder`) if present: the contracts say what each directory already provides.
+1. **Index.** Read the codebase map (`map_folder`) if present: the contracts say what each directory already provides. Read the artifacts ledger: it says what has already been measured, so nothing is probed twice.
 2. **Search.** By meaning and by text: the verb and noun of the need (`export csv`, `format date`, `fetch orders`), the shape of the data, the route or table involved, sibling files of where the change would land. Use a semantic search tool when the host has one; grep otherwise. Search the whole repository, tests and scripts included.
 3. **Categorize** each candidate: **exact** (does this already) · **close** (same domain, slightly different operation) · **pattern** (same shape, different domain) · **none**.
 4. **Decide**, and write it in the report under *Reuse candidates*:

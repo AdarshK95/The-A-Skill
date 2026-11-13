@@ -19,6 +19,7 @@ disable-model-invocation: true
 
    Verdict is *doc is right* (code must change), *code is right* (doc must change), or *your call*. Nothing is changed in this command.
 4. **Decisions hygiene**: list decisions whose cited files no longer exist; decisions contradicted by a later one with no reversal entry; decisions older than a year that no current code references. Each with a proposed action (mark superseded, add a reversal, keep).
+4b. **Artifacts**: for each row in the artifacts ledger, compare its *Valid for* (model version, package version, deployment, date) with the current environment; mark stale rows and say what changed. Never delete.
 5. **Ceilings and duplicates**: list every marked simplification (`lean.md › Marked simplifications`) with its ceiling, and run the duplication check (`lean.md`, items 1–3) across the whole codebase rather than one feature; report both as tables with proposed actions.
 6. **Record** the run as a dated line in the board's `## Log`. `/A.status` says drift is overdue when the last run is older than `drift.cadence_days`.
 7. **Offer** the follow-ups as features or items: each *code is right* → an extend item to update the doc; each *doc is right* → a bugfix or extend item; each *your call* → a decision to make. The user picks; nothing is created unasked.
