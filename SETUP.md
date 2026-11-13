@@ -37,8 +37,20 @@ PowerShell:
 
 ```powershell
 git clone https://github.com/AdarshK95/The-A-Skill $env:TEMP\the-a-skill
-& "$env:TEMP\the-a-skill\install.ps1"
+powershell -ExecutionPolicy Bypass -File "$env:TEMP\the-a-skill\install.ps1"
 ```
+
+Windows blocks unsigned scripts by default ("not digitally signed"). `-ExecutionPolicy Bypass -File …` allows that one run only; or `Set-ExecutionPolicy -Scope Process Bypass` allows the current window. Neither changes your machine's policy.
+
+On a **managed machine** (work laptop) the policy is set by Group Policy and even `Bypass` is refused. Then run the script as text, from inside the cloned folder:
+
+```powershell
+cd $env:TEMP\the-a-skill
+& ([scriptblock]::Create((Get-Content .\install.ps1 -Raw)))
+& ([scriptblock]::Create((Get-Content .\uninstall.ps1 -Raw))) -Project D:\path\to\project -Yes   # uninstall, same way
+```
+
+The policy governs script files, not script blocks. Or use Git Bash with the `.sh` scripts: `sh install.sh`.
 
 Re-running updates the method and the commands. It never touches any project's `.a/project.md` or documents.
 
@@ -97,7 +109,7 @@ A command fails to load, or a file under `.a/` or the command folders was change
 
 ## Uninstall
 
-Run `/A.skill-uninstall`, or the script directly: `~/.a/templates/uninstall.ps1 -Yes` (`sh ~/.a/templates/uninstall.sh --yes`; add `-Project <dir>` / `--project <dir>` for a project-level install). Without `-Yes` it only lists what it would remove. It removes exactly what the installer created: the method, templates, registry, version, source note, and the `/A.*` command files. It never touches any project's `.a/project.md`, `.a/shared/`, documentation, board, activity files, decisions, lessons, or `~/.a/projects.md` — that is your work. If you also want the `A-skill` block out of a project's instruction files, `/A.skill-uninstall` offers that as a separate question.
+Run `/A.skill-uninstall`, or the script directly: `powershell -ExecutionPolicy Bypass -File ~/.a/templates/uninstall.ps1 -Yes` (`sh ~/.a/templates/uninstall.sh --yes`; add `-Project <dir>` / `--project <dir>` for a project-level install). Without `-Yes` it only lists what it would remove. It removes exactly what the installer created: the method, templates, registry, version, source note, and the `/A.*` command files. It never touches any project's `.a/project.md`, `.a/shared/`, documentation, board, activity files, decisions, lessons, or `~/.a/projects.md` — that is your work. If you also want the `A-skill` block out of a project's instruction files, `/A.skill-uninstall` offers that as a separate question.
 
 ## Git and the documentation
 

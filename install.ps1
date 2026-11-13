@@ -4,7 +4,9 @@
 # Idempotent: re-running updates the method and commands, never a project's documents or config.
 param([string]$Project = "")
 $ErrorActionPreference = "Stop"
-$Src = Split-Path -Parent $MyInvocation.MyCommand.Path
+# Where this repository is: the script's folder, or the current folder when run as a script block (managed machines).
+$Src = if ($PSScriptRoot) { $PSScriptRoot } elseif ($MyInvocation.MyCommand.Path) { Split-Path -Parent $MyInvocation.MyCommand.Path } else { (Get-Location).Path }
+if (-not (Test-Path (Join-Path $Src "skills\core\SKILL.md"))) { throw "Run this from the cloned The-A-Skill folder (skills\core\SKILL.md not found under $Src)." }
 if ($Project) {
   $Dest = (Resolve-Path $Project).Path; $Global = $false
   $SkillsRoot = ".a/skills"; $CopilotDir = Join-Path $Dest ".github\prompts"
