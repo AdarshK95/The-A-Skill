@@ -12,7 +12,7 @@ Auto is on whenever the user did not type an `/A.*` command. It never does the w
 
 **0. Shared folder.** In a fresh conversation, read it first; non-empty means work is in flight — say what, in plain words, before locating anything.
 
-**1. Locate.** Which activity is this conversation in?
+**1. Locate.** First the project, then the activity. Project: the one the user named, else the one containing the files mentioned or open, else the one this conversation already resolved, else the only one in the workspace, else ask which (`../core/references/projects.md`). Then, within that project:
 
 - An activity file was opened or resumed earlier in this conversation → that one.
 - Otherwise read the project board. A Planned or In-progress feature whose title, item or file matches the request → `/A.resume` it (`../resume/SKILL.md`).

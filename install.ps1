@@ -54,6 +54,6 @@ if ($Global) {
   Write-Host "The skill remembers work PER PROJECT: in any folder you want to work in, run /A.start-project once."
   Write-Host "Everything done there (board, logs, decisions) becomes that project's memory, separate from every other project. /A.projects shows them all."
 } else {
-  Write-Host "This was a PROJECT-LEVEL install into $Dest`: the commands work only when this folder is the workspace root."
+  Write-Host "This was a PROJECT-LEVEL install into $Dest`: the commands are read from this folder, so it must be the workspace root for them to appear (the global install has no such limit)."
   Write-Host "Open this folder, start a new chat, and run /A.start-project (required; nothing is remembered without it)."
 }

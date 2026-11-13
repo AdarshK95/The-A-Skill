@@ -70,10 +70,10 @@ Plugin commands are namespaced by Claude Code: `/a:A.plan` instead of `/A.plan`.
 ## Then
 
 1. **Copilot in VS Code only:** Settings → search `promptFilesLocations` → add the Copilot commands folder the installer printed (`~/.a/commands/copilot`) → Reload Window. Claude Code needs nothing.
-2. Open the folder you want to work in as the workspace root. Start a **new chat**.
-3. Run `/A.start-project`. It asks about your areas, where docs should live, date format, and whether this project depends on or provides something to another project. It creates only what is missing and registers the project in `~/.a/projects.md`.
+2. Open your workspace as you normally do — a single project, a parent folder holding several, or a multi-root workspace all work. Start a **new chat**.
+3. Run `/A.start-project` (or `/A.start-project <folder>` to start a project in a sub-folder of the workspace). It asks about your areas, where docs should live, date format, and whether this project depends on or provides something to another project. It creates only what is missing and registers the project in `~/.a/projects.md`.
 4. Run `/A.help` to confirm the commands resolve.
-5. Repeat 2–3 in every folder you want as a separate project. One repository with parallel parts (UI, backend, API) is **one** project with areas; separate repositories are separate projects. Full guidance: `skills/core/references/projects.md`.
+5. Repeat step 3 for every folder you want as a separate project; they can all live in the same workspace. The agent works out which project a message belongs to from the files involved, or asks. One repository with parallel parts (UI, backend, API) is **one** project with areas; separate repositories are separate projects. Full guidance: `skills/core/references/projects.md`.
 
 ## Verify
 

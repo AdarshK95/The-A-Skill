@@ -1,10 +1,21 @@
 # Projects — scope, setup, and where the skill is installed
 
-## One workspace root = one project context
+## Which project is this message about?
 
-The A Skill is installed into a folder and is available only when that folder is the agent's workspace root. Everything it knows — `.a/project.md`, the board, activity files, decisions, lessons, the shared folder — lives in that folder. Opening a parent folder, a different repository, or a multi-root workspace does not carry it along.
+A project is any folder that holds `.a/project.md`. A workspace may hold one project, several (a parent folder such as `D:\Code` with projects under it, or a multi-root workspace), or none. The commands are installed globally, so they work in all of these; what the agent must do is **resolve the project** before Start, in this order:
 
-Nested `.a/` folders are not supported. The agent uses the `.a/` at the workspace root; a `.a/` deeper in the tree is ignored, and `/A.start-project` warns if it finds one.
+1. **The user named it** — `/A.plan in api-backend …`, or the project is named in the message → that project, by its row in `~/.a/projects.md` or by folder name.
+2. **The files point to it** — the message mentions or the editor has open a file; walk up from that file's folder until a `.a/project.md` is found → that project.
+3. **The conversation is already in one** — a project was resolved earlier in this conversation → stay in it (auto's Stay rule).
+4. **Exactly one project in the workspace** — one folder in the workspace holds `.a/project.md` (or exactly one registered path in `~/.a/projects.md` lies under the workspace) → that one.
+5. **Several** → ask, one question, listing them by name: "Which project is this for: api-backend, frontend, mcp-server?" Never guess between projects.
+6. **None** → say that no folder here is a project yet and offer `/A.start-project <folder>`.
+
+Say the resolved project in one phrase at the start of the reply ("In *api-backend*:"). All paths in config are relative to **that project's folder**, not the workspace root. Nested projects (a `.a/project.md` inside another project's folder) are not supported; the nearest one up from the file wins and `/A.start-project` warns.
+
+## Workspaces that hold several projects
+
+Keep working from the parent folder or the multi-root workspace; there is no need to open each project separately. `/A.start-project <folder>` starts a project in a sub-folder. When run at a folder that is not itself a project but contains projects, it writes a short **workspace block** into that folder's instruction files (`templates/always-on-workspace.md`): the list of projects under it with their paths, and the resolution rule above, so every agent opening the workspace knows which projects exist and how to pick one. `/A.projects` lists the projects in the current workspace first.
 
 ## One project or several?
 
@@ -12,10 +23,10 @@ Nested `.a/` folders are not supported. The agent uses the `.a/` at the workspac
 | --- | --- | --- |
 | One repository, several parts worked on in parallel (UI, backend, API, data) | **One** `.a/` at the repository root, one **area** per part | The board, overview and shared folder keep topics separate by area while sessions coordinate; one install, one history |
 | Several repositories that belong to one product | One `.a/` **per repository** | Each is its own workspace root; contexts stay separate, each has its own board |
-| A monorepo where teams open sub-folders as separate workspaces | One `.a/` per sub-folder that is opened as a root | Install where the workspace root is, not where the code is |
+| A parent folder or multi-root workspace holding several repositories | One `.a/` per repository; a workspace block in the parent's instruction file | Work from the parent; the agent resolves the project from the files or asks |
 | A main project plus throwaway experiments | `.a/` in the main project; experiments without it unless they will outlive the week | Install where history is worth keeping |
 
-If a user describes a main project with parallel pieces under it, the question to ask is: **do you open them as one folder or as separate folders?** One folder → one install with areas. Separate folders → one install each.
+If a user describes a main project with parallel pieces under it, the question is whether the pieces share one history or need their own: one repository worked on as one thing → one project with areas; separate repositories or separately shipped parts → one project each, all under the same workspace if the user likes.
 
 ## Install once, start projects many times
 

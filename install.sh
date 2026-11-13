@@ -44,6 +44,6 @@ if [ "$GLOBAL" = 1 ]; then
   echo "The skill remembers work PER PROJECT: in any folder you want to work in, run /A.start-project once."
   echo "Everything done there (board, logs, decisions) becomes that project's memory, separate from every other project. /A.projects shows them all."
 else
-  echo "This was a PROJECT-LEVEL install into $DEST: the commands work only when this folder is the workspace root."
+  echo "This was a PROJECT-LEVEL install into $DEST: the commands are read from this folder, so it must be the workspace root for them to appear (the global install has no such limit)."
   echo "Open this folder, start a new chat, and run /A.start-project (required; nothing is remembered without it)."
 fi

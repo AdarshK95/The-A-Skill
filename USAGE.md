@@ -4,7 +4,7 @@ You describe work; the agent investigates, reports, waits for your approval, bui
 
 ## Projects
 
-The skill is installed once on your machine. A folder becomes a project when you run `/A.start-project` in it; from then on everything done there is that project's memory — board, logs, decisions — and nothing else's. Start as many projects as you like. If two projects work together (an MCP server and the frontend that calls it), say so in each one's `.a/project.md` under `depends_on` and `provides`; `/A.projects` shows all projects on the machine and how they connect. A project that documents no dependency is independent — that is the statement.
+The skill is installed once on your machine. A folder becomes a project when you run `/A.start-project` in it; from then on everything done there is that project's memory — board, logs, decisions — and nothing else's. Start as many projects as you like, and keep them all in one workspace if you prefer — the agent works out which project a message belongs to from the files involved and says so, or asks. If two projects work together (an MCP server and the frontend that calls it), say so in each one's `.a/project.md` under `depends_on` and `provides`; `/A.projects` shows all projects on the machine and how they connect. A project that documents no dependency is independent — that is the statement.
 
 ## The shape of a piece of work
 
