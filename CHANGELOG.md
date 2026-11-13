@@ -4,6 +4,8 @@
 
 Seamless setup.
 
+- **Wrappers no longer require `.a/project.md` at the workspace root**: they resolve the project as the spine does (named → files → conversation → the only project folder in the workspace, sub-folders included → ask), and offer `/A.start-project` only when no project exists anywhere in the workspace.
+
 - **Review findings**: severity scale is now Blocker / Major / Low; every finding has one shape (severity · confidence · summary · where · now · gap); "no findings" is a complete review, and silence is a valid output everywhere the agent reports by exception.
 - **Peer-review adoptions**: findings carry confidence; constitution violations are Blockers; synthesis before resolution (de-dupe across lenses, order by severity, Lows as a count, low-confidence verified or dropped); no context added to a plan only for reviewers; the user may edit the activity file directly and say "re-read"; never stall on a defaultable answer.
 - **Review structure**: a round is one full pass of the lens groups; XL runs three groups (zoom-out → comprehension + critic → additions zoom-out + readiness + codebase-details + impact + lean), lenses inside a group in parallel; later rounds re-run only the lenses the fixes touched; stopping at the cap is the user's decision and a round that ended with new Blockers is never called complete silently. Reviewers are told nothing about earlier rounds (except the additions-only zoom-out). Report corrected in place before Approve with every change logged; dated revisions only after Approve. One consolidated write per lens group.
