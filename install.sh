@@ -34,13 +34,15 @@ echo "  $DEST/.claude/commands/A.*.md    $n_claude files   (Claude Code: /A.plan
 echo "  $COPILOT_DIR/A.*.prompt.md       $n_copilot files   (Copilot in VS Code)"
 echo
 if [ "$GLOBAL" = 1 ]; then
-  echo "This was a GLOBAL install: the /A.* commands are available in every folder on this machine."
-  echo "Copilot in VS Code needs one setting once: add \"$COPILOT_DIR\" to chat.promptFilesLocations, then Reload Window."
+  echo "INSTALLATION COMPLETE. The A Skill $(cat "$DEST/.a/VERSION") is installed for this machine (global)."
   echo
-  echo "Nothing is remembered until a folder is made a project. In the folder you want to work in, open a new chat and run:"
-  echo "    /A.start-project"
-  echo "Everything you do there becomes that project's memory (board, logs, decisions), separate from every other project."
-  echo "Start as many projects as you like in different folders. /A.projects shows them all and how they depend on each other."
+  echo "To see the /A.* shortcuts in VS Code (Copilot), two steps remain:"
+  echo "  1. Settings -> chat.promptFilesLocations -> add: $COPILOT_DIR"
+  echo "  2. Developer: Reload Window"
+  echo "Claude Code needs nothing. (Agents: ask the user for approval, then do both and confirm /A.help appears.)"
+  echo
+  echo "The skill remembers work PER PROJECT: in any folder you want to work in, run /A.start-project once."
+  echo "Everything done there (board, logs, decisions) becomes that project's memory, separate from every other project. /A.projects shows them all."
 else
   echo "This was a PROJECT-LEVEL install into $DEST: the commands work only when this folder is the workspace root."
   echo "Open this folder, start a new chat, and run /A.start-project (required; nothing is remembered without it)."

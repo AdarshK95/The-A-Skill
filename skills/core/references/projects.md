@@ -36,10 +36,8 @@ No dependency documented → the agent assumes none and does not go looking.
 
 ## After install — what to tell the user
 
-At the end of the installer's output, and whenever a command runs in a folder with no `.a/project.md`:
+After an install, lead with **"Installation complete"** and the version and counts — never with what is missing. Then, if VS Code Copilot is in use, say the two remaining steps (add the commands folder to `chat.promptFilesLocations`, reload the window) and **ask for approval to do them**; on yes, do them and confirm `/A.help` appears. Then one idea, in one line: the skill remembers work per project — run `/A.start-project` once in any folder you want to work in; everything done there is that project's memory, separate from every other project; `/A.projects` shows them all. The exact wording is in the repository's `SETUP.md › A — ask your agent`.
 
-1. The skill is installed globally; the commands work in every folder on this machine.
-2. But nothing is remembered until a folder is made a project: **run `/A.start-project` in the folder you want to work in.** Everything done there is then that project's memory — board, logs, decisions — and stays separate from every other project.
-3. Start as many projects as you like, in different folders, so their contexts never mix. If projects work together, declare it in each one's `.a/project.md` (`depends_on`, `provides`); `/A.projects` shows how they connect.
+Whenever a command runs in a folder with no `.a/project.md`: say the skill is installed but this folder is not a project yet, so nothing done here is remembered, and offer `/A.start-project`.
 
 At the end of `/A.start-project`: confirm the project is registered, show the index row, and ask whether this project depends on, or provides something to, any other project in the index.
