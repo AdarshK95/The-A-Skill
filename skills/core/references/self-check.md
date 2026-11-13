@@ -20,4 +20,6 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 15. Every path shown in chat is a full path from the root; every item has steps with done-conditions and the pointer's `N` is the real count; `## Requirements` is present at L/XL.
 16. This self-check was run and the line `Self-check: passed <date time>` was written to `## Log` before the report was shown.
 17. Nothing the agent created remains outside `$env:TEMP` / `.a/tmp/`; every temporary file is already deleted; *Your next step* contains no chore the agent caused.
-18. Every decision has a recommended answer with its reason, and the list ends with the "say go" line; the report states the solution quality (robust / tactical / quick fix) and names the next step with its default.
+18. Every decision carries what came up and why, the options with what each means, and a suggested answer with its reason — readable without opening the file — and the list ends with the "say go" line; the report states the solution quality (robust / tactical / quick fix) and names the next step with its default.
+19. Every step lists its failure cases and the two-layer message (plain English, then technical) each produces; verification covers them.
+20. The reply states the agent's own read of each instruction it acted on — agree / caveat / disagree with alternative / possible misunderstanding — in one line each.

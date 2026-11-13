@@ -48,7 +48,7 @@ What the user or end user will see or experience afterwards, as a reference for 
 `S | M | L | XL` with the signals that chose it, one per line, each naming its file or decision.
 
 ### Decisions needed from you
-Numbered. Each one a single question, **with the recommended answer and its one-line reason**, grounded in the code, the constitution, a decision or the user's stated theme; the alternatives in a clause. End the list with: "Say **go** to take all recommended answers, or change any by number." (`communication.md › Decisions arrive answered`)
+A short *where we are* paragraph, then a table — **what came up and why · the options and what each means · suggested (with reason)** — then *what happens after you answer*. Each row readable by someone who has not opened the file. End with: "Say **go** to take all suggested answers, or change any by number." The same shape is used when these decisions are shown in chat (`communication.md › Decisions arrive with their context`).
 ```
 
 ## Chat version

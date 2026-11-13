@@ -9,7 +9,7 @@ How every finding is answered — from a review lens in Phase 5, or from an exte
 | **FIX** | The finding is right; here is the change to the plan or code | The concrete change, and which report section or file it touches |
 | **CONTEST** | The finding is wrong | Evidence the reviewer could have read: `path:symbol` or `path:line` that shows it. Without such evidence, the verdict is not available |
 | **ESCALATE** | The finding turns on something outside the files — a product decision, a constraint only the user knows, context from a past conversation | The question for the user, in one line |
-| **DECLINE** | The finding is right but will not be addressed now | The reason, and where it is recorded (open items, debt list, or a decision) |
+| **DECLINE** | The finding is right but will not be addressed now | The reason, and where it is recorded: a **deferred decision** (`deferred_decisions_log`) when it does not apply under today's conditions — with the reasoning and the condition that reopens it; the board's Deferred table when it is work to do later; a decision when it changes direction |
 
 A comprehension finding — "I could not follow this" — takes FIX or ESCALATE only. Wanting to contest is not evidence that the reviewer is wrong.
 
@@ -25,7 +25,7 @@ Under `## Findings` in the activity file, one line per finding:
 - [Nit] style: ... → DECLINE: cosmetic, tracked in open items
 ```
 
-Every ESCALATE becomes a question in the report's *Decisions needed from you*. Every DECLINE of a Blocker or Major becomes an open item in the status header count.
+Every ESCALATE becomes a row in the report's *Decisions needed from you*, in the full shape — what came up and why, the options and what each means, suggested — never a bare question (`communication.md › Decisions arrive with their context`). Every DECLINE of a Blocker or Major becomes an open item in the status header count.
 
 ## Settling
 

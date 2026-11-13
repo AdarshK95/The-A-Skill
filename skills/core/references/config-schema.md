@@ -42,6 +42,7 @@ The only file that knows anything about the project. The skill never contains a 
 | `reminders` | When `on`, every `/A.*` command first checks To do and Deferred for items due today or overdue and says so in one line | `on` |
 | `activity_naming` | File path pattern inside `activity_folder`; may contain `/` to create month and day folders on demand. Tokens: `{yyyy}` `{mm}` `{dd}` `{date}` (uses `filename_date_format`) `{seq}` (zero-padded per day) `{type}` `{slug}` `{feature}` | `{yyyy}-{mm}/{yyyy}-{mm}-{dd}/{seq}-{slug}.md` |
 | `tracker_label` | Name of the external work-item system shown in headers and ledgers (`Work item`, `ADO`, `Jira`, `Issue`); `none` hides the field | `Work item` |
+| `deferred_decisions_log` | Decisions deliberately put off, each with its reasoning and the condition that reopens it; consequential and read at Start for work touching the same area | `docs/deferred-decisions.md` |
 | `lessons_log` | Append-only log of drifts and mistakes with what to do instead; read at Start with the constitution | `docs/lessons.md` |
 | `date_format` | How dates are written inside files and in chat. Tokens: `DD` `MMM` `MM` `YY` `YYYY`, spaces and punctuation kept | `DD MMM YY` (e.g. `13 Nov 26`) |
 | `time_format` | `12h` → `hh:mm AM/PM`; `24h` → `HH:mm` | `12h` |
@@ -70,6 +71,7 @@ Everything the config names forms one documentation set any agent can read. The 
 | `docs/api.md` | Contracts as they exist now | `/A.close` when a contract changed |
 | `docs/decisions.md` | Why, with alternatives rejected | At every gate and fork |
 | `docs/lessons.md` | Drift and mistakes, what to do instead | When the user stops a drift; Realign |
+| `docs/deferred-decisions.md` | Decisions deliberately put off, with the reasoning and the condition that reopens them | A review finding or design question the user defers; Realign |
 | `docs/board.md` | Planned · In progress · Finished · Deferred · To do · Overview | Every stage or step move |
 | `docs/map/` | One contract per directory | `/A.map`, `/A.drift` |
 | `.a/shared/` | Live claims, handoffs and notes between sessions; empty when nothing is in flight | Every session, continuously |

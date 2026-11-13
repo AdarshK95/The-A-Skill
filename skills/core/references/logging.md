@@ -12,6 +12,7 @@ The project's files are the memory: they outlive this session, this model and th
 | **Implementation log, API docs, ledger** | Whole project | `/A.close` only | People, and agents mapping the system |
 | **Constitution** | Whole project | Never by an agent; proposed wording only | Start of every activity |
 | **Lessons log** | Whole project, append-only | When the user stops a drift; when Realign finds one | Start of every activity, with the constitution |
+| **Deferred-decisions log** | Whole project, append-only | A finding or design question the user defers, with why and the condition that reopens it | Start of work touching the same area |
 | **Month ledger** | One month of features | At feature creation and every status change | The user, scanning a month |
 | **Shared folder** | Live claims, handoffs, notes between sessions | Before edits, on waits and completions; rows removed when acted on | Every session at Start, every stage move, every step |
 

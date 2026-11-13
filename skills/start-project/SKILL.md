@@ -37,7 +37,7 @@ If several folders could be the project (step 1 found siblings, or none at the r
 ## Step 3 — on yes, do all of it, silently
 
 1. Write `.a/project.md` from `../../templates/project.md` with the inferred values.
-2. Create what the config names and does not exist, from `../../templates/`: constitution, decisions log, implementation log, API docs, lessons log, activity folder with `_template.md`, board with one `### Area:` heading per area and one `subgraph` per area. Existing files are kept untouched. Numbered central docs (`01.…`) get the next numbers.
+2. Create what the config names and does not exist, from `../../templates/`: constitution, decisions log, deferred-decisions log, implementation log, API docs, lessons log, activity folder with `_template.md`, board with one `### Area:` heading per area and one `subgraph` per area. Existing files are kept untouched. Numbered central docs (`01.…`) get the next numbers.
 3. Create `shared_folder` from `../../templates/shared/`.
 4. Append `../../templates/always-on.md` to each `always_on_files` entry (create if missing), `{{skills_root}}` filled with the real method path; skip files that already carry the marker.
 5. `.gitignore`: the marked block, unless `gitignore: off`.

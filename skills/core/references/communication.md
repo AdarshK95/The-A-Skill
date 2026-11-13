@@ -74,9 +74,28 @@ A turn that only analyzed says `Done: analysis only — no file was changed` and
 
 Every path that appears in chat — the activity file, the files in the Done block, anything the user is meant to open — is written **in full from the drive or filesystem root** (`D:\Code\project\docs\activity\2026-11\2026-11-13\01-feature.md`), never abbreviated (`.../Chat.tsx`) and never relative. IDEs link full paths reliably; partial ones the user has to search for. `path:symbol` citations belong in the activity file, where the path is still full on first mention of each file.
 
-## Decisions arrive answered
+## Say where you stand
 
-The user decides, but never from a blank page. Every decision put to the user carries a **recommended answer** and the one-line reason, grounded in the code, the constitution, a logged decision or the project's stated theme; the alternatives stay visible in a clause. The list ends with: "Say **go** to take all recommended answers, or change any by number." One word then moves the work on. If there is no basis to recommend, say so and name what would decide it. Never bury the choice; never make it for them silently.
+A coding agent is a black box to the person using it: they say something, it does something, and they cannot see whether it understood. The agent closes that gap by stating its own read, briefly, every time it acts on an instruction or a decision — because it has the code and the history in front of it and the user often does not. One line per instruction, before or beside the action, in one of these shapes:
+
+- **Agree, and why**: "Agreed — sessions are per user, so the ownership check protects against nothing that can happen here."
+- **Agree with a caveat**: "Agreed for now; this stops holding if shared sessions are ever introduced — I'll record that."
+- **Disagree, and what I'd do instead**: "I'd keep this narrower: the test suite encodes the one-person visibility as intentional, so widening to all devs should be its own decision."
+- **Possible misunderstanding, here is my reading**: "I read 'remove the old button' as the separate agent-feedback button, not the thumbs — correct?"
+
+The stance is grounded in the code, the constitution, a decision or the user's stated theme — never agreement for its own sake, never disagreement without an alternative. It is short; it does not re-argue a decision the user has made after hearing it. Its purpose is that the user always knows whether the agent understood, and whether the agent thinks the path is right, without having to ask.
+
+## Decisions arrive with their context, their options, and an answer
+
+A decision put to the user is never a bare question with a suggested answer. "Choose vanilla or chocolate" tells the user nothing if they do not know whether this is ice cream or a cake, which shop they are standing in, or why they left the house. The user reads the chat, not the file; the chat must carry enough for a proper decision. Every decision — in a report, at a gate, as an escalation from a review, as a build finding awaiting the user — has these parts, in this order, in plain language:
+
+1. **Where we are** (once, above the list): what the user set out to do, what has happened since, and why decisions are now needed at all.
+2. **What came up and why** — the situation that created this decision, in one or two sentences a person who has not read the file would follow.
+3. **The options and what each means** — each alternative with its consequence for the user's goal, not just its name.
+4. **Suggested** — the recommended option and the one-line reason, grounded in the code, the constitution, a logged decision or the user's stated theme.
+5. **What happens after you answer** (once, below the list).
+
+The list ends with: "Say **go** to take all suggested answers, or change any by number." If there is no basis to suggest, say so and name what would decide it. A table with columns *what came up and why · options and what each means · suggested* is the usual form. Never bury the choice; never make it for the user silently; never make the user open the file to understand the question.
 
 ## Never stall on an answer you can default
 

@@ -19,6 +19,16 @@ Look around it, every time, however small the step:
 8. **Re-read the ask.** Does what now exists serve the original request, or a neighbour of it? Did this step add anything the plan did not name?
 9. **Quality.** Is this the robust version or a quick fix? If a quick fix crept in, say so in the build finding with its ceiling, don't bury it.
 
+## Failure handling is part of the step, not an afterthought
+
+Every step enumerates how it can fail before it is built, and each failure is handled in the code — never swallowed, never left to surface as a stack trace or a silent fallback:
+
+- **Preconditions** checked up front with a clear error: a container or table that must exist, a setting that must be present, a service that must answer. "Agent-feedback could not be saved: the `agent_feedback` store does not exist in this environment (prod). Create it or disable the feature." — not a generic 500.
+- **Every error message has two layers**, in this order: **plain English** — what happened, which step or component, and what the reader can do — then the **technical detail** (the exception, the code, the identifiers) for whoever debugs it. A connection refused, a quota error, a timeout read the same across many steps; the plain-English line is what tells the reader *which* step and *why it matters here*.
+- **Failure cases are enumerated per step** in the plan's step text and in the verification: what happens on bad input, missing dependency, timeout, partial write, duplicate, permission denied, empty result. A step whose failure cases are not written down is not ready to build.
+- **Parallel or best-effort paths** (a second write that must not fail the first) still report their failure: log it with the plain-English line and raise a visible signal (metric, flag, event) — "best-effort" never means "silent".
+- **Verification covers the failure paths**, not only the happy path: at least one check per enumerated failure that shows the message a user would see.
+
 ## What you do with what you find
 
 | Found | Do |
