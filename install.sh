@@ -20,7 +20,8 @@ cp -R "$SRC/templates/." "$DEST/.a/templates/"
 cp "$SRC/install.sh" "$SRC/install.ps1" "$SRC/uninstall.sh" "$SRC/uninstall.ps1" "$DEST/.a/templates/" 2>/dev/null || true
 cp "$SRC/registry.md" "$DEST/.a/registry.md"
 cp "$SRC/VERSION" "$DEST/.a/VERSION"
-printf "repository: https://github.com/AdarshK95/The-A-Skill\ninstalled: %s\nscope: %s\n" "$(date '+%d %b %y, %I:%M %p')" "$([ "$GLOBAL" = 1 ] && echo global || echo project)" > "$DEST/.a/SOURCE"
+COMMIT="$(git -C "$SRC" rev-parse HEAD 2>/dev/null || echo unknown)"
+printf "repository: https://github.com/AdarshK95/The-A-Skill\ninstalled: %s\nscope: %s\ncommit: %s\n" "$(date '+%d %b %y, %I:%M %p')" "$([ "$GLOBAL" = 1 ] && echo global || echo project)" "$COMMIT" > "$DEST/.a/SOURCE"
 [ -f "$DEST/.a/projects.md" ] || [ "$GLOBAL" = 0 ] || cp "$SRC/templates/projects.md" "$DEST/.a/projects.md"
 for f in "$SRC"/commands/claude/A.*.md; do sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$f" > "$DEST/.claude/commands/$(basename "$f")"; done
 for f in "$SRC"/commands/copilot/A.*.prompt.md; do sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$f" > "$COPILOT_DIR/$(basename "$f")"; done
@@ -28,7 +29,7 @@ for f in "$SRC"/commands/copilot/A.*.prompt.md; do sed "s|{{SKILLS_ROOT}}|$SKILL
 n_skills=$(find "$DEST/.a/skills" -type f -name '*.md' | wc -l | tr -d ' ')
 n_claude=$(ls "$DEST/.claude/commands"/A.*.md 2>/dev/null | wc -l | tr -d ' ')
 n_copilot=$(ls "$COPILOT_DIR"/A.*.prompt.md 2>/dev/null | wc -l | tr -d ' ')
-echo "Installed (version $(cat "$DEST/.a/VERSION")):"
+echo "Installed (version $(cat "$DEST/.a/VERSION"), commit $(echo "$COMMIT" | cut -c1-7)):"
 echo "  $DEST/.a/skills                  $n_skills files   (the method)"
 echo "  $DEST/.claude/commands/A.*.md    $n_claude files   (Claude Code: /A.plan, /A.bugfix, ...)"
 echo "  $COPILOT_DIR/A.*.prompt.md       $n_copilot files   (Copilot in VS Code)"

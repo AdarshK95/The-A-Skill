@@ -11,7 +11,7 @@ For when a command fails to load, a file was deleted or edited by mistake, or an
 ## Step 1 — inspect and report. Nothing else first.
 
 1. Read `.a/VERSION` and `.a/SOURCE` (missing SOURCE → `https://github.com/AdarshK95/The-A-Skill`). Missing VERSION → the skill is not installed; say so and offer the install sentence from the repository's SETUP.md instead.
-2. Fetch the **same version** as `.a/VERSION` from the repository to a temporary folder (tag or commit if available; otherwise the latest, and say so).
+2. Fetch the **same commit** recorded in `.a/SOURCE` (`commit:`) from the repository to a temporary folder; if it is `unknown`, fetch the latest and say that differences may include genuine updates.
 3. Compare, file by file, these locations against the fetched release: `.a/skills` ↔ `skills`, `.a/templates` ↔ `templates`, `.a/registry.md`, `.claude/commands/A.*.md` ↔ `commands/claude`, `.github/prompts/A.*.prompt.md` ↔ `commands/copilot`. Classify each as **present and identical**, **missing**, **altered** (content differs), or **extra** (an `A.*` file not in the release).
 4. Say, then **stop and wait**:
 

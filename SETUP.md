@@ -71,7 +71,7 @@ Plugin commands are namespaced by Claude Code: `/a:A.plan` instead of `/A.plan`.
 
 1. **Copilot in VS Code only:** Settings → search `promptFilesLocations` → add the Copilot commands folder the installer printed (`~/.a/commands/copilot`) → Reload Window. Claude Code needs nothing.
 2. Open your workspace as you normally do — a single project, a parent folder holding several, or a multi-root workspace all work. Start a **new chat**.
-3. Run `/A.start-project` (or `/A.start-project <folder>` to start a project in a sub-folder of the workspace). It asks about your areas, where docs should live, date format, and whether this project depends on or provides something to another project. It creates only what is missing and registers the project in `~/.a/projects.md`.
+3. Run `/A.start-project`. It looks for existing projects in the workspace (root and up to three levels down), tells you what it found, and asks where to create the new one before it writes anything. `/A.start-project <folder>` names the folder directly. It asks about your areas, where docs should live, date format, and whether this project depends on or provides something to another project. It creates only what is missing and registers the project in `~/.a/projects.md`.
 4. Run `/A.help` to confirm the commands resolve.
 5. Repeat step 3 for every folder you want as a separate project; they can all live in the same workspace. The agent works out which project a message belongs to from the files involved, or asks. One repository with parallel parts (UI, backend, API) is **one** project with areas; separate repositories are separate projects. Full guidance: `skills/core/references/projects.md`.
 
@@ -101,7 +101,7 @@ The web uploader takes at most 100 files per commit and refuses files or folders
 
 ## Upgrade
 
-In the project, run `/A.skill-update`. It compares `.a/VERSION` with the repository, shows the changelog entries in between, re-runs the installer, and proposes any new config keys without writing them. Or do the same by hand: re-run the install script from a fresh clone and compare `.a/VERSION` before and after.
+Run `/A.skill-update`. It compares the **commit** recorded at install (`.a/SOURCE`) with the repository's current `main` — so fixes that did not change the version number are still found — shows the commits in between, re-runs the installer after you say yes, and proposes any new config keys without writing them. Or do the same by hand: re-run the install script from a fresh clone and compare `.a/VERSION` before and after.
 
 ## Repair
 

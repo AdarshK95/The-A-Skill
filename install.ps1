@@ -25,7 +25,8 @@ Copy-Item -Force "$Src\install.sh","$Src\install.ps1","$Src\uninstall.sh","$Src\
 Copy-Item -Force "$Src\registry.md"          (Join-Path $Dest ".a\registry.md")
 Copy-Item -Force "$Src\VERSION"              (Join-Path $Dest ".a\VERSION")
 $scope = if ($Global) { "global" } else { "project" }
-"repository: https://github.com/AdarshK95/The-A-Skill`ninstalled: $(Get-Date -Format 'dd MMM yy, hh:mm tt')`nscope: $scope" | Set-Content (Join-Path $Dest ".a\SOURCE")
+$commit = "unknown"; try { $commit = (git -C $Src rev-parse HEAD 2>$null).Trim(); if (-not $commit) { $commit = "unknown" } } catch {}
+"repository: https://github.com/AdarshK95/The-A-Skill`ninstalled: $(Get-Date -Format 'dd MMM yy, hh:mm tt')`nscope: $scope`ncommit: $commit" | Set-Content (Join-Path $Dest ".a\SOURCE")
 if ($Global -and -not (Test-Path (Join-Path $Dest ".a\projects.md"))) { Copy-Item "$Src\templates\projects.md" (Join-Path $Dest ".a\projects.md") }
 Get-ChildItem "$Src\commands\claude" -Filter "A.*.md" | ForEach-Object {
   (Get-Content $_.FullName -Raw) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot | Set-Content (Join-Path $Dest ".claude\commands\$($_.Name)") -NoNewline
@@ -38,7 +39,7 @@ $nSkills  = (Get-ChildItem (Join-Path $Dest ".a\skills") -Recurse -Filter *.md -
 $nClaude  = (Get-ChildItem (Join-Path $Dest ".claude\commands") -Filter "A.*.md" -File).Count
 $nCopilot = (Get-ChildItem $CopilotDir -Filter "A.*.prompt.md" -File).Count
 $ver = (Get-Content (Join-Path $Dest ".a\VERSION")).Trim()
-Write-Host "Installed (version $ver):"
+Write-Host "Installed (version $ver, commit $($commit.Substring(0, [Math]::Min(7, $commit.Length)))):"
 Write-Host "  $Dest\.a\skills                  $nSkills files   (the method)"
 Write-Host "  $Dest\.claude\commands\A.*.md    $nClaude files   (Claude Code: /A.plan, /A.bugfix, ...)"
 Write-Host "  $CopilotDir\A.*.prompt.md       $nCopilot files   (Copilot in VS Code)"

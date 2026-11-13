@@ -15,7 +15,7 @@ Say the resolved project in one phrase at the start of the reply ("In *api-backe
 
 ## Workspaces that hold several projects
 
-Keep working from the parent folder or the multi-root workspace; there is no need to open each project separately. `/A.start-project <folder>` starts a project in a sub-folder. When run at a folder that is not itself a project but contains projects, it writes a short **workspace block** into that folder's instruction files (`templates/always-on-workspace.md`): the list of projects under it with their paths, and the resolution rule above, so every agent opening the workspace knows which projects exist and how to pick one. `/A.projects` lists the projects in the current workspace first.
+Keep working from the parent folder or the multi-root workspace; there is no need to open each project separately. `/A.start-project` first looks for existing projects at the root and up to three levels below, reports them, and asks where the new project should be created before writing anything; `/A.start-project <folder>` names the folder directly but is checked the same way. When run at a folder that is not itself a project but contains projects, it writes a short **workspace block** into that folder's instruction files (`templates/always-on-workspace.md`): the list of projects under it with their paths, and the resolution rule above, so every agent opening the workspace knows which projects exist and how to pick one. `/A.projects` lists the projects in the current workspace first.
 
 ## One project or several?
 

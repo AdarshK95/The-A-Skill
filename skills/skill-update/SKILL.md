@@ -10,18 +10,23 @@ This command is about the skill, not the user's code. Nothing in the project's f
 
 ## Step 1 — check, then ask. Nothing else first.
 
-1. Read `.a/VERSION` (installed) and `.a/SOURCE` (repository URL; missing → `https://github.com/AdarshK95/The-A-Skill`).
-2. Fetch the repository's `VERSION` (and `CHANGELOG.md`) without cloning anything yet.
-3. Say exactly one of these, then **stop and wait**:
+Releases are not always numbered: the version can stay the same while the repository gains fixes. So the check is on the **commit**, with the version as a label.
 
-   - Versions differ:
-     > `/A.skill-update` checks for a newer release of The A Skill — the workflow tooling, not your project code. You have **<installed>**; the latest is **<latest>**. What changed: <one line per changelog entry in between, plain words>. Do you want to update now? (yes / no)
+1. Read `.a/SOURCE` (global: `~/.a/SOURCE`): `repository:`, `commit:` (the commit installed from; may be `unknown` on old installs) and `.a/VERSION`.
+2. Ask the repository for its current `main` commit without cloning: `git ls-remote <repository> HEAD` (first field). Fetch its `VERSION` too.
+3. Compare the two commits. Say exactly one of these, then **stop and wait**:
 
-   - Versions equal:
-     > `/A.skill-update` checks for a newer release of The A Skill — the workflow tooling, not your project code. You have **<installed>**, which is the latest. Nothing to do.
+   - Commits differ (version may or may not differ):
+     > `/A.skill-update` checks for a newer release of The A Skill — the workflow tooling, not your project code. You have **<installed version>** (commit <short>); the repository is at **<latest version>** (commit <short>), **<n> commits newer**. What changed: <one line per commit message in between — from `git log --oneline <installed>..<latest>` on a shallow fetch, or from the repository's commit page; the CHANGELOG where it has an entry>. Do you want to update now? (yes / no)
+
+   - Commits equal:
+     > `/A.skill-update` checks for a newer release of The A Skill — the workflow tooling, not your project code. You have **<version>** (commit <short>), which is exactly what the repository has. Nothing to do.
+
+   - `commit:` is `unknown` (installed before commits were recorded):
+     > I can't tell which commit your copy came from, so I can't say whether anything changed. Updating is safe and takes a few seconds: it refreshes the method and commands and touches none of your projects. Do you want to update now? (yes / no)
 
    - Repository unreachable:
-     > I couldn't reach <url> to check (reason). Nothing was changed. Try again later or check the address in `.a/SOURCE`.
+     > I couldn't reach <repository> to check (reason). Nothing was changed. Try again later or check the address in `.a/SOURCE`.
 
 ## Step 2 — only after "yes"
 
@@ -29,6 +34,6 @@ This command is about the skill, not the user's code. Nothing in the project's f
 2. Show the user the fetched `install.ps1` / `install.sh` if it differs from the one in `.a/templates` (or in one line say it is unchanged), then run it against this project (`powershell -ExecutionPolicy Bypass -File install.ps1` on Windows — or, when Group Policy refuses even that, from inside the fetched folder: `& ([scriptblock]::Create((Get-Content .\install.ps1 -Raw)))`, `sh install.sh` elsewhere). It writes only `.a/skills`, `.a/templates`, `.a/registry.md`, `.a/VERSION`, `.a/SOURCE`, `.claude/commands/A.*`, `.github/prompts/A.*`. No installer possible → copy exactly those paths by hand.
 3. If `.a/project.md` exists and its `schema_version` is older than the one `../core/references/config-schema.md` expects: list the keys added or renamed with their defaults and **ask again** before writing any of them.
 4. Remove the temporary folder.
-5. Report: `<old> → <new>`, the installer's file counts, any config keys the user should set, and that a **new chat** is needed before the updated commands load.
+5. Report: `<old version> (<old commit>) → <new version> (<new commit>)`, the installer's file counts, any config keys the user should set, and that a **new chat** is needed before the updated commands load.
 
 "No" or anything other than a clear yes → "Not updated. You're still on <installed>." and stop.
