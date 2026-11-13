@@ -68,7 +68,7 @@ Per tier. Spawn reviewers as `references/hosts.md` says for this host; run the i
 
 ## Approve
 
-Wait for an explicit go. One question at a time. Each decision → dual write (`references/logging.md`). Changed plan → revised report. Stopped → `Phase: Stopped` with reason. With `approval.second_reviewer: on`, the user's go sets `Phase: Approved (pending second reviewer)`; a named person's go, logged as a decision, completes it. Otherwise on go: `Phase: Approved`.
+At tiers L and XL, Review has run before this stage; the chat never offers "or just say go" as a way around it. Wait for an explicit go. One question at a time. Each decision → dual write (`references/logging.md`). Changed plan → revised report. Stopped → `Phase: Stopped` with reason. With `approval.second_reviewer: on`, the user's go sets `Phase: Approved (pending second reviewer)`; a named person's go, logged as a decision, completes it. Otherwise on go: `Phase: Approved`.
 
 ## Implement
 

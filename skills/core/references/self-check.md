@@ -15,5 +15,7 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 14. No step adds a second path to something an existing path already reaches, and no step introduces a literal that varies (URL, key, limit, path, label) outside config.
 8. The tier's signals each name a file or a decision.
 9. Assumptions and parked clarifications are listed, not buried.
-10. The chat summary fits one screen and names the decisions the user must make.
+10. The chat summary fits one screen, names the decisions the user must make, and at L/XL says Review runs next — never offers to skip it.
 14. The plan does what the user asked, as asked. Where it does not, the report says so and why, and asks — it does not substitute.
+15. Every path shown in chat is a full path from the root; every item has steps with done-conditions and the pointer's `N` is the real count; `## Requirements` is present at L/XL.
+16. This self-check was run and the line `Self-check: passed <date time>` was written to `## Log` before the report was shown.

@@ -23,6 +23,12 @@ Whether the request is sound as stated, what the code already supports, what it 
 ### Reuse candidates
 The reuse search (`lean.md`): one row per new need — candidate `path:symbol`, match (exact / close / pattern / none), decision. Never empty: a need with no candidate says so and why.
 
+### Assumptions
+Relevant points the ask did not settle and that were not asked (over the five-question cap, or inferable): one line each, so the user can object. Omit only if there are none.
+
+### Requirements *(L and XL)*
+One checkable line per requirement, in the user's terms, `- [ ] R1 …`; ticked at Validate with evidence. See `clarify.md`.
+
 ### Proposed change
 What will be modified, file by file, and how. The rung of the ladder each change sits on. For a choice the user must make: the options, the trade-offs, and one line on which way you lean and why; the alternatives stay visible.
 
@@ -39,7 +45,7 @@ What the user or end user will see or experience afterwards, as a reference for 
 `S | M | L | XL` with the signals that chose it, one per line, each naming its file or decision.
 
 ### Decisions needed from you
-Numbered. Each one a single question the user can answer in a line.
+Numbered. Each one a single question the user can answer in a line, **followed by one line: which way you lean and why**, grounded in the code, the constitution or a decision. The alternatives stay visible.
 ```
 
 ## Chat version

@@ -29,7 +29,7 @@ Only when steps 1 and 2 found nothing permanent. Propose this and wait for appro
 On yes:
 
 1. Copy `~/.a/skills` → `<root>/.a/mirror/skills` and `~/.a/templates` → `<root>/.a/mirror/templates`. Write `<root>/.a/mirror/MIRROR` with: `mirror_of: <global .a path>`, `commit: <from ~/.a/SOURCE>`, `created: <date time>`.
-2. Add the mirror path to `~/.a/projects.md` under `## Mirrors` so `/A.skill-update` refreshes it after every update.
+2. Add the mirror path to `~/.a/projects.md` under `## Mirrors`. `/A.skill-update` and `/A.skill-repair` refresh every mirror after every update — those in the list and any they discover under registered projects or the current workspace — so a mirror never silently falls behind.
 3. Add `.a/mirror/` to the workspace's `.gitignore` (marked block) unless the user wants it committed, and say so.
 4. Test with the same read; confirm the prompt is gone.
 

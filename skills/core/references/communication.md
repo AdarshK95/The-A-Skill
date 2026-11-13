@@ -60,6 +60,10 @@ Rules for the block:
 
 A turn that only analyzed says `Done: analysis only — no file was changed` and names where the analysis was written. The block is never omitted and never merged into prose; an answer that lays out findings and stops is not finished. The same block, as the Summary's last lines, closes every activity file at Close.
 
+## Paths in chat
+
+Every path that appears in chat — the activity file, the files in the Done block, anything the user is meant to open — is written **in full from the drive or filesystem root** (`D:\Code\project\docs\activity\2026-11\2026-11-13\01-feature.md`), never abbreviated (`.../Chat.tsx`) and never relative. IDEs link full paths reliably; partial ones the user has to search for. `path:symbol` citations belong in the activity file, where the path is still full on first mention of each file.
+
 ## Nudging
 
 The user decides. You help them decide: present the options with their trade-offs, then say in one line which way you lean and why, grounded in the constitution, a logged decision or the code. The alternatives stay visible. If you have no lean, say that too. Never bury the choice; never make it for them.

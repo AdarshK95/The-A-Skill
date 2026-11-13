@@ -13,7 +13,7 @@ Also what any plain-language question about state means: "where were we", "what'
 3. For **Planned**: one line each with `Waiting on`.
 4. **Finished** since the last `/A.status` call recorded in the board's `## Log`, if any: one line each. Then append a dated line to that log: `status given`.
 5. **Deferred** with a revisit date within seven days, and **To do** due within seven days: one line each.
-6. If this workspace has `.a/mirror/MIRROR` and its commit differs from `~/.a/SOURCE`, say the mirror is behind and that `/A.skill-update` refreshes it.
+6. If this workspace, or any registered project under it, has `.a/mirror/MIRROR` whose commit differs from `~/.a/SOURCE`, say which mirror is behind and that `/A.skill-update` refreshes it.
 7. If the board's `## Log` shows no `/A.drift` run within `drift.cadence_days`, say "drift check overdue" in one line.
 8. End with the single most useful next action across everything, as the files state it.
 

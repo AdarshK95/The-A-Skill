@@ -6,7 +6,7 @@ Seamless setup.
 
 - `/A.start-project` is one confirmation, not an interview: infers name, areas, documentation location, date formats, tracker label and dependencies from the project; shows one summary; asks one question; then does everything. Never installs the method, never writes outside the project, never logs its run in another project. Report lists only what was asked; one optional line at most.
 - Rules: *Not done* lists only the user's asks; multi-choice moments are one summary and one confirmation; the agent does its own searching before asking the user; given steps are followed in the given order; never substitute, never assert what was not checked.
-- IDE permissions procedure (`ide-permissions.md`): agent searches the IDE first, tests the prompt with the user second, offers a workspace mirror of the method last; wrappers resolve a mirror first; `/A.skill-update` refreshes mirrors.
+- IDE permissions procedure (`ide-permissions.md`): agent searches the IDE first, tests the prompt with the user second, offers a workspace mirror of the method last; wrappers resolve a mirror first; `/A.skill-update` and `/A.skill-repair` discover every mirror (index, registered projects, current workspace), register unlisted ones, and refresh them all.
 - `/A.skill-update` compares the installed **commit** with the repository, not only the version; installers record the commit in `.a/SOURCE`.
 - Installers fail loudly if a command wrapper keeps an unfilled `{{SKILLS_ROOT}}`.
 - Multi-project workspaces: the agent resolves which project a message belongs to (named → files → conversation → only one → ask); workspace block for parent folders; `/A.start-project <folder>`.
