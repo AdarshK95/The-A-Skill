@@ -14,3 +14,5 @@ How to run one: open the fixture project in the host, install the current build,
 | 06 | Plain-English report | Two readers kept apart; conclusive answers with next steps; timed append-only event log |
 | 07 | Reuse and duplication | Reuse search before new code; no parallel paths or hardcoded values; behaviour-preserving simplify |
 | 08 | Parallel sessions | Claims respected; handoffs picked up; shared folder left empty |
+
+`check-spine.sh` is a one-second guard: it fails if any standing rule or required section is missing from `skills/core/SKILL.md`. Run it before every commit that touches the spine; editing scripts that search-and-replace can drop a block silently.

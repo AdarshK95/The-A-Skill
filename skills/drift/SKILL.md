@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.drift — documents versus code
 
+**Place in the flow:** independent; produces a drift report; next: features for the drifts the user picks. See `../core/references/flow.md`.
+
 **Input:** optional — a document path or a feature number to check only that.
 
 1. **Collect** the documents the config names: constitution, decisions log, API docs, the codebase map, the activity files of Finished features (their *Proposed change* and *Impact*), and the board's overview.

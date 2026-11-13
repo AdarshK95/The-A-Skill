@@ -6,9 +6,11 @@ disable-model-invocation: true
 
 # /A.review — triage reviewer comments
 
+**Place in the flow:** needs something to review — a report, a plan, a build, or pasted comments; produces findings with verdicts and a revised report; next: Approve, or back to the report if material. With no plan behind the subject, ends by offering to make it one. See `../core/references/flow.md`.
+
 Runs the core spine (`../core/SKILL.md`). This file is its **Evaluate** step.
 
-**Input:** the comments, pasted or as a link to a PR or review the agent can read, and which change they are about (branch, PR, or activity file). Each comment is a finding from a cold reader: it may be right, it may lack context, or it may be known and deferred. All three are expected.
+**Input:** the comments, pasted or as a link to a PR or review the agent can read, and which change they are about (branch, PR, or activity file). With **no** input, `/A.review` is the Review *stage* on the current subject — resolved chat-first (spine Start step 0): the plan, report or build most recently in this conversation, else a board candidate offered by name. It never picks a board feature over work present in the chat without asking. Each comment is a finding from a cold reader: it may be right, it may lack context, or it may be known and deferred. All three are expected.
 
 ## Evaluate
 

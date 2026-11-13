@@ -23,6 +23,7 @@ cp "$SRC/VERSION" "$DEST/.a/VERSION"
 COMMIT="$(git -C "$SRC" rev-parse HEAD 2>/dev/null || echo unknown)"
 printf "repository: https://github.com/AdarshK95/The-A-Skill\ninstalled: %s\nscope: %s\ncommit: %s\n" "$(date '+%d %b %y, %I:%M %p')" "$([ "$GLOBAL" = 1 ] && echo global || echo project)" "$COMMIT" > "$DEST/.a/SOURCE"
 [ -f "$DEST/.a/projects.md" ] || [ "$GLOBAL" = 0 ] || cp "$SRC/templates/projects.md" "$DEST/.a/projects.md"
+[ -f "$DEST/.a/settings.md" ] || cp "$SRC/templates/settings.md" "$DEST/.a/settings.md"
 for f in "$SRC"/commands/claude/A.*.md; do sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$f" > "$DEST/.claude/commands/$(basename "$f")"; done
 for f in "$SRC"/commands/copilot/A.*.prompt.md; do sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$f" > "$COPILOT_DIR/$(basename "$f")"; done
 

@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.projects — all projects on this machine
 
+**Place in the flow:** independent. See `../core/references/flow.md`.
+
 Reads `~/.a/projects.md`. Missing → no project has been started yet; say so and point to `/A.start-project`.
 
 1. **Rebuild.** For every row, open that path's `.a/project.md` and refresh name, areas, `depends_on`, `provides`, and last active (the newest `Updated:` in its activity files). A path that no longer exists is marked `missing` and left in the table for the user to remove. Redraw the dependency diagram: one node per project, one edge per `depends_on` line.

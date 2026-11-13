@@ -82,7 +82,7 @@ Finalizes the feature's log, writes the implementation-log entry, updates API do
 
 ## How the agent talks to you
 
-Every few steps and at every stage move you get a five-line update — doing, found, means, next, need from you — so you can stop it the moment it drifts. Reports open with what the finding means for you, in plain words; file paths and code names stay in the activity file unless you ask. Every answer ends with the same block — Done / Not done / Your next step — so you can skip straight to what you have to do. If you stop it for drifting, that goes into the lessons log so it is not repeated.
+By default the agent is quiet: it speaks when you have to decide something, at a point where you might want to stop it, or to answer you. Everything else it does — checks, bookkeeping, cleanup — goes into the activity file's event log, not the chat. A long stage starts with one line and ends with one report. Want more? Set `verbosity: normal` or `verbose` in `~/.a/settings.md` (or per project in `.a/project.md`). Reports open with what the finding means for you, in plain words; file paths and code names stay in the activity file unless you ask. Every answer ends with the same block — Done / Not done / Your next step — so you can skip straight to what you have to do. If you stop it for drifting, that goes into the lessons log so it is not repeated.
 
 ## What the agent writes, and where
 
@@ -99,4 +99,4 @@ Everything is plain markdown in your repository. Any agent, any model, any sessi
 
 ## Tuning
 
-`.a/project.md` holds every path, your areas, which projects this one depends on, date and time formats, which ledgers close updates, the review floor, and project rules. `/A.start-project` writes it; edit it any time. Field reference: `.a/skills/core/references/config-schema.md`.
+`~/.a/settings.md` holds how the agent behaves everywhere: verbosity, when it may interrupt, whether it offers to record chat work, the highest review tier it may choose on its own, date formats. `.a/project.md` holds every path, your areas, which projects this one depends on, date and time formats, which ledgers close updates, the review floor, and project rules. `/A.start-project` writes it; edit it any time. Field reference: `.a/skills/core/references/config-schema.md`.

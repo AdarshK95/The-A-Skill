@@ -2,7 +2,9 @@
 
 Each lens is a prompt for a reviewer that has **not** seen the working conversation. Give it: the activity file (at least the `## Report` section), the project files the report cites, and the constitution. Nothing else. It reads, it reports, it changes nothing.
 
-The reviewer returns findings as a list, each tagged **Blocker** (the plan cannot proceed as written), **Major** (must be addressed or explicitly accepted), or **Nit**. A finding names the exact text or file it is about. A reviewer that cannot read a file it needs returns `INCOMPLETE: <file>` instead of a verdict.
+The reviewer returns findings as a list, each tagged **Blocker** (the plan cannot proceed as written), **Major** (must be addressed or explicitly accepted), or **Nit**, and each with a **confidence** (`high` — pointed at in the files; `medium` — inferred from them; `low` — suspected). Any finding that contradicts the project's constitution is a Blocker regardless of the lens. A finding names the exact text or file it is about. A reviewer that cannot read a file it needs returns `INCOMPLETE: <file>` instead of a verdict.
+
+The same questions, asked by the implementer of their own work during Implement, are `build-check.md`; this file is the independent version.
 
 Spawn one fresh subagent per lens where the host allows. Otherwise run the lens yourself, with its prompt verbatim, and label the output `cold self-review`.
 
@@ -42,6 +44,18 @@ A comprehension finding is never contested by the author: if a cold reader could
 
 > The plan says what it changes. You find what else changes with it. For every modified function: list its callers from the code and say whether the plan accounts for each. For every changed contract or stored shape: who reads it, and what happens to data already written. For every cache, permission or ordering path touched: how it could now serve a stale or wrong result. For a bug fix: does the fix remove the cause, or move it? An unaccounted caller or consumer is a Major; a fix that moves the cause is a Blocker.
 
+## Synthesis before resolution
+
+When a group has more than one lens, merge their findings before resolving: drop duplicates (the same gap found by two lenses is one finding, credited to both), group by the part of the plan they concern, order by severity then confidence. Resolve Blockers and Majors; Nits are applied silently when trivial and otherwise listed, never discussed. Low-confidence findings are verified against the code before they get a verdict, and dropped with one line if the code does not bear them out. This is what keeps a five-lens group from producing twenty threads for the user: the user sees the merged, ordered result — Blockers and Majors only — and the Nits as a count.
+
 ## Rounds (L and XL)
 
-A **round** is one run of the tier's lenses on the current report. After resolving its findings, run the next round. A round is **clean** when no Blocker or Major is unresolved (contested or declined with the user's agreement counts as resolved). Stop at **two consecutive clean rounds**, or at **five rounds**, or on **churn** — a fix from a previous round is itself flagged, and reverting it would resolve the new finding. At five rounds or on churn, the user chooses: accept the residual findings as recorded trade-offs, run another round, or return to Report. Fresh reviewers sample differently each round, which is why one clean round is not enough and zero findings is not the target.
+A **round** is one complete pass of the tier's lens groups (`sizing.md`) over the current report, with each group's findings resolved before the next group runs. After a round, the report has usually changed. A round is **clean** when no Blocker or Major was raised in it that is still unresolved (contested or declined with the user's agreement counts as resolved). Rounds continue until **two consecutive clean rounds**, or **five rounds**, or **churn** — a fix from a previous round is itself flagged and reverting it would resolve the new finding.
+
+The second and later rounds re-run only the lenses whose area the previous round's fixes touched (a Blocker from `impact` → `impact` and `codebase-details` again on the revised text), not the whole sequence, unless the plan changed materially.
+
+Stopping at the cap or on churn is a **user decision**, not an automatic close: say "five rounds reached; the last round raised <n> Blockers that are now fixed but unreviewed" and let the user choose to accept the residual risk, run once more, or return to Report. A round that ended with new Blockers is never reported as "review complete" without that sentence.
+
+## What a reviewer is told
+
+A reviewer receives the lens prompt with its preamble, the path of the report (and which sections to read), the paths of the files it cites, and the constitution — nothing about the conversation, and **nothing about earlier rounds**: not what was already fixed, not what to avoid re-flagging. Fresh means fresh. The one exception is the additions-only `zoom-out`, whose job is defined relative to the previous zoom-out report and therefore receives that report's path.

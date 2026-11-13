@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.bugfix — something is broken
 
+**Place in the flow:** needs a described failure; produces a trace, root cause and a fix report at Gate; next: Review (if shared callers or contracts), Approve, Implement. See `../core/references/flow.md`.
+
 Runs the core spine (`../core/SKILL.md`). This file is its **Evaluate** step.
 
 **Input:** the bug as the user saw it: what happened, what was expected, where, and any error text. Missing pieces are asked for in one line each; a reproduction path is worth asking for.

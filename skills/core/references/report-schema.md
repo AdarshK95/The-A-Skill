@@ -23,6 +23,9 @@ Whether the request is sound as stated, what the code already supports, what it 
 ### Reuse candidates
 The reuse search (`lean.md`): one row per new need — candidate `path:symbol`, match (exact / close / pattern / none), decision. Never empty: a need with no candidate says so and why.
 
+### Solution quality
+One line: *robust* / *tactical* / *quick fix*, with what a state-of-the-art team would do here and how this proposal compares (`communication.md › Solution-architect judgement`). If the user asked for a quick fix, say so and name the follow-up that would make it robust.
+
 ### Assumptions
 Relevant points the ask did not settle and that were not asked (over the five-question cap, or inferable): one line each, so the user can object. Omit only if there are none.
 
@@ -45,7 +48,7 @@ What the user or end user will see or experience afterwards, as a reference for 
 `S | M | L | XL` with the signals that chose it, one per line, each naming its file or decision.
 
 ### Decisions needed from you
-Numbered. Each one a single question the user can answer in a line, **followed by one line: which way you lean and why**, grounded in the code, the constitution or a decision. The alternatives stay visible.
+Numbered. Each one a single question, **with the recommended answer and its one-line reason**, grounded in the code, the constitution, a decision or the user's stated theme; the alternatives in a clause. End the list with: "Say **go** to take all recommended answers, or change any by number." (`communication.md › Decisions arrive answered`)
 ```
 
 ## Chat version
@@ -54,4 +57,4 @@ Per `communication.md`: what this means for the user; what was found, in plain w
 
 ## Revising
 
-A revised report is appended under `## Report` with a dated heading (`### Revision — 13 Nov 26, 05:10 PM`); earlier versions stay above it, unchanged. The event log records why.
+**Before Approve**, the report is corrected in place — it is still a draft under review, and five appended copies would bury the current text. Every change is recorded as a line in `## Findings` (what changed, which finding caused it) and in the event log with its time, so the history is complete without the copies. **After Approve**, the approved text is frozen: a change is appended under `## Report` with a dated heading (`### Revision — 13 Nov 26, 05:10 PM`) and the reason, and goes back through Approve.

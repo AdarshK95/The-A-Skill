@@ -6,18 +6,15 @@ disable-model-invocation: true
 
 # Auto mode
 
+**Place in the flow:** the router; needs nothing; hands the message to the right command. See `../core/references/flow.md`.
+
 Auto is on whenever the user did not type an `/A.*` command. It never does the work itself; it decides *where* the message belongs, says so in one line, and runs the spine (`../core/SKILL.md`) from there.
 
 ## On every message, in order
 
 **0. Shared folder.** In a fresh conversation, read it first; non-empty means work is in flight — say what, in plain words, before locating anything.
 
-**1. Locate.** First the project, then the activity. Project: the one the user named, else the one containing the files mentioned or open, else the one this conversation already resolved, else the only one in the workspace, else ask which (`../core/references/projects.md`). Then, within that project:
-
-- An activity file was opened or resumed earlier in this conversation → that one.
-- Otherwise read the project board. A Planned or In-progress feature whose title, item or file matches the request → `/A.resume` it (`../resume/SKILL.md`).
-- The message says continue, resume, pick up, or where did we leave off → `/A.resume` with no target: it lists what is in flight and asks which.
-- Otherwise the request is new → step 2.
+**1. Locate — this chat first.** Resolve the subject exactly as the spine's Start step 0: what the user pointed at; else what this conversation is doing (an activity opened here, else the latest substantive work in the chat); else fetch the board's candidates and offer them by name with their next action; if both chat and board are plausible, one question naming both. Then the project (named → files → conversation → only one → ask). Only then, within that project:
 
 **2. Classify** a new request into one entry type, and say it in one line ("Treating this as a bug fix"):
 

@@ -16,9 +16,7 @@ Start at **S**. Each signal that applies moves the tier up one step; stop at **X
 | More than one module or layer changes in the same activity | Cross-module effects are where plans drift |
 | New subsystem, new design document, or an extend activity where drift between doc and code is large | The design itself needs fresh eyes before detail |
 
-The user may set the tier directly at the gate; record `Tier: M (user override, rubric said S)`.
-
-`project.md` → `review.default_floor` raises the starting point for the whole project.
+Limits come from settings (`~/.a/settings.md`, overridable per project): `review.default_floor` is the lowest tier; `review.max_tier` is the highest the rubric may choose on its own; `review.auto_tier: off` disables the rubric and uses the floor unless the user sets a tier. The user may set the tier directly at the gate in either direction; record `Tier: M (user override, rubric said XL)`. The report always says the tier and the signals, in one phrase in chat ("touches shared code and two contracts, so I'll have it reviewed in depth first"), so the user can change it before anything runs.
 
 ## What each tier runs
 
@@ -26,8 +24,10 @@ The user may set the tier directly at the gate; record `Tier: M (user override, 
 |---|---|---|
 | **S** | None. Implement with the ladder; leave one runnable check | — |
 | **M** | `implementation-readiness` + `impact` + `lean` lenses on the report | Fresh reviewers, or cold self-review |
-| **L** | `zoom-out` first; then `critic` + `implementation-readiness` + `impact` + `lean` | Rounds until two consecutive clean (`goldfish-lenses.md › Rounds`); reviewers within a round may run in parallel |
-| **XL** | `zoom-out` → `comprehension` → `critic` → `zoom-out` (additions only) → `implementation-readiness` + `codebase-details` + `impact` + `lean` — or the EGM review when `review.xl_engine: egm` (`hosts.md`) | Five sequential stages with a gate after each; rounds per `goldfish-lenses.md` |
+| **L** | Group 1: `zoom-out`. Group 2 (parallel): `critic` + `implementation-readiness` + `impact` + `lean` | The two groups are one **round**; then rounds per `goldfish-lenses.md › Rounds` |
+| **XL** | Group 1: `zoom-out`. Group 2 (parallel): `comprehension` + `critic`. Group 3 (parallel): `zoom-out` (additions only) + `implementation-readiness` + `codebase-details` + `impact` + `lean` — or the EGM review when `review.xl_engine: egm` (`hosts.md`) | The three groups are one **round**; findings of a group are resolved before the next group runs; then rounds per `goldfish-lenses.md › Rounds` |
+
+Groups run in sequence because later lenses read the text the earlier ones corrected; lenses inside a group are independent and run in parallel. A **stage group is not a round**: the whole sequence is one round.
 
 Lens prompts are in `goldfish-lenses.md`. Findings are handled with `resolve-protocol.md`.
 

@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.board — the project board
 
+**Place in the flow:** independent. See `../core/references/flow.md`.
+
 **No input:** show the board file as it stands, then a three-line summary: counts per section by area; what is waiting on the user; what is due within seven days.
 
 **With input**, in plain language:

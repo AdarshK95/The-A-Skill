@@ -28,6 +28,7 @@ $scope = if ($Global) { "global" } else { "project" }
 $commit = "unknown"; try { $commit = (git -C $Src rev-parse HEAD 2>$null).Trim(); if (-not $commit) { $commit = "unknown" } } catch {}
 "repository: https://github.com/AdarshK95/The-A-Skill`ninstalled: $(Get-Date -Format 'dd MMM yy, hh:mm tt')`nscope: $scope`ncommit: $commit" | Set-Content (Join-Path $Dest ".a\SOURCE")
 if ($Global -and -not (Test-Path (Join-Path $Dest ".a\projects.md"))) { Copy-Item "$Src\templates\projects.md" (Join-Path $Dest ".a\projects.md") }
+if (-not (Test-Path (Join-Path $Dest ".a\settings.md"))) { Copy-Item "$Src\templates\settings.md" (Join-Path $Dest ".a\settings.md") }
 Get-ChildItem "$Src\commands\claude" -Filter "A.*.md" | ForEach-Object {
   (Get-Content $_.FullName -Raw) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot | Set-Content (Join-Path $Dest ".claude\commands\$($_.Name)") -NoNewline
 }

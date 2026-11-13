@@ -32,3 +32,7 @@ Rules: each boundary gets a line in the report's *Impact*; a cache, permission, 
 ## How much to read
 
 Everything the three tables need, and nothing more. Breadth comes from search (every caller), depth from opening the hops. Stop reading when the tables are complete; do not stop before.
+
+## Scratch
+
+Sampling scripts, exported data and other working files produced while reading go to `.a/tmp/` (in the project, git-ignored) or the OS temp folder — never beside the user's files — and are removed when the feature closes. The findings they produced live in the report and the event log; the files themselves are not the record.

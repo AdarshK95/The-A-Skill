@@ -42,7 +42,7 @@ Before the first fresh review in a project:
 3. A reviewer that reports either phrase is **not isolated**: use cold self-review on this host and record it. A reviewer that reports neither is isolated.
 4. Remove the temporary phrase from the instruction file. Record the result in `.a/project.md`: `review.isolation_verified: <host> <date> <fresh | not fresh>`.
 
-Repeat after a host upgrade. The probe is cheap; a false "fresh" is not.
+Repeat after a host upgrade. The probe is cheap; a false "fresh" is not. While a reviewer runs, wait for it — no filler tool calls.
 
 ## XL hand-off (`review.xl_engine`)
 

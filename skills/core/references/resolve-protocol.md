@@ -13,6 +13,8 @@ How every finding is answered — from a review lens in Phase 5, or from an exte
 
 A comprehension finding — "I could not follow this" — takes FIX or ESCALATE only. Wanting to contest is not evidence that the reviewer is wrong.
 
+A FIX adds what a *human* reader of the plan needs. Context that only a zero-context reviewer needs — restating what the project already knows everywhere — is not added to the plan to satisfy the reviewer; that finding is ESCALATED or, with the user's agreement, DECLINED with the note that the project's readers have the context. Plans are written for the people who will build and maintain them, not for the reviewers.
+
 ## Recording
 
 Under `## Findings` in the activity file, one line per finding:

@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.plan — something new
 
+**Place in the flow:** needs a request and a project; produces a report at Gate; next: Review (M+), then Approve, then Implement. See `../core/references/flow.md`.
+
 Runs the core spine (`../core/SKILL.md`). This file is its **Evaluate** step.
 
 **Input:** the user's idea, in their words. Everything after the command is the request. If there is nothing after it, ask for the idea in one line.

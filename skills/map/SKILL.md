@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.map — map the codebase
 
+**Place in the flow:** needs a project with code; produces the codebase map and the overview's first nodes; next: whatever the user came to do. See `../core/references/flow.md`.
+
 Alias: `/A.bootstrap`. Writes to `map_folder` from config (`none` → say so and stop). Offered by `/A.init` on a non-empty repository; re-runnable.
 
 **Input:** optional — a path to map only that subtree; `changed` to refresh only directories with files newer than their contract.
@@ -17,7 +19,8 @@ Alias: `/A.bootstrap`. Writes to `map_folder` from config (`none` → say so and
 3. **Parents next**, from the leaf contracts upward, summarizing rather than re-reading.
 4. **Root**: `<map_folder>/README.md` — the architecture in one screen: the areas (from config), the main parts in each, and the dependencies between parts, each with a link to its contract.
 5. **Overview**: add one node per part to the board's `## Overview`, grey, under its area's subgraph, and one edge per dependency the contracts name. Existing nodes keep their colour.
-6. **Report**: directories mapped, contracts with `UNVERIFIED` lines, parts that fit no configured area (ask whether to add an area).
+6. **Clean up**: any listing or scratch produced while mapping is removed from the OS temp folder before reporting.
+7. **Report**: directories mapped, contracts with `UNVERIFIED` lines, parts that fit no configured area (ask whether to add an area).
 
 Read uses the map as its starting point and cites it; the reuse search (`../core/references/lean.md`) treats the contracts as the capability index — what each directory already provides — so new code is proposed only after the map says nothing does it. `/A.drift` checks the map against the code.
 

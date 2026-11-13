@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.simplify — make what was just written leaner
 
+**Place in the flow:** needs something built; produces behaviour-preserving cuts; next: Validate. See `../core/references/flow.md`.
+
 Alias: `/A.lean`. A stage call: runs on the current feature and returns to the active stage. Also what Realign runs as its last step.
 
 **Input:** optional — a path or a feature number to scope to; default is code modified in this feature (`## Changes`) or, outside a feature, the working diff.

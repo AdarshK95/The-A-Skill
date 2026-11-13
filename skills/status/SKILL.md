@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.status — where are we
 
+**Place in the flow:** independent; produces the state from the files; next: the single most useful action, from the files. See `../core/references/flow.md`.
+
 Also what any plain-language question about state means: "where were we", "what's pending", "what did we do", "what's next".
 
 1. Read the shared folder: anything in flight between sessions (claims, waits, notes) is reported first, in plain words, with who waits on whom. Then read the board. Reminders next, one line, if due.
@@ -13,8 +15,8 @@ Also what any plain-language question about state means: "where were we", "what'
 3. For **Planned**: one line each with `Waiting on`.
 4. **Finished** since the last `/A.status` call recorded in the board's `## Log`, if any: one line each. Then append a dated line to that log: `status given`.
 5. **Deferred** with a revisit date within seven days, and **To do** due within seven days: one line each.
-6. If this workspace, or any registered project under it, has `.a/mirror/MIRROR` whose commit differs from `~/.a/SOURCE`, say which mirror is behind and that `/A.skill-update` refreshes it.
+6. Only if a mirror exists under this workspace and its commit differs from `~/.a/SOURCE`: say which mirror is behind and that `/A.skill-update` refreshes it. Say nothing about mirrors otherwise.
 7. If the board's `## Log` shows no `/A.drift` run within `drift.cadence_days`, say "drift check overdue" in one line.
 8. End with the single most useful next action across everything, as the files state it.
 
-Every line comes from a file read in this call. Nothing comes from the conversation. If a header and its board block disagree, the header wins; say so and fix the block.
+Empty sections are one short line each ("Nothing deferred or due"), never a paragraph about why they are empty. Every line comes from a file read in this call. Nothing comes from the conversation. If a header and its board block disagree, the header wins; say so and fix the block.

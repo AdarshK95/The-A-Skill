@@ -35,6 +35,10 @@ _Same block shape as In progress; items listed with their planned steps count._
 | Item | Due | Added | Notes |
 | --- | --- | --- | --- |
 
+## Log
+
+_Dated lines about the board itself: status given, drift run, feature promoted. Newest at the bottom._
+
 ## Overview
 
 _How the project is shaping up: its areas, the parts in each, how they connect, and the state of each. Grey planned · blue in progress · green finished · orange deferred. Each board topic is a node under its area; updated by the activity that touches it._

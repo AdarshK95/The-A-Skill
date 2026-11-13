@@ -1,4 +1,20 @@
-# Project config — `.a/project.md`
+# Config — `~/.a/settings.md` and `.a/project.md`
+
+Two files. **`~/.a/settings.md`** (machine-wide, created by the installer from `templates/settings.md`) holds behaviour: verbosity, interrupts, whether chat work is offered for recording, review tier limits, date formats. **`.a/project.md`** holds everything about one project and may override any settings key for that project. Precedence: `project.md` > `settings.md` > the defaults below.
+
+## Settings keys (`~/.a/settings.md`)
+
+| Key | Meaning | Default |
+|---|---|---|
+| `verbosity` | `quiet` (decisions, stop points, answers only) · `normal` (plus a line per stage) · `verbose` (plus progress every few steps) | `quiet` |
+| `progress_interrupts` | `blockers` (interrupt a running stage only for a blocking finding) · `findings` (also Majors) | `blockers` |
+| `solution_mode` | `balanced` (recommend robust, name quick fixes, follow the user's stated theme) · `robust` · `quick` | `balanced` |
+| `record_chat_work` | When a command runs on chat work not on the board: `ask` (offer once, afterwards) · `always` · `never` | `ask` |
+| `review.auto_tier` | `on`: the rubric picks the tier within the limits; `off`: the floor unless the user sets one | `on` |
+| `review.max_tier` | Highest tier the rubric may choose on its own | `XL` |
+| `review.default_floor`, `review.fresh_context`, `dates.*` | As below; copied into new projects by `/A.start-project` | — |
+
+## Project config — `.a/project.md`
 
 The only file that knows anything about the project. The skill never contains a project name, path or tool; it reads them from here. `/A.start-project` creates it from `templates/project.md` and asks the user to confirm each value.
 
@@ -22,6 +38,7 @@ The only file that knows anything about the project. The skill never contains a 
 | `shared_folder` | Live coordination between parallel sessions: claims, handoffs, notes (`shared.md`). Empty means nothing in flight | `.a/shared/` |
 | `claim_stale_hours` | A claim older than this with no newer activity from its session may be taken over, with a note | `4` |
 | `gitignore` | `on`: `/A.start-project` adds `.a/` and the documentation paths it created to the project's `.gitignore` (marked block, removable); `off`: touches `.gitignore` never | `on` |
+| `tmp_folder` | Where the agent keeps scratch that must live inside the project (sampling output, fixtures); ignored by git, emptied at Close. Scratch that need not be in the project goes to the OS temp folder instead | `.a/tmp/` |
 | `reminders` | When `on`, every `/A.*` command first checks To do and Deferred for items due today or overdue and says so in one line | `on` |
 | `activity_naming` | File path pattern inside `activity_folder`; may contain `/` to create month and day folders on demand. Tokens: `{yyyy}` `{mm}` `{dd}` `{date}` (uses `filename_date_format`) `{seq}` (zero-padded per day) `{type}` `{slug}` `{feature}` | `{yyyy}-{mm}/{yyyy}-{mm}-{dd}/{seq}-{slug}.md` |
 | `tracker_label` | Name of the external work-item system shown in headers and ledgers (`Work item`, `ADO`, `Jira`, `Issue`); `none` hides the field | `Work item` |

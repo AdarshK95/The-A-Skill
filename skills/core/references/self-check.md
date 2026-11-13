@@ -19,3 +19,5 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 14. The plan does what the user asked, as asked. Where it does not, the report says so and why, and asks — it does not substitute.
 15. Every path shown in chat is a full path from the root; every item has steps with done-conditions and the pointer's `N` is the real count; `## Requirements` is present at L/XL.
 16. This self-check was run and the line `Self-check: passed <date time>` was written to `## Log` before the report was shown.
+17. Nothing the agent created remains outside `$env:TEMP` / `.a/tmp/`; every temporary file is already deleted; *Your next step* contains no chore the agent caused.
+18. Every decision has a recommended answer with its reason, and the list ends with the "say go" line; the report states the solution quality (robust / tactical / quick fix) and names the next step with its default.

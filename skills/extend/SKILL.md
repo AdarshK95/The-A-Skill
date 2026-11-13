@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.extend — continue what exists
 
+**Place in the flow:** needs something already built (design, earlier feature or code) and a request; produces a report at Gate; next: Review (M+), Approve, Implement. See `../core/references/flow.md`.
+
 Runs the core spine (`../core/SKILL.md`). This file is its **Evaluate** step. `/A.reopen <activity file>` is the same skill with the earlier activity given explicitly.
 
 **Input:** what the user wants changed or continued, and optionally a pointer: a design document, an earlier activity file, or a feature name. With no pointer, find it: search the board (Finished and Planned), the implementation log and the activity folder for the feature's name; ask only if two candidates fit.

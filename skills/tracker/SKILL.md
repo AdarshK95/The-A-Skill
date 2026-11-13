@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.tracker — project overview
 
+**Place in the flow:** independent. See `../core/references/flow.md`.
+
 Aliases: `/A.flow`, `/A.overview`.
 
 1. Read the board. For every feature: Finished → its node is `finished` (green); In progress → `inprogress` (blue); Planned → `planned` (grey); Deferred → `deferred` (orange). A node whose colour disagrees with the board is corrected; say what was fixed.

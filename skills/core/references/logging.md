@@ -59,7 +59,7 @@ One per feature, at the path `activity_naming` gives (month folder, day folder, 
 | `## Links` | Both | Work item(s) under `tracker_label`; related features (continues / superseded by); central docs touched |
 | `## Event log` | Agent | **The backbone.** One line per step, `E<n> · <date>, <time> — …`, in the order it happened: the ask quoted, every file opened and what it showed, every command and output, every dead end and why, every change with path · symbol · line · before → after · reason, every doc updated, every validation and result. Nothing skipped. A correction is `E<m> … corrects E<n>`; a stopped drift is tagged `DRIFT` |
 
-Time is the ordering. If the exact minute is unknown, use the best available and keep it increasing. A later line never edits an earlier one; it supersedes it by reference, so a reader can see what was believed at E12 and why E20 overturned it.
+Time is the ordering: the time the event happened, not the time it was written. If the exact minute is unknown, use the best available and keep it increasing. A later line never edits an earlier one; it supersedes it by reference, so a reader can see what was believed at E12 and why E20 overturned it.
 
 ## Month ledger
 
@@ -71,6 +71,19 @@ Time is the ordering. If the exact minute is unknown, use the best available and
 ```
 
 The Summary column is the feature file's title, in the user's words, so a month reads as a story without opening a file.
+
+## Write points — batch the writing, not the recording
+
+Recording and writing are different things. Every event is **recorded** when it happens — its timestamp, what was done, what was seen — so the order and times in the log are true. The file is **written** at boundaries, in one consolidated pass, not after every tool call; thirty single-line edits to the activity file during one stage is wasted motion and clutter. Write when:
+
+- a **step** completes (its event lines, its `## Changes` lines, the pointer);
+- a **decision** is made — immediately and alone, because its loss costs the most (dual write);
+- a **finding** is logged as blocking — immediately;
+- a **stage** changes;
+- **before asking the user** anything, and **before any long-running action** (a reviewer run, a build, a migration);
+- **before the turn ends**, always: a session can end at any moment and a resuming session reads the file, not your memory.
+
+Between write points, hold the recorded events and write them together. The event log keeps the original timestamps, so a batch written at 05:40 still reads `E12 · 05:14 PM`, `E13 · 05:19 PM`, … in order. What is never deferred: decisions, blocking findings, the header's `Pointer` / `Next` when a turn is about to end.
 
 ## Decisions — dual write
 

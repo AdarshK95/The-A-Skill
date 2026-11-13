@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.resume — pick up where we left off
 
+**Place in the flow:** needs a feature with a pointer; produces continuation at that pointer; next: whatever stage the pointer is in. See `../core/references/flow.md`.
+
 **Input:** optional — a feature number, title or file. With none, this is also what "where did we leave off, let's continue" means.
 
 1. **Read the shared folder** first: a handoff addressed to this feature, or a claim left by a cut-off session, changes where to resume; report it. Then **read the board** (`project_board`). Reminders, one line, if due.

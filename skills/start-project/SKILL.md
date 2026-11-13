@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # /A.start-project — make this folder a project
 
+**Place in the flow:** needs an installed skill and a folder; produces a project; next: describe what to build, or `/A.plan`. See `../core/references/flow.md`.
+
 Aliases: `/A.init`, `/A.setup`, `/A.initialize`. Safe to run again: existing files are kept and reported, never overwritten; the index row is refreshed.
 
 The method is installed once per machine; this command gives *one folder* its own memory. A workspace can hold many such folders. Everything the user does here afterwards — board, activity files, decisions, lessons — lives here and nowhere else (`../core/references/projects.md`).
@@ -19,7 +21,7 @@ The method is installed once per machine; this command gives *one folder* its ow
    - `project_name`: the folder name.
    - `areas`: top-level folders that hold code, named after their role (frontend, ui, web, backend, api, server, services, mcp, connectors, data, infra, tests…). None recognisable → `General`.
    - documentation: an existing docs folder (`docs`, `documentation`, `z_Documentation`, anything holding a decisions/implementation/API file) and its files, pointed at rather than duplicated; otherwise `docs/` with the defaults.
-   - `date_format` / `time_format`: the format already used in the existing docs if any; else the defaults.
+   - `date_format` / `time_format`: the format already used in the existing docs if any; else the values in `~/.a/settings.md`.
    - `tracker_label`: `ADO` when `AB#` patterns appear in docs or commits, `Jira` for `[A-Z]+-\d+` keys, `Issue` when a `.github` folder exists, else `Work item`.
    - `depends_on` / `provides`: empty unless the index lists other projects **and** this folder's code references one of them (imports, URLs, package names); then propose the dependency.
    - `gitignore`: on; paths already tracked by git are excluded from the block.
