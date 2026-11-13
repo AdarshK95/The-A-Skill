@@ -1,0 +1,13 @@
+{
+  "name": "the-a-skill",
+  "owner": {
+    "name": "AdarshK95"
+  },
+  "plugins": [
+    {
+      "name": "a",
+      "source": "./",
+      "description": "The A Skill: a development method as /A.* commands"
+    }
+  ]
+}
