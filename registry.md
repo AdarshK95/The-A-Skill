@@ -45,5 +45,9 @@ Every activity flows: **Read → Evaluate → Clarify → Report → Review → 
 
 | Command | Does |
 |---|---|
-| `/A.init` · `/A.setup` · `/A.initialize` | First time in a project: creates the config, docs and board, adds the always-on block |
+| `/A.start-project` · `/A.init` · `/A.setup` · `/A.initialize` | Make this folder a project: config, docs, board, shared folder, always-on block, and a row in the machine-wide index. Run once per folder you work in |
+| `/A.projects` | All projects on this machine and how they depend on each other |
+| `/A.skill-update` | Checks for a newer release of The A Skill itself; tells you installed vs latest; updates only after you say yes |
+| `/A.skill-uninstall` | Removes the skill's own files after you confirm; keeps every project's config, documentation, board and logs |
+| `/A.skill-repair` | Checks the skill's own installed files; reports missing or altered; restores only after you say yes |
 | `/A.help` · `/A.skills` · `/A.list` · `/A.tools` | Shows this page |

@@ -33,6 +33,8 @@ A claim whose `since` is older than `claim_stale_hours` (config, default 4) and 
 
 The folder is emptied by the receiver acting, never by the sender assuming.
 
+**Across projects:** a session in project A that needs something from project B writes its `waiting on` row in **B's** shared folder (path from `~/.a/projects.md`), with the reference naming A's feature file and path. B's next session reports it at Start like any other handoff and writes `done` there; A's session picks it up from B's folder. Only a declared dependency (`depends_on`) justifies writing in another project's folder.
+
 ## Notes — warnings and requests
 
 Short, addressed, dated: `| <from> | <to or all> | <note> | <time> |`. Typical: "don't touch `lib/range.ts` until I release it", "I changed `Order.total` from number to string — re-read before you use it", "lines 40–90 of `api/index.ts` are mid-rewrite". The addressed session removes the row once it has read and acted on it; `all` notes are removed by the writer when no longer true.

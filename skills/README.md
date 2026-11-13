@@ -12,13 +12,17 @@ Each folder holds one `SKILL.md`. Every command's wrapper (in `../commands/`) po
 | `drift/` | /A.drift — documents and decisions versus code |
 | `extend/` | /A.extend and /A.reopen — continue or change what exists |
 | `help/` | /A.help — show the command list |
-| `init/` | /A.init — set a project up (required before first use) |
+| `start-project/` | /A.start-project (aliases init, setup, initialize) — make this folder a project; register it in the machine-wide index |
+| `projects/` | /A.projects — all projects on this machine and how they depend on each other |
 | `map/` | /A.map — map an existing codebase |
 | `plan/` | /A.plan — design and build something new |
 | `resume/` | /A.resume — continue at the exact step work stopped |
 | `review/` | /A.review — triage an outside reviewer's comments |
 | `simplify/` | /A.simplify — behaviour-preserving cleanup of recently modified code |
 | `status/` | /A.status — where are we, from the files |
+| `skill-repair/` | /A.skill-repair — check the skill's own files against the release; restore after confirmation |
+| `skill-uninstall/` | /A.skill-uninstall — remove the skill's own files after confirmation; the user's work is never touched |
+| `skill-update/` | /A.skill-update — check for a newer release of the skill; update after confirmation |
 | `tracker/` | /A.tracker — the project overview diagram |
 
-Counts for verifying an install: **16 skill folders**, **13 reference files** in `core/references/`, **30 markdown files** under `skills/` including this one. The installer prints the number it copied.
+Counts for verifying an install: **20 skill folders**, **14 reference files** in `core/references/`, **35 markdown files** under `skills/` including this one. The installer prints the number it copied.

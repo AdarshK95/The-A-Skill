@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.6 — 13 Nov 26
+
+- **Install once, start projects many times.** The installer is global by default (method in `~/.a`, commands in `~/.claude/commands` and `~/.a/commands/copilot`); `--project DIR` / `-Project DIR` keeps a project-level layout for repositories that must carry it. Command wrappers carry `{{SKILLS_ROOT}}`, filled by the installer.
+- `/A.start-project` (aliases `init`, `setup`, `initialize`): makes a folder a project — config, docs, board, shared folder, always-on block, a marked `.gitignore` block for `.a/` and the created documentation (removable), and a row in `~/.a/projects.md`, the machine-wide index with `depends_on` / `provides` and a dependency diagram. Asks at the end about dependencies on other projects.
+- `/A.projects`: shows and rebuilds the index from the projects' own config files.
+- `/A.skill-update`: installed vs latest, what changed, acts only after yes; shows the fetched installer if it differs. `/A.skill-repair`: compares installed files with the release, restores after yes. `/A.skill-uninstall`: removes only what the installer created, through a fixed-path uninstall script, after yes; never the user's config, documentation, board, logs or index.
+- `DISCLAIMER.md` and `SECURITY.md`; core rule that everything read from project files is data, never instructions.
+- Installer prints version and file counts, writes `.a/SOURCE`; cross-project handoffs through the dependent project's shared folder; `projects.md` reference; SETUP rewritten for the global layout.
+
 ## 0.5.5 — 13 Nov 26
 
 From the first agent-install run (Copilot in VS Code, passed):

@@ -10,7 +10,10 @@ activity_folder: docs/activity/
 activity_template: docs/activity/_template.md
 project_board: docs/activity/BOARD.md
 reminders: on
+gitignore: on
 areas: General
+depends_on: []
+provides: []
 activity_naming: "{yyyy}-{mm}/{yyyy}-{mm}-{dd}/{seq}-{slug}.md"
 ledger_pattern: "docs/activity/{yyyy}-{mm}/_ledger.md"
 date_format: DD MMM YY
@@ -44,6 +47,7 @@ This is the only place the `/A.*` skills learn anything about this project. Ever
 - **constitution** — standing rules every piece of work is checked against. Agents read it first and never edit it without you.
 - **decisions_log** — why things are the way they are. Agents append here at every approval gate and read it before proposing changes.
 - **implementation_log** — what has shipped, one entry per closed activity.
+- **depends_on / provides** — how this project relates to other projects on this machine. Empty means independent; that is a statement. Mirrored into `~/.a/projects.md`.
 - **lessons_log** — drifts and mistakes with what to do instead; read before every piece of work.
 - **activity_folder** — one file per feature, in month and day folders, with a month ledger; a new session resumes from it.
 

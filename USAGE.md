@@ -2,6 +2,10 @@
 
 You describe work; the agent investigates, reports, waits for your approval, builds exactly that, verifies it, and logs everything in your project's files. You can type commands, or just talk — auto mode picks the path.
 
+## Projects
+
+The skill is installed once on your machine. A folder becomes a project when you run `/A.start-project` in it; from then on everything done there is that project's memory — board, logs, decisions — and nothing else's. Start as many projects as you like. If two projects work together (an MCP server and the frontend that calls it), say so in each one's `.a/project.md` under `depends_on` and `provides`; `/A.projects` shows all projects on the machine and how they connect. A project that documents no dependency is independent — that is the statement.
+
 ## The shape of a piece of work
 
 **Area › Feature › Item › Step.** A *feature* is a board topic with its own file (numbered 7, 8, 9 …). Inside it are *items* (7.1, 7.2 …): the planned build, plus any bugfix, review or change that comes up. Each item has *steps*. The feature's header always says which step work stopped at and what the next concrete action is.
@@ -95,4 +99,4 @@ Everything is plain markdown in your repository. Any agent, any model, any sessi
 
 ## Tuning
 
-`.a/project.md` holds every path, your areas, date and time formats, which ledgers close updates, the review floor, and project rules. `/A.init` writes it; edit it any time. Field reference: `.a/skills/core/references/config-schema.md`.
+`.a/project.md` holds every path, your areas, which projects this one depends on, date and time formats, which ledgers close updates, the review floor, and project rules. `/A.start-project` writes it; edit it any time. Field reference: `.a/skills/core/references/config-schema.md`.

@@ -1,48 +1,50 @@
 # Setup
 
+Before installing, read `DISCLAIMER.md` and `SECURITY.md`. The installer is a short script; read it too.
+
 For a person, or for an agent asked to "install this repo into my project". Steps are the same.
 
-## What gets installed where
+## How it is laid out
 
-| In your project | What | Why |
+**Install once per machine. Start projects per folder.**
+
+| Where | What | Why |
 | --- | --- | --- |
-| `.a/skills/` | The method (core spine, auto, plan, extend, bugfix, review, resume, status, board, tracker, close, init, help) | Both hosts read the skills from here by path |
-| `.a/templates/` | Config, board, docs and always-on templates | `/A.init` creates project files from these |
-| `.a/registry.md`, `.a/VERSION` | Command list; installed version | `/A.help`; upgrade checks |
-| `.claude/commands/A.*.md` | One file per command | Claude Code shows them as `/A.plan`, `/A.bugfix`, … |
-| `.github/prompts/A.*.prompt.md` | One file per command | Copilot in VS Code shows them as `/A.plan`, `/A.bugfix`, … |
+| `~/.a/skills/`, `~/.a/templates/`, `~/.a/registry.md`, `~/.a/VERSION`, `~/.a/SOURCE` | The method, templates, command list, version, origin | One copy; `/A.skill-update` keeps it current |
+| `~/.a/projects.md` | Index of every project on this machine and their dependencies | `/A.projects`; read at the start of every piece of work |
+| `~/.claude/commands/A.*.md` | One file per command | Claude Code shows `/A.plan`, `/A.bugfix`, … in every folder |
+| `~/.a/commands/copilot/A.*.prompt.md` | One file per command | Copilot in VS Code, after adding that folder to `chat.promptFilesLocations` |
+| **Inside each project:** `.a/project.md`, the docs it names, the board, `.a/shared/`, the always-on block in `CLAUDE.md` / `AGENTS.md` / `.github/copilot-instructions.md` | That project's memory | Created by `/A.start-project`, never by the installer |
 
-Created later by `/A.init`, with your answers: `.a/project.md` (config), the docs the config names, the board, and the always-on block appended to `CLAUDE.md`, `AGENTS.md` and `.github/copilot-instructions.md`.
+Project-level install (`install.sh --project DIR` / `install.ps1 -Project DIR`) puts the method and commands inside one repository instead, for teams that want it to travel with the code. Not both for the same folder.
 
 ## Install
 
 ### A — ask your agent
 
-In a chat opened at your project root:
+In any chat:
 
-> Install https://github.com/AdarshK95/The-A-Skill into this project following its SETUP.md. Clone it to a temporary folder, run its install script against this project, then tell me what was installed.
-
-The agent runs section B, then stops. Installing does not set the project up: `/A.init` is a separate, required step that you run yourself (the agent should not run it unless asked, because it makes decisions about where your documentation lives). If the agent cannot run scripts, it copies the files listed above by hand.
+> Install https://github.com/AdarshK95/The-A-Skill following its SETUP.md. Clone it to a temporary folder, run its install script (global, the default), then tell me what was installed. Do not run /A.start-project; I will.
 
 ### B — script
 
 ```sh
 git clone https://github.com/AdarshK95/The-A-Skill /tmp/the-a-skill
-sh /tmp/the-a-skill/install.sh /path/to/your/project
+sh /tmp/the-a-skill/install.sh
 ```
 
 PowerShell:
 
 ```powershell
 git clone https://github.com/AdarshK95/The-A-Skill $env:TEMP\the-a-skill
-& "$env:TEMP\the-a-skill\install.ps1" -Dest C:\path\to\your\project
+& "$env:TEMP\the-a-skill\install.ps1"
 ```
 
-Re-running updates the method and the commands. It never touches `.a/project.md` or your documents.
+Re-running updates the method and the commands. It never touches any project's `.a/project.md` or documents.
 
 ### C — by hand
 
-Copy `skills/` → `.a/skills/`, `templates/` → `.a/templates/`, `registry.md` and `VERSION` → `.a/`, `commands/claude/*` → `.claude/commands/`, `commands/copilot/*` → `.github/prompts/`.
+Copy `skills/` → `~/.a/skills/`, `templates/` → `~/.a/templates/`, `registry.md` and `VERSION` → `~/.a/`, `templates/projects.md` → `~/.a/projects.md`, `commands/claude/*` → `~/.claude/commands/`, `commands/copilot/*` → `~/.a/commands/copilot/`. In every copied command file replace `{{SKILLS_ROOT}}` with the full path of `~/.a/skills`.
 
 ### D — Claude Code plugin (optional)
 
@@ -55,23 +57,21 @@ Plugin commands are namespaced by Claude Code: `/a:A.plan` instead of `/A.plan`.
 
 ## Then
 
-1. Open the **project folder itself** as the workspace root. The commands live in that folder's `.github/prompts` and `.claude/commands`; from a parent folder or a multi-root workspace they are not visible.
-2. Start a **new chat** (hosts load commands at startup; in VS Code, Reload Window also works).
-3. Run `/A.init` — **required**, not optional: it creates `.a/project.md`, and every command stops without it. Answer its questions: your project's areas, where docs should live, date format if you have one.
+1. **Copilot in VS Code only:** Settings → search `promptFilesLocations` → add the Copilot commands folder the installer printed (`~/.a/commands/copilot`) → Reload Window. Claude Code needs nothing.
+2. Open the folder you want to work in as the workspace root. Start a **new chat**.
+3. Run `/A.start-project`. It asks about your areas, where docs should live, date format, and whether this project depends on or provides something to another project. It creates only what is missing and registers the project in `~/.a/projects.md`.
 4. Run `/A.help` to confirm the commands resolve.
-
-The installer prints the number of files it wrote in each location; compare with the counts in `skills/README.md` to confirm nothing was dropped.
+5. Repeat 2–3 in every folder you want as a separate project. One repository with parallel parts (UI, backend, API) is **one** project with areas; separate repositories are separate projects. Full guidance: `skills/core/references/projects.md`.
 
 ## Verify
 
-- `/A.help` prints the command table.
-- `.a/project.md` exists and its paths point where you expect.
-- The board file the config names exists with your areas.
-- `CLAUDE.md` / `.github/copilot-instructions.md` contain the block between `A-skill: begin` and `A-skill: end`.
+- `/A.help` prints the command table in any folder.
+- In a started project: `.a/project.md` exists and its paths point where you expect; the board file exists with your areas; `CLAUDE.md` / `.github/copilot-instructions.md` contain the block between `A-skill: begin` and `A-skill: end`.
+- `/A.projects` lists the project.
 
 ## Command names on your host
 
-Both hosts derive the command from the file name, so `A.plan.md` → `/A.plan`. If your host lowercases command names, type `/a.plan`; the files still resolve. If a host rejects the dot, rename the wrapper files to `A-plan.md` (and the prompt files likewise); nothing else references the wrapper names.
+Both hosts derive the command from the file name, so `A.plan.md` → `/A.plan`. If `/A.*` commands do not appear in Copilot after the global install, check the `chat.promptFilesLocations` setting from step 1 and Reload Window. If your host lowercases command names, type `/a.plan`; the files still resolve. If a host rejects the dot, rename the wrapper files to `A-plan.md` (and the prompt files likewise); nothing else references the wrapper names.
 
 ## Install test protocol
 
@@ -79,7 +79,7 @@ Run once per host when adopting or upgrading, in a scratch copy of a real projec
 
 1. Fresh clone; install by the agent sentence (A) in one host and by script (B) in the other; note the time to a working `/A.help`.
 2. Casing and dots: does `/A.plan` autocomplete as typed, as `/a.plan`, or not at all? If not at all, apply the rename in "Command names on your host" and note it.
-3. `/A.init` on a non-empty repo: did it find existing docs and point at them? Were its questions clear to someone who has not read this repo? Did it offer `/A.map`?
+3. `/A.start-project` on a non-empty repo: did it find existing docs and point at them? Were its questions clear to someone who has not read this repo? Did it offer `/A.map`?
 4. Run `tests/01` and `tests/05`. Then run the isolation probe (`.a/skills/core/references/hosts.md`) and record its result.
 5. File what failed as issues on this repository with the host, version and transcript excerpt.
 
@@ -89,8 +89,16 @@ The web uploader takes at most 100 files per commit and refuses files or folders
 
 ## Upgrade
 
-Re-run the install script from a fresh clone. Compare `.a/VERSION` before and after. Read `CHANGELOG.md` for config keys added; `/A.init` will propose new keys and write nothing without you.
+In the project, run `/A.skill-update`. It compares `.a/VERSION` with the repository, shows the changelog entries in between, re-runs the installer, and proposes any new config keys without writing them. Or do the same by hand: re-run the install script from a fresh clone and compare `.a/VERSION` before and after.
+
+## Repair
+
+A command fails to load, or a file under `.a/` or the command folders was changed by mistake: run `/A.skill-repair`. It compares the installed files with the release, reports what is missing or altered, and restores only after you confirm. Your config and documents are never touched.
 
 ## Uninstall
 
-Delete `.a/`, `.claude/commands/A.*.md`, `.github/prompts/A.*.prompt.md`, and the block between the `A-skill` markers in your instruction files. Your documentation and board stay; they are yours.
+Run `/A.skill-uninstall`, or the script directly: `~/.a/templates/uninstall.ps1 -Yes` (`sh ~/.a/templates/uninstall.sh --yes`; add `-Project <dir>` / `--project <dir>` for a project-level install). Without `-Yes` it only lists what it would remove. It removes exactly what the installer created: the method, templates, registry, version, source note, and the `/A.*` command files. It never touches any project's `.a/project.md`, `.a/shared/`, documentation, board, activity files, decisions, lessons, or `~/.a/projects.md` — that is your work. If you also want the `A-skill` block out of a project's instruction files, `/A.skill-uninstall` offers that as a separate question.
+
+## Git and the documentation
+
+`/A.start-project` adds `.a/` and the documentation paths it created to the project's `.gitignore` in a marked block, so agent metadata and working notes stay out of commits by default. It tells you the exact lines. Remove the block if you want the documentation committed — many teams do, for shared history. Paths already tracked by git are never added.

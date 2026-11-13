@@ -17,7 +17,7 @@ The project's files are the memory: they outlive this session, this model and th
 
 ## Project board
 
-One file (`project_board` in config), created by `/A.init` from `templates/board.md`. Grouped by **Area**. Features are blocks; their items are rows under the block.
+One file (`project_board` in config), created by `/A.start-project` from `templates/board.md`. Grouped by **Area**. Features are blocks; their items are rows under the block.
 
 | Section | Holds | Moves |
 |---|---|---|

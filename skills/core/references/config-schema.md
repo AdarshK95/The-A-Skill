@@ -1,13 +1,15 @@
 # Project config — `.a/project.md`
 
-The only file that knows anything about the project. The skill never contains a project name, path or tool; it reads them from here. `/A.init` creates it from `templates/project.md` and asks the user to confirm each value.
+The only file that knows anything about the project. The skill never contains a project name, path or tool; it reads them from here. `/A.start-project` creates it from `templates/project.md` and asks the user to confirm each value.
 
 ## Fields
 
-| Key | Meaning | Default from `/A.init` |
+| Key | Meaning | Default from `/A.start-project` |
 |---|---|---|
 | `schema_version` | Version of this config shape, so a newer skill can detect an older config and say what to migrate | `1` |
-| `project_name` | Used only in log entries and chat | folder name |
+| `project_name` | The project's name in logs, chat, and the machine-wide projects index (`~/.a/projects.md`); unique on this machine | folder name |
+| `depends_on` | Other projects this one uses, by `project_name`, each with one line on what it uses (for example `api-backend: REST contract in docs/api.md`). Empty means independent — and that is a statement, not an omission | empty |
+| `provides` | What this project offers to others, one line each (a contract, a package, an MCP server). Read by dependents' sessions when their work touches it | empty |
 | `docs_root` | Folder that holds the project's living documentation | `docs/` |
 | `constitution` | Standing rules every phase gates against. Read whole in Phase 0 | `docs/constitution.md` |
 | `decisions_log` | Append-only log of decisions with reasons. Searched in Phase 0, appended at every gate | `docs/decisions.md` |
@@ -16,9 +18,10 @@ The only file that knows anything about the project. The skill never contains a 
 | `activity_folder` | Where per-activity files live | `docs/activity/` |
 | `activity_template` | Body template for a new activity file (the skill writes the status header above it) | `docs/activity/_template.md` |
 | `project_board` | The project board: Planned / In progress / Finished tables, Deferred, To do, and the overview diagram. Updated at every phase or step change; what parallel sessions and the user read instead of each other's files | `docs/activity/BOARD.md` |
-| `areas` | The project's sections, used as the Area column on the board and as subgraphs in the overview (for example `UI, Backend, API, Data`). `/A.init` asks for them; the agent asks once when an activity fits none | `General` |
+| `areas` | The project's sections, used as the Area column on the board and as subgraphs in the overview (for example `UI, Backend, API, Data`). `/A.start-project` asks for them; the agent asks once when an activity fits none | `General` |
 | `shared_folder` | Live coordination between parallel sessions: claims, handoffs, notes (`shared.md`). Empty means nothing in flight | `.a/shared/` |
 | `claim_stale_hours` | A claim older than this with no newer activity from its session may be taken over, with a note | `4` |
+| `gitignore` | `on`: `/A.start-project` adds `.a/` and the documentation paths it created to the project's `.gitignore` (marked block, removable); `off`: touches `.gitignore` never | `on` |
 | `reminders` | When `on`, every `/A.*` command first checks To do and Deferred for items due today or overdue and says so in one line | `on` |
 | `activity_naming` | File path pattern inside `activity_folder`; may contain `/` to create month and day folders on demand. Tokens: `{yyyy}` `{mm}` `{dd}` `{date}` (uses `filename_date_format`) `{seq}` (zero-padded per day) `{type}` `{slug}` `{feature}` | `{yyyy}-{mm}/{yyyy}-{mm}-{dd}/{seq}-{slug}.md` |
 | `tracker_label` | Name of the external work-item system shown in headers and ledgers (`Work item`, `ADO`, `Jira`, `Issue`); `none` hides the field | `Work item` |
@@ -26,7 +29,7 @@ The only file that knows anything about the project. The skill never contains a 
 | `date_format` | How dates are written inside files and in chat. Tokens: `DD` `MMM` `MM` `YY` `YYYY`, spaces and punctuation kept | `DD MMM YY` (e.g. `13 Nov 26`) |
 | `time_format` | `12h` → `hh:mm AM/PM`; `24h` → `HH:mm` | `12h` |
 | `filename_date_format` | Date format used only for the `{date}` token in file and folder names, which are not prose and may sort chronologically | `YYYY-MM-DD` |
-| `always_on_files` | Host instruction files `/A.init` appends the always-on block to, so every turn starts knowing this project uses the workflow | `CLAUDE.md, AGENTS.md, .github/copilot-instructions.md` |
+| `always_on_files` | Host instruction files `/A.start-project` appends the always-on block to, so every turn starts knowing this project uses the workflow | `CLAUDE.md, AGENTS.md, .github/copilot-instructions.md` |
 | `ledger_pattern` | Optional periodic index (for example a monthly ledger). Tokens: `{yyyy}` `{mm}`. `none` disables it | `none` |
 | `close_updates` | Which project-level files `/A.close` touches, in order | `implementation_log, api_docs, ledger` |
 | `review.default_floor` | Lowest tier the project allows. `S` means the rubric decides freely | `S` |
@@ -41,7 +44,7 @@ The only file that knows anything about the project. The skill never contains a 
 
 ## The central repository
 
-Everything the config names forms one documentation set any agent can read. The default `/A.init` layout, extendable by adding keys:
+Everything the config names forms one documentation set any agent can read. The default `/A.start-project` layout, extendable by adding keys:
 
 | Default file | Holds | Written |
 | --- | --- | --- |
@@ -56,7 +59,7 @@ Everything the config names forms one documentation set any agent can read. The 
 | `docs/activity/<yyyy>-<mm>/_ledger.md` | One row per feature that month | At creation and every status change |
 | `docs/activity/<yyyy>-<mm>/<yyyy>-<mm>-<dd>/<seq>-<slug>.md` | The feature: summary, event log, items, findings, changes | Continuously |
 
-Projects that already have numbered files (`01.Implementation logs.md`, `02.API Documentation.md`, `03.Decisions.md` …) point the keys at them; `/A.init` offers to add the missing ones with the next numbers.
+Projects that already have numbered files (`01.Implementation logs.md`, `02.API Documentation.md`, `03.Decisions.md` …) point the keys at them; `/A.start-project` offers to add the missing ones with the next numbers.
 
 ## Resolution
 
@@ -98,6 +101,10 @@ shared_folder: .a/shared/
 claim_stale_hours: 4
 drift:
   cadence_days: 7
+depends_on:
+  - api-backend: REST contract in documentation/02.API Documentation.md
+provides:
+  - Web UI consuming the API; nothing other projects import
 rules: |
   Every fix ships for all environments; no dev-only or partial fixes.
   Cache invalidation is version-based, never TTL-based.
