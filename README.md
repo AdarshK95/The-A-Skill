@@ -7,8 +7,8 @@ The A Skill gives a coding agent a working method instead of a prompt. You descr
 ## 60-second start
 
 1. Install into your project (pick one):
-   - Ask your agent: *"Install https://github.com/<owner>/<repo> into this project following its SETUP.md"*
-   - Or: `git clone https://github.com/<owner>/<repo> /tmp/a && sh /tmp/a/install.sh .` (PowerShell: `.\install.ps1 -Dest .`)
+   - Ask your agent: *"Install https://github.com/AdarshK95/The-A-Skill into this project following its SETUP.md"*
+   - Or: `git clone https://github.com/AdarshK95/The-A-Skill /tmp/the-a-skill && sh /tmp/the-a-skill/install.sh .` (PowerShell: `.\install.ps1 -Dest .`)
 2. Start a new chat in your agent and run `/A.init`. It asks a few questions and sets up the config, docs and board.
 3. Describe what you want, or run `/A.plan <idea>`. You get a report to approve before anything is built.
 4. Any morning: `/A.status` → "where were we?" answered from the files.
@@ -34,6 +34,9 @@ The A Skill gives a coding agent a working method instead of a prompt. You descr
 See [registry.md](registry.md) — also shown by `/A.help`.
 
 ## Documentation
+
+Repository: https://github.com/AdarshK95/The-A-Skill · Issues and install reports: https://github.com/AdarshK95/The-A-Skill/issues
+
 
 - [SETUP.md](SETUP.md) — install, by agent or by hand, per host; verify; uninstall
 - [USAGE.md](USAGE.md) — how to work with it day to day, with examples

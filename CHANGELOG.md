@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.3 — 13 Nov 26
+
+- Repository is https://github.com/AdarshK95/The-A-Skill; placeholders replaced in README, SETUP, LICENSE and the plugin manifests; plugin manifest version and marketplace name corrected; maintainer note on web uploads added to SETUP.
+
 ## 0.5.2 — 13 Nov 26
 
 - Project named **The A Skill**; README intro rewritten; always-on marker renamed `A-skill: begin/end`.

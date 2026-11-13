@@ -20,22 +20,22 @@ Created later by `/A.init`, with your answers: `.a/project.md` (config), the doc
 
 In a chat opened at your project root:
 
-> Install https://github.com/<owner>/<repo> into this project following its SETUP.md. Clone it to a temporary folder, run its install script against this project, then tell me what was installed.
+> Install https://github.com/AdarshK95/The-A-Skill into this project following its SETUP.md. Clone it to a temporary folder, run its install script against this project, then tell me what was installed.
 
 The agent runs section B. If it cannot run scripts, it copies the files listed above by hand.
 
 ### B — script
 
 ```sh
-git clone https://github.com/<owner>/<repo> /tmp/a-workflow
-sh /tmp/a-workflow/install.sh /path/to/your/project
+git clone https://github.com/AdarshK95/The-A-Skill /tmp/the-a-skill
+sh /tmp/the-a-skill/install.sh /path/to/your/project
 ```
 
 PowerShell:
 
 ```powershell
-git clone https://github.com/<owner>/<repo> $env:TEMP\a-workflow
-& "$env:TEMP\a-workflow\install.ps1" -Dest C:\path\to\your\project
+git clone https://github.com/AdarshK95/The-A-Skill $env:TEMP\the-a-skill
+& "$env:TEMP\the-a-skill\install.ps1" -Dest C:\path\to\your\project
 ```
 
 Re-running updates the method and the commands. It never touches `.a/project.md` or your documents.
@@ -47,8 +47,8 @@ Copy `skills/` → `.a/skills/`, `templates/` → `.a/templates/`, `registry.md`
 ### D — Claude Code plugin (optional)
 
 ```
-claude plugin marketplace add <owner>/<repo>
-claude plugin install a@a-workflow
+claude plugin marketplace add AdarshK95/The-A-Skill
+claude plugin install a@the-a-skill
 ```
 
 Plugin commands are namespaced by Claude Code: `/a:A.plan` instead of `/A.plan`. Use B or C for bare `/A.*` names.
@@ -79,6 +79,10 @@ Run once per host when adopting or upgrading, in a scratch copy of a real projec
 3. `/A.init` on a non-empty repo: did it find existing docs and point at them? Were its questions clear to someone who has not read this repo? Did it offer `/A.map`?
 4. Run `tests/01` and `tests/05`. Then run the isolation probe (`.a/skills/core/references/hosts.md`) and record its result.
 5. File what failed as issues on this repository with the host, version and transcript excerpt.
+
+## Note for maintainers uploading through the GitHub website
+
+The web uploader takes at most 100 files per commit and refuses files or folders whose name starts with a dot. Upload in batches (root files + `skills` + `templates` + `tests`; then `commands/claude`; then `commands/copilot`), and create `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` with **Add file → Create new file**, typing the folder in the file name. Pushing with git has neither limit.
 
 ## Upgrade
 
