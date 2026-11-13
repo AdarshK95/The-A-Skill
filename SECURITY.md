@@ -34,6 +34,10 @@ Markdown instructions that a coding agent follows, plus two installer scripts (`
 
 **Modified copies.** A fork or a hand-edited `.a/skills` file can say anything. Install from this repository, and run `/A.skill-repair` if behaviour looks wrong.
 
+## Scratch and sampled data
+
+When a command samples live data (conversations, records, logs) to answer a question, the copy goes to the project's ignored `.a/tmp/` or the OS temp folder and is deleted before the agent reports — the agent never asks the user to delete it, and never leaves users' data lying in a folder outside the project.
+
 ## Secrets
 
 Never put API keys, tokens or passwords in `.a/project.md`, the board, activity files or the shared folder. They are plain text in your repository. The skill never asks for them.
