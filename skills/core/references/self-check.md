@@ -11,7 +11,8 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 7. Every option offered to the user has trade-offs on each side, the alternatives stay visible, and one line says which way you lean and why.
 11. The chat summary is in plain language: no path or symbol the user did not ask for; it ends with the Done / Not done / Your next step block, and every item in that block names a file, a record or a command the user can check.
 12. *Reuse candidates* is filled for every new symbol, route, query or config path the plan adds, and every *none* has a reason.
-13. No step adds a second path to something an existing path already reaches, and no step introduces a literal that varies (URL, key, limit, path, label) outside config.
+13. Anything the plan asks the user to run or install has passed the ladder: an existing tool or a single standard command was considered first and named if it suffices.
+14. No step adds a second path to something an existing path already reaches, and no step introduces a literal that varies (URL, key, limit, path, label) outside config.
 8. The tier's signals each name a file or a decision.
 9. Assumptions and parked clarifications are listed, not buried.
 10. The chat summary fits one screen and names the decisions the user must make.

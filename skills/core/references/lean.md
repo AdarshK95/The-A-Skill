@@ -16,6 +16,8 @@ Stop at the first rung that holds, after Read is complete:
 
 The ladder shortens the solution, never the reading.
 
+**The ladder applies to anything you hand the user, not only to code.** A check, a script, a procedure or a tool you are about to write for them is climbed the same way: does an existing tool already answer the question (`git status` is a file comparison; a diff is a review; a folder listing is an inventory)? If it does, name the tool and the one command, and write nothing. A custom script that reproduces `git status` is the same failure as a custom cache that reproduces the standard library.
+
 ## Reuse search — mandatory in Evaluate
 
 Duplicate *purpose* is the risk, not duplicate text: agents re-implement rather than copy. Before any new function, endpoint, component, query, helper or config path is proposed:
