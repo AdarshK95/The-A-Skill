@@ -65,7 +65,7 @@ When a group has more than one lens, merge their findings before resolving: drop
 
 ## Between groups: consistency pass
 
-After a group's findings are resolved and before the next group runs, the author re-reads the whole report for internal consistency: one name per concept, one rule per behaviour, no sentence that contradicts another. Resolutions are folded into the text they change, never appended as amendments (`report-schema.md › Revising`). A second group reviewing a self-contradictory document reports the contradictions, not the design.
+After a group's findings are resolved and before the next group runs, the author re-reads the whole report for internal consistency: one name per concept, one rule per behaviour, no sentence that contradicts another. Resolutions are folded into the text they change, never appended as amendments (`report-schema.md › Revising`). The reground reflex runs here too (`lean.md › Reground`): did this group's fixes add structure the ask did not need, or change the premise? A second group reviewing a self-contradictory document reports the contradictions, not the design.
 
 ## Rounds (L and XL)
 

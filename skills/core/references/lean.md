@@ -45,6 +45,18 @@ An empty *Reuse candidates* section means the search was not run; the self-check
 - **Fewest files.** A new file needs a reason a reader would accept; a new folder needs two.
 - **Boring over clever.** Clever is what someone decodes at three in the morning.
 
+## Reground — the reflex, not the command
+
+The two full checks (`/A.plan.scope_check_drift_check`, `/A.plan.lean_overcomplication_check`) exist for when something has gone wrong. What keeps things from going wrong is a reflex that fires at every stage boundary and costs nothing when the answer is yes:
+
+1. **Scope** — does what I am about to do still serve the ask as stated? Is the type (`hierarchy.md`) still right for what this has become?
+2. **Lean** — is this the least structure that is still robust? Am I adding a path, a field, a state, a setting, a file that the ask did not need?
+3. **Premise** — has anything I learned since the start changed *why* we are doing this?
+
+All yes → silent. A no → one line ("this has grown past a fix — three elements now; scope check before I continue?") and then the full check, run by the agent when the answer is obvious, asked when it is not. Scope first when the type looks wrong; lean first when the plan looks heavy; both, in parallel, when a whole stage is in doubt. Fires at: the end of Evaluate, before Report, after each lens group's resolutions, per item in Build, before Realign, every auto advance.
+
+**Robust and lean are not opposites.** Robust is about correctness and failure handling: the cause addressed, every failure case handled with a clear message, a check that fails if it breaks. Lean is about not adding structure the ask did not need: no second path, no speculative setting, no one-implementation abstraction. The target is always the robust solution with the least code; when the two seem to pull apart, the plan has usually added structure in the name of robustness that robustness did not require.
+
 ## When not to be lean
 
 Never simplified away: validation at a trust boundary (anything from a user, a network, a file); error handling that prevents data loss or a silent wrong answer; authentication, authorization, secrets handling; accessibility basics; anything the user explicitly asked for. When the user insists on the full version, build it without re-arguing, and log the decision.

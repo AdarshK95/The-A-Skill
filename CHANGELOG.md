@@ -1,8 +1,12 @@
 # Changelog
 
-## 0.5.7 — 13 Nov 26
+Version numbers follow the scale of the change, decided per release: the third number for wording, rules and fixes inside existing commands; the second for a new or removed command, stage, reference or config key — anything an installed copy must re-learn; the first for a restructure that breaks existing projects' files (not before 1.0).
 
-Seamless setup.
+## 0.6.0 — 14 Nov 26
+
+Second-number release: the command set, the stages and the project schema changed. An installed copy needs `/A.skill.update` and a new chat.
+
+- **Reground** (`lean.md › Reground`, spine standing rule, build-check step 8, lens consistency pass, auto advance, self-check 23): scope, lean and premise asked silently at every stage boundary; one line and the full check when any is no. Robust and lean defined as the same target: the robust solution with the least code.
 
 - **Root cause is its own stage** (`/A.rootcause`, `.m` `.l` `.xl`; `rootcause.md`): understand and compartmentalize the user's account (symptom · expectation · their insights · what they want next); observe the real artifacts; reverse, forward and zoom-out lanes **in parallel, each blind to the others, each to an origin** (never the first candidate; cascades recorded as chains); a **coverage check** for gaps along the path, lateral and vertical, with targeted passes before reconciliation; reconcile; **confirm by a falsifiable test** (CONFIRMED / LIKELY / demoted / not found); XL adds a fresh critic on the confirmed cause. Output is a cause, never a fix; nothing is planned from a HYPOTHESIS. `plan.bugfix` is removed; `/A.plan` plans the fix from the report at the origin. Auto classifies any wrong behaviour with an unknown cause as root cause — the shape of a likely fix never decides it.
 

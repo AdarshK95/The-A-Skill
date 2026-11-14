@@ -1,6 +1,6 @@
 {
   "name": "a",
-  "version": "0.5.7",
+  "version": "0.6.0",
   "description": "The A Skill: plan, extend, bugfix and review with gates, logging and a project board. Commands: /A.plan, /A.bugfix, /A.status ... (namespaced /a:A.* when installed as a plugin; copy into the project for bare /A.*)",
   "commands": "./commands/claude"
 }

@@ -16,7 +16,7 @@ Look around it, every time, however small the step:
 
 6. **Wire it end to end.** Follow the path from where the request enters to where the result leaves, through the change. Does the new piece connect to the old pieces — is it called, does its output reach what needs it, is the dead old path removed?
 7. **Run the nearest check**, and when the step touched a contract, the consumers' checks too. No check exists → leave the smallest one that fails if this breaks.
-8. **Re-read the ask.** Does what now exists serve the original request, or a neighbour of it? Did this step add anything the plan did not name?
+8. **Reground** (`lean.md › Reground`): scope — does what now exists serve the original request, or a neighbour of it; did this step add anything the plan did not name? Lean — is this the least structure that is still robust? Premise — has what I learned building this changed why we are doing it? Silent when yes; one line and the full check when not.
 9. **Quality.** Is this the robust version or a quick fix? If a quick fix crept in, say so in the build finding with its ceiling, don't bury it.
 
 ## Failure handling is part of the step, not an afterthought

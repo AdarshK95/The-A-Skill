@@ -45,7 +45,7 @@ An activity opens when code will change or when analysis is to be kept. A `chat`
 
 Auto never reclassifies an open feature. The user changes type by command (`/A.rootcause` inside a feature opens an item) or by saying so.
 
-**4. Advance.** When the current stage's done-condition is met, move to the next stage and say it in one line ("Report ready — your decision on 2 items", "Approved — implementing step 1/5"). Stop at every gate the spine defines. Nothing past Approve runs on auto; the user's go is required every time.
+**4. Advance.** Reground first (`../core/references/lean.md › Reground`): scope, lean, premise — silent when yes, one line and the check when not. When the current stage's done-condition is met, move to the next stage and say it in one line ("Report ready — your decision on 2 items", "Approved — implementing step 1/5"). Stop at every gate the spine defines. Nothing past Approve runs on auto; the user's go is required every time.
 
 ## Commands as overrides
 

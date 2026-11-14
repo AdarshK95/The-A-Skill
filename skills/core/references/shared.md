@@ -25,6 +25,8 @@ Each entry is one table row, written by one session, with the session tag and a 
 
 A claim whose `since` is older than `claim_stale_hours` (config, default 4) and whose session has no newer board or header update is **stale**: the other session may take it over after writing a `notes.md` row saying so, and the user is told.
 
+**Taking a feature number is a board write.** Two sessions starting features in the same minute will take the same number. Before taking one: claim the board file in `claims.md` (file: the board, symbols: "next feature number"), re-read the board, take the number, write the block, release. A session that finds the board claimed waits for the release (seconds) rather than guessing. The same applies to any write of a shared index: the board, the month ledger, `~/.a/projects.md`.
+
 ## Handoffs — dependencies between sessions
 
 - **Waiting:** session B needs something session A is building. B writes `| <B> | waiting on | <A> | <feature.item or file:symbol> | <what B needs, in one line> | <time> |`, sets its own header `Status: waiting on <A>`, tells the user, and continues with unblocked steps or stops.

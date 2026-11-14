@@ -25,3 +25,4 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 20. The reply states the agent's own read of each instruction it acted on — agree / caveat / disagree with alternative / possible misunderstanding — in one line each.
 21. `### Elements touched` names every system part the plan changes, with existing ids or a proposed new element; the type stated matches the signals or is raised as a proposal.
 22. A plan that fixes a wrong behaviour names the root-cause report it plans from, with the cause at CONFIRMED or LIKELY; the change sits at the origin, not at a cascade link or the symptom.
+23. The reground questions were answered at this boundary: the plan still serves the ask as stated at its current type, adds no structure the ask did not need, and nothing learned has changed the premise.
