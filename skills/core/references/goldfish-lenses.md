@@ -63,6 +63,10 @@ A `zoom-out` finding that questions the **premise** of the design — "this buil
 
 When a group has more than one lens, merge their findings before resolving: drop duplicates (the same gap found by two lenses is one finding, credited to both), group by the part of the plan they concern, order by severity then confidence. Resolve Blockers and Majors; Lows are applied silently when trivial and otherwise listed, never discussed. Low-confidence findings are verified against the code before they get a verdict, and dropped with one line if the code does not bear them out. This is what keeps a five-lens group from producing twenty threads for the user: the user sees the merged, ordered result — Blockers and Majors only — and the Lows as a count.
 
+## Between groups: consistency pass
+
+After a group's findings are resolved and before the next group runs, the author re-reads the whole report for internal consistency: one name per concept, one rule per behaviour, no sentence that contradicts another. Resolutions are folded into the text they change, never appended as amendments (`report-schema.md › Revising`). A second group reviewing a self-contradictory document reports the contradictions, not the design.
+
 ## Rounds (L and XL)
 
 A **round** is one complete pass of the tier's lens groups (`sizing.md`) over the current report, with each group's findings resolved before the next group runs. After a round, the report has usually changed. A round is **clean** when no Blocker or Major was raised in it that is still unresolved (contested or declined with the user's agreement counts as resolved). Rounds continue until **two consecutive clean rounds**, or **five rounds**, or **churn** — a fix from a previous round is itself flagged and reverting it would resolve the new finding.
