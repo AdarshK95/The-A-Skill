@@ -32,11 +32,11 @@ You get: what the code supports today (cited), the idea assessed plainly, altern
 
 You get the design versus the code, every drift marked *doc is right / code is right / your call*, and the remaining work as steps.
 
-**Something broke**
+**Something went wrong**
 
-> `/A.plan.bugfix` export returns an empty file when the filter has no rows
+> `/A.rootcause` export returns an empty file when the filter has no rows
 
-You get the trace from symptom to origin, the root cause in one sentence, every caller of the function to be changed, the fix at the root, and what the fix itself could break. Then you say go.
+Before anything is planned: your account split into what you saw, what you expected, your own suspicions (each tested, none assumed), and what you want next (kept for later). Then the real artifacts, three passes run in parallel — backward from the error, forward from the entry, and a step back to the design — a check that nothing between them was skipped, and a test that confirms the cause. You get the cause with its confidence and condition, what was ruled out, and your suspicions each with a verdict — never a fix. Then `/A.plan` plans the fix exactly where the passes converged.
 
 **Reviewer comments**
 
@@ -52,7 +52,7 @@ Auto says "Treating this as a bug fix" and goes. Correct it with a command if it
 
 **Inside a feature, something else comes up**
 
-> `/A.plan.bugfix` while in the middle of a plan
+> `/A.rootcause` while in the middle of a plan
 
 Opens item 7.n inside the current feature, runs it through the same gate, returns to where you were. If it turns out feature-sized, the agent says so and makes it its own feature.
 

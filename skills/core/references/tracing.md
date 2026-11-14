@@ -29,6 +29,22 @@ One line per place in the traced path where data changes shape, is stored or cac
 
 Rules: each boundary gets a line in the report's *Impact*; a cache, permission, timestamp or concurrency boundary raises the tier.
 
+## 4. Forward pass — where could this error arise? (root cause)
+
+One row per stage from the entry point to the output, continuing past the first candidate.
+
+| # | Stage (`path:symbol`) | Input it receives | Condition under which the error could arise here | Evidence for / against |
+| --- | --- | --- | --- | --- |
+
+## 5. Coverage map — what was examined (root cause)
+
+One row per segment of the path (and the layer beneath it), marked by lane.
+
+| Segment | Layer beneath | Reverse | Forward | Zoom-out | Targeted | Could carry the error? |
+| --- | --- | --- | --- | --- | --- | --- |
+
+Reconciliation starts only when every segment that could carry the error is marked examined by at least one lane.
+
 ## How much to read
 
 Everything the three tables need, and nothing more. Breadth comes from search (every caller), depth from opening the hops. Stop reading when the tables are complete; do not stop before.

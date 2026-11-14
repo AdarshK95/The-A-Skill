@@ -6,7 +6,7 @@ Work is organized so that its size, its place in the system and its history are 
 | --- | --- | --- |
 | Project | One folder with `.a/project.md` | — |
 | Area | A section of the project (`areas` in config) | board grouping, map subgraph |
-| **Feature** | A board topic with its own activity file. Types: `feature` (something new), `change` (what exists, altered), `fix` (a standalone bug) | activity file, board block, map node |
+| **Feature** | A board topic with its own activity file. Types: `feature` (something new), `change` (what exists, altered), `fix` (a standalone bug — assigned only after `/A.rootcause` has named the cause; a wrong behaviour with an unknown cause is a root-cause investigation, not yet a fix) | activity file, board block, map node |
 | **Item** | A piece of work inside a feature: `build`, `change`, `fix`, `review` | section in the feature's file, row under its block |
 | Step | One unit of work with a done-condition | the item's step list |
 | **Element** | A named part of the *system* — a component, service, store, pipeline, adapter — that work is done *to*. Not work | `elements_registry` (`elements.md`) |

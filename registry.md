@@ -2,13 +2,19 @@
 
 Type `/A.` and keep typing: the picker filters on any word in a name (`/A.scope` and `/A.drift` both find the scope/drift check). No command typed means **auto** — say what you want and the right command runs. A mistyped command also lands in auto.
 
+## rootcause — find why, before deciding what
+
+| Command | Does |
+|---|---|
+| `/A.rootcause <what went wrong>` | Understand your account (symptom, expectation, your insights, what you want next — kept apart); observe the real artifacts; run reverse, forward and zoom-out passes in parallel, each to an origin; check coverage for gaps along the path, lateral and vertical; reconcile; confirm by a test. Output: the cause at CONFIRMED or LIKELY with its condition and chain, what was ruled out, your insights with verdicts — or an honest "not found" with what would find it. Never a fix |
+| `/A.rootcause.m` · `.l` · `.xl` | The same at the depth you choose; plain `/A.rootcause` chooses from the signals and escalates when a shallower pass doesn't close |
+
 ## plan — decide what to do
 
 | Command | Does |
 |---|---|
-| `/A.plan <idea>` | Plan something new: fit against the code, alternatives, steps, a report to approve |
+| `/A.plan <idea>` | Plan something new — or, from a root-cause report, plan the fix at the origin where the passes converged |
 | `/A.plan.realign <what>` | Realign the plan to what exists: continue or change built work; baseline, drift, remaining steps. Reopens a closed feature |
-| `/A.plan.bugfix <what broke>` | Trace to root cause, plan the fix at the root, analyze what the fix could break |
 | `/A.plan.scope_check_drift_check` | Scope check / drift check: has the work outgrown its type (promote or demote); has the plan drifted from the ask, or the code from the plan |
 | `/A.plan.lean_overcomplication_check` | Is the plan lean: duplication, speculative generality, reuse missed, hardcoding |
 

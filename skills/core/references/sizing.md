@@ -34,3 +34,7 @@ Lens prompts are in `goldfish-lenses.md`. Findings are handled with `resolve-pro
 ## Writing the tier
 
 In the status header: `Tier: L (signals: shared callers in api/handlers.ts, contract change on /v2/items, contradicts decision 2026-03-14 "version-based invalidation")`. The signals are what the user checks, so name the file or decision for each.
+
+## Root-cause depth
+
+`/A.rootcause` has its own depth table (`rootcause.md › Depth`), chosen from its own signals (cause unknown after the reverse lane, more than one element, intermittent, data- or environment-dependent, production, an untested user hypothesis). The review tier of the *fix* plan that follows is computed here as usual.

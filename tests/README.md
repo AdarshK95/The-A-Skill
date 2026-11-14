@@ -7,7 +7,7 @@ How to run one: open the fixture project in the host, install the current build,
 | # | Scenario | What it proves |
 | --- | --- | --- |
 | 01 | Plan on a small repo | Report before build; citations; options without a default; gate holds |
-| 02 | Bugfix with a shared caller | Trace to origin; caller inventory; tier raised; fix at the root; fix impact |
+| 02 | Root cause with a shared caller | Four boxes; reverse lane to the origin; confirmation test; hand-off to plan; fix at the root |
 | 03 | Review with one wrong comment | CONTEST with `path:symbol` evidence; FIX for the right one; nothing built before approval |
 | 04 | Resume from a vague Next | Pointer repaired from the step list; files verified against Last done; continues at the right step |
 | 05 | Where were we, in plain words | Reads board and headers; no claim from memory; one line per in-progress feature |

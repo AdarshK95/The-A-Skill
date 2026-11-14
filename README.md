@@ -23,6 +23,7 @@ This is a personal, experimental project, shared as is. Your agent acts on these
 | --- | --- |
 | **Auto mode** | No command needed. Say what you want; it picks plan / extend / bugfix / review, stays in the current stage, and stops at every approval. |
 | **One workflow** | Read → Evaluate → Clarify → Report → Review → Approve → Implement → Realign → Validate → Close. Each stage is a command. |
+| **Root cause first** | A wrong behaviour is diagnosed before it is planned: parallel passes to the origin, a coverage check, a confirming test. A cause, never a symptom treatment. |
 | **Gate** | Nothing is built until you approve a report that cites the code it describes. |
 | **Project board** | Planned · In progress · Finished · Deferred · To do, per area, plus an overview diagram coloured by state. |
 | **Exact resume** | Every feature carries a pointer to the step it stopped at and the next concrete action. |

@@ -12,6 +12,8 @@ Runs the core spine (`../core/SKILL.md`). This file is its **Evaluate** step.
 
 **Input:** the user's idea, in their words. Everything after the command is the request. If there is nothing after it, ask for the idea in one line.
 
+**From a root-cause report:** when the subject (chat-first) is a `/A.rootcause` report at CONFIRMED or LIKELY, this is a **fix plan**: the ask is the user's expectation box; the change goes where the lanes converged (the origin), never at a cascade link, never at the symptom; the report's *Not the cause* section is a constraint on the plan; the user's wished-for fix is evaluated against the cause and kept, adapted, or set aside with the reason. The fix carries a check that fails if the cause returns. A report at HYPOTHESIS is sent back to `/A.rootcause`, not planned.
+
 ## Evaluate
 
 After Read has traced the code the idea touches:

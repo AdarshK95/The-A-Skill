@@ -13,7 +13,7 @@ For a person, or for an agent asked to "install this repo into my project". Step
 | `~/.a/skills/`, `~/.a/templates/`, `~/.a/registry.md`, `~/.a/VERSION`, `~/.a/SOURCE` | The method, templates, command list, version, origin | One copy; `/A.skill.update` keeps it current |
 | `~/.a/projects.md` | Index of every project on this machine and their dependencies | `/A.project.list`; read at the start of every piece of work |
 | `~/.a/settings.md` | Your behaviour settings: verbosity, interrupts, review tier limits, date formats | Edit any time; projects may override |
-| `~/.claude/commands/A.*.md` | One file per command | Claude Code shows `/A.plan`, `/A.plan.bugfix`, … in every folder |
+| `~/.claude/commands/A.*.md` | One file per command | Claude Code shows `/A.rootcause`, `/A.plan`, … in every folder |
 | `~/.a/commands/copilot/A.*.prompt.md` | One file per command | Copilot in VS Code, after adding that folder to `chat.promptFilesLocations` |
 | **Inside each project:** `.a/project.md`, the docs it names, the board, `.a/shared/`, the always-on block in `CLAUDE.md` / `AGENTS.md` / `.github/copilot-instructions.md` | That project's memory | Created by `/A.project.start`, never by the installer |
 

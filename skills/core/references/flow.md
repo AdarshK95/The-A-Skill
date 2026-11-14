@@ -6,7 +6,8 @@ Every command knows three things: what it **needs** to exist, what it **produces
 
 | Command | Needs | Produces | Natural next |
 | --- | --- | --- | --- |
-| `/A.plan` · `/A.plan.realign` · `/A.plan.bugfix` | a request (chat or argument); a project | a report at Gate | Review (M+) → Approve → Implement |
+| `/A.rootcause` (`.m` `.l` `.xl`) | a reported wrong behaviour; a project | a root-cause report: CONFIRMED / LIKELY with its condition, or not-found with coverage | `/A.plan` from the report (fix at the origin) |
+| `/A.plan` · `/A.plan.realign` | a request (chat or argument), or a root-cause report; a project | a report at Gate | Review (M+) → Approve → Implement |
 | Clarify (inside `/A.plan`) | an ask with open questions | answers / assumptions | the report |
 | `/A.review` (stage; `.m` `.l` `.xl` choose the effort) | something to review: a report, a plan, a build | findings resolved; a revised report | Approve, or back to the report if material |
 | `/A.review` with pasted comments | the comments and the change they refer to | verdicts per comment; FIX steps | Approve the FIX steps → Implement |
@@ -22,6 +23,7 @@ Every command knows three things: what it **needs** to exist, what it **produces
 
 Say what is missing and offer the shortest way through, with a default — one question:
 
+- `/A.plan` asked to fix a wrong behaviour whose cause is unknown → "The cause isn't established yet. Run `/A.rootcause` first (recommended), or plan against the symptom knowing it may not be the cure?"
 - `/A.review` on chat work that has no plan or report → review it anyway as a plan-in-the-making (the lenses apply to any design text), then at the end: "This has no plan on the board. Make it one, so it can be approved and built? (yes, recommended / no)".
 - `/A.build` with nothing approved → "Nothing is approved yet. The report at Gate has <n> decisions; take the recommended answers and approve? (yes / show me)".
 - `/A.verify` with nothing built → say so; offer `/A.project.status` or `/A.build.resume`.

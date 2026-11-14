@@ -12,7 +12,7 @@ Work is organized in a hierarchy and a workflow:
 
 **Hierarchy — Area › Feature › Item › Step.** An *area* is a section of the project (`areas` in config). A *feature* is a board topic with its own activity file and overview node, numbered sequentially (`7`). An *item* is a piece of work inside a feature, numbered `7.1, 7.2 …`, of type *build* (the planned work), *bugfix*, *review* or *change*; it lives as a section in the feature's file. A *step* is one unit of work inside an item with a done-condition. The feature's report defines its items up front (a small feature is one build item); items that emerge later get the next number. Every item runs the full workflow below and stops at the same gate.
 
-**Entry commands** decide *how the work is evaluated*: `/A.plan` (new), `/A.plan.realign` (continue or change what exists; also reopens a closed feature), `/A.plan.bugfix` (broken), `/A.review` with pasted comments (an outside reviewer's findings). Each has a skill folder beside this one and supplies the **Evaluate** stage only. A feature's **type** (`feature`, `change`, `fix`) follows the sizing signals, not the command used, and is re-evaluated at Evaluate and Realign (`references/hierarchy.md`); a bug asked for on its own becomes an item of the feature it belongs to, or a standalone `fix`.
+**Entry commands** decide *how the work is evaluated*: `/A.rootcause` (something went wrong — find the cause before anything is planned; `references/rootcause.md`), `/A.plan` (new, or the fix from a root-cause report), `/A.plan.realign` (continue or change what exists; also reopens a closed feature), `/A.review` with pasted comments (an outside reviewer's findings). Each has a skill folder beside this one and supplies the **Evaluate** stage only. A feature's **type** (`feature`, `change`, `fix`) follows the sizing signals, not the command used, and is re-evaluated at Evaluate and Realign (`references/hierarchy.md`); a bug asked for on its own becomes an item of the feature it belongs to, or a standalone `fix`.
 
 **Elements.** Every report names the system parts it touches (`### Elements touched`); Close appends the work to each element's history; Start reads an element's history before the code (`references/elements.md`).
 
@@ -45,15 +45,18 @@ References (relative to this folder), read when a stage names them: `config-sche
 ## The workflow
 
 ```
-Start → Read → Evaluate → Clarify → Report → Review → Approve → Implement → Realign → Validate → Close
-                                      └─────── Gate: nothing past here without the user ───────┘
+[Root cause] → Start → Read → Evaluate → Clarify → Report → Review → Approve → Implement → Realign → Validate → Close
+                                                     └─────── Gate: nothing past here without the user ───────┘
 ```
+
+Root cause is its own stage before planning, with its own gate: a cause at CONFIRMED or LIKELY, or "not found" with what would find it. Nothing is planned from a HYPOTHESIS.
 
 | Stage | Command | Done when |
 |---|---|---|
-| Start | (entry type) | Config read; reminders given; constitution and matching decisions summarized into `## Context`; board row under Planned |
+| Root cause | `/A.rootcause` · `.m` `.l` `.xl` | A cause at CONFIRMED or LIKELY with its condition and chain, or an honest not-found with the coverage map (`references/rootcause.md`) |
+| Start | (entry command) | Config read; reminders given; constitution and matching decisions summarized into `## Context`; board row under Planned |
 | Read | — | What exists and what the request touches, paraphrased, every claim cited `path:symbol` |
-| Evaluate | (entry type) | The type's questions answered; tier chosen with signals (`references/sizing.md`) |
+| Evaluate | (entry command) | The type's questions answered; tier chosen with signals (`references/sizing.md`) |
 | Clarify | (inside `/A.plan`) | Every `[NEEDS CLARIFICATION]` resolved or explicitly parked; at most five questions, one at a time |
 | Report | — | `## Report` written (`references/report-schema.md`) with numbered steps; chat summary given |
 | Review | `/A.review` · `.m` `.l` `.xl` | The tier's lenses run (`references/goldfish-lenses.md`); findings resolved (`references/resolve-protocol.md`); effort from the rubric, or chosen |
