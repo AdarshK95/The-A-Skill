@@ -8,4 +8,4 @@
 - [ ] B writes a `waiting on` handoff for `normalizeRange` and continues with its other steps.
 - [ ] When A finishes and writes `done`, B's next step pick-up removes both rows and B continues.
 - [ ] A's claim is released when its step's check passes; neither session leaves rows behind at close; `/A.close` refuses while a row remains.
-- [ ] `/A.status` in a third chat lists the live claim and wait before the board.
+- [ ] `/A.project.status` in a third chat lists the live claim and wait before the board.

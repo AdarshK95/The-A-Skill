@@ -55,6 +55,10 @@ A comprehension finding is never contested by the author: if a cold reader could
 
 > The plan says what it changes. You find what else changes with it. For every modified function: list its callers from the code and say whether the plan accounts for each. For every changed contract or stored shape: who reads it, and what happens to data already written. For every cache, permission or ordering path touched: how it could now serve a stale or wrong result. For a bug fix: does the fix remove the cause, or move it? An unaccounted caller or consumer is a Major; a fix that moves the cause is a Blocker.
 
+## A premise finding stops the round
+
+A `zoom-out` finding that questions the **premise** of the design — "this builds permanent machinery on a path marked temporary", "this solves a neighbouring problem", "the cause is elsewhere" — is not resolved by the author and is not carried into the next lens group. It goes to the user at once, in decision shape (what came up and why, the options and what each means, suggested), and the review pauses until they answer. Detail lenses run on a design whose premise the user has confirmed; running them first spends rounds on text that may be discarded.
+
 ## Synthesis before resolution
 
 When a group has more than one lens, merge their findings before resolving: drop duplicates (the same gap found by two lenses is one finding, credited to both), group by the part of the plan they concern, order by severity then confidence. Resolve Blockers and Majors; Lows are applied silently when trivial and otherwise listed, never discussed. Low-confidence findings are verified against the code before they get a verdict, and dropped with one line if the code does not bear them out. This is what keeps a five-lens group from producing twenty threads for the user: the user sees the merged, ordered result — Blockers and Majors only — and the Lows as a count.

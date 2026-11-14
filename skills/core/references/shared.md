@@ -52,4 +52,4 @@ Every session reads all three files at Start, at every stage move, and before ev
 
 ## What never goes here
 
-Plans, reports, decisions, findings, results, logs. Those have homes; the shared folder points at them when needed and is otherwise empty. `/A.status` shows the live entries; `/A.close` refuses to close a feature that still has rows here.
+Plans, reports, decisions, findings, results, logs. Those have homes; the shared folder points at them when needed and is otherwise empty. `/A.project.status` shows the live entries; `/A.close` refuses to close a feature that still has rows here.

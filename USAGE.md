@@ -4,7 +4,7 @@ You describe work; the agent investigates, reports, waits for your approval, bui
 
 ## Projects
 
-The skill is installed once on your machine. A folder becomes a project when you run `/A.start-project` in it; from then on everything done there is that project's memory — board, logs, decisions — and nothing else's. Start as many projects as you like, and keep them all in one workspace if you prefer — the agent works out which project a message belongs to from the files involved and says so, or asks. If two projects work together (an MCP server and the frontend that calls it), say so in each one's `.a/project.md` under `depends_on` and `provides`; `/A.projects` shows all projects on the machine and how they connect. A project that documents no dependency is independent — that is the statement.
+The skill is installed once on your machine. A folder becomes a project when you run `/A.project.start` in it; from then on everything done there is that project's memory — board, logs, decisions — and nothing else's. Start as many projects as you like, and keep them all in one workspace if you prefer — the agent works out which project a message belongs to from the files involved and says so, or asks. If two projects work together (an MCP server and the frontend that calls it), say so in each one's `.a/project.md` under `depends_on` and `provides`; `/A.project.list` shows all projects on the machine and how they connect. A project that documents no dependency is independent — that is the statement.
 
 ## The shape of a piece of work
 
@@ -28,13 +28,13 @@ You get: what the code supports today (cited), the idea assessed plainly, altern
 
 **It's built but not right**
 
-> `/A.extend` the export ignores the date filter, and I asked for a download button, not a link
+> `/A.plan.realign` the export ignores the date filter, and I asked for a download button, not a link
 
 You get the design versus the code, every drift marked *doc is right / code is right / your call*, and the remaining work as steps.
 
 **Something broke**
 
-> `/A.bugfix` export returns an empty file when the filter has no rows
+> `/A.plan.bugfix` export returns an empty file when the filter has no rows
 
 You get the trace from symptom to origin, the root cause in one sentence, every caller of the function to be changed, the fix at the root, and what the fix itself could break. Then you say go.
 
@@ -52,13 +52,13 @@ Auto says "Treating this as a bug fix" and goes. Correct it with a command if it
 
 **Inside a feature, something else comes up**
 
-> `/A.bugfix` while in the middle of a plan
+> `/A.plan.bugfix` while in the middle of a plan
 
 Opens item 7.n inside the current feature, runs it through the same gate, returns to where you were. If it turns out feature-sized, the agent says so and makes it its own feature.
 
 **Keeping it lean**
 
-Before anything new is proposed, the agent searches the codebase for something that already does it and tells you what it found and what it will reuse or extend. Values that vary go in configuration, not code. After building, it checks its own work for duplicates and hardcoding and runs a cleanup that changes no behaviour. `/A.simplify` runs that cleanup any time on recently modified code.
+Before anything new is proposed, the agent searches the codebase for something that already does it and tells you what it found and what it will reuse or extend. Values that vary go in configuration, not code. After building, it checks its own work for duplicates and hardcoding and runs a cleanup that changes no behaviour. `/A.plan.lean_overcomplication_check` runs that cleanup any time on recently modified code.
 
 **Working in several chats at once**
 
@@ -68,17 +68,17 @@ Each chat works on its own feature. They coordinate through `.a/shared/`: before
 
 | Ask | Command | You get |
 | --- | --- | --- |
-| Where were we? What's pending? | `/A.status` | Every in-progress feature with its pointer and next action, what waits on you, what is due — read from the files |
-| Show me everything | `/A.board` | The board: Planned · In progress · Finished · Deferred · To do, per area |
-| How is the project shaped? | `/A.tracker` | The overview diagram: areas, parts, connections; grey planned, blue in progress, green finished, orange deferred |
-| Continue | `/A.resume` | Picks up at the exact step, after checking the files match what the log says was done |
-| Remind me | `/A.board add to do: rotate the API key due 20Nov2026 10:00 AM` | Any `/A.*` command on or after that date starts by reminding you |
+| Where were we? What's pending? | `/A.project.status` | Every in-progress feature with its pointer and next action, what waits on you, what is due — read from the files |
+| Show me everything | `/A.project.board` | The board: Planned · In progress · Finished · Deferred · To do, per area |
+| How is the project shaped? | `/A.project.map` | The overview diagram: areas, parts, connections; grey planned, blue in progress, green finished, orange deferred |
+| Continue | `/A.build.resume` | Picks up at the exact step, after checking the files match what the log says was done |
+| Remind me | `/A.project.board add to do: rotate the API key due 20Nov2026 10:00 AM` | Any `/A.*` command on or after that date starts by reminding you |
 
 ## Finishing
 
 > `/A.close`
 
-Finalizes the feature's log, writes the implementation-log entry, updates API docs if a contract changed, moves the feature to Finished, turns its overview nodes green. The project stays open. `/A.reopen 7` continues it later as a new feature that points back.
+Finalizes the feature's log, writes the implementation-log entry, updates API docs if a contract changed, moves the feature to Finished, turns its overview nodes green. The project stays open. `/A.plan.realign 7` continues it later as a new feature that points back.
 
 ## How the agent talks to you
 
@@ -99,4 +99,4 @@ Everything is plain markdown in your repository. Any agent, any model, any sessi
 
 ## Tuning
 
-`~/.a/settings.md` holds how the agent behaves everywhere: verbosity, when it may interrupt, whether it offers to record chat work, the highest review tier it may choose on its own, date formats. `.a/project.md` holds every path, your areas, which projects this one depends on, date and time formats, which ledgers close updates, the review floor, and project rules. `/A.start-project` writes it; edit it any time. Field reference: `.a/skills/core/references/config-schema.md`.
+`~/.a/settings.md` holds how the agent behaves everywhere: verbosity, when it may interrupt, whether it offers to record chat work, the highest review tier it may choose on its own, date formats. `.a/project.md` holds every path, your areas, which projects this one depends on, date and time formats, which ledgers close updates, the review floor, and project rules. `/A.project.start` writes it; edit it any time. Field reference: `.a/skills/core/references/config-schema.md`.

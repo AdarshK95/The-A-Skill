@@ -12,13 +12,16 @@ One or two sentences, in your words. Where the request was ambiguous, the readin
 
 ### What exists today
 The current state of the code the request touches: structure, flow, data shapes, the callers involved. Citations on every line.
-[extend] Where the implementation has drifted from its design document or from the decisions log, and which side is right.
+[realign] Where the implementation has drifted from its design document or from the decisions log, and which side is right.
 [bugfix] How the bug reproduces, and the trace from symptom to origin: each hop cited.
 
 ### Assessment
 Whether the request is sound as stated, what the code already supports, what it does not, and anything the constitution or a logged decision says about it.
 [bugfix] The root cause, stated in one sentence, and why that and not the nearer symptom.
-[review] For each reviewer comment: correct / incorrect / known and deferred — with the evidence for each verdict.
+[review with comments] For each reviewer comment: correct / incorrect / known and deferred — with the evidence for each verdict.
+
+### Elements touched
+The system parts this work touches (`elements.md`): existing element ids, or `new: <id> — <one-line purpose>`; for each, what this work changes about it. Never empty.
 
 ### Known facts *(if any)*
 Artifacts from the ledger that bear on this work, cited by file — measured facts the plan relies on instead of re-measuring.
@@ -47,8 +50,8 @@ How you will prove the change works and that nothing planned was missed: the che
 ### After the change *(if relevant)*
 What the user or end user will see or experience afterwards, as a reference for judging the result. Included when the change is user-visible or when the report's correctness depends on it.
 
-### Tier
-`S | M | L | XL` with the signals that chose it, one per line, each naming its file or decision.
+### Tier and type
+`S | M | L | XL` with the signals that chose it, one per line, each naming its file or decision; and the **type** the signals imply (`feature` / `change` / `fix`, `hierarchy.md`) — stated as a proposal when it differs from what the user called the work.
 
 ### Decisions needed from you
 A short *where we are* paragraph, then a table — **what came up and why · the options and what each means · suggested (with reason)** — then *what happens after you answer*. Each row readable by someone who has not opened the file. End with: "Say **go** to take all suggested answers, or change any by number." The same shape is used when these decisions are shown in chat (`communication.md › Decisions arrive with their context`).

@@ -1,13 +1,13 @@
 # Projects on this machine
 
-_Index maintained by `/A.start-project` and `/A.projects`. Each project's own `.a/project.md` is the source of truth; this file is rebuilt from them. A project not listed here has never been started with The A Skill. Two projects are independent unless one of them documents a dependency. Dates `DD MMM YY`._
+_Index maintained by `/A.project.start` and `/A.project.list`. Each project's own `.a/project.md` is the source of truth; this file is rebuilt from them. A project not listed here has never been started with The A Skill. Two projects are independent unless one of them documents a dependency. Dates `DD MMM YY`._
 
 | Project | Path | Areas | Depends on | Provides | Started | Last active |
 | --- | --- | --- | --- | --- | --- | --- |
 
 ## Mirrors
 
-_Workspaces that keep a local copy of the method (`.a/mirror/`) because their IDE cannot permanently allow reads outside the workspace. `/A.skill-update` refreshes each after updating the global install._
+_Workspaces that keep a local copy of the method (`.a/mirror/`) because their IDE cannot permanently allow reads outside the workspace. `/A.skill.update` refreshes each after updating the global install._
 
 | Workspace root | Mirror commit | Created |
 | --- | --- | --- |

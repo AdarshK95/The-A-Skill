@@ -35,5 +35,5 @@ Named `<date>-<slug>.md` (file date in `filename_date_format`), containing:
 
 - **Start** searches the ledger for the request's terms, as it does the decisions log; a matching artifact is cited in `## Context` and read before Read re-measures anything. Re-measuring what an artifact already established is a build finding, not a step.
 - **Reuse search** (`lean.md`) treats the ledger as an index of known facts.
-- **`/A.drift`** checks each artifact's *Valid for* against the current environment (model version, package version, deployment) and marks stale artifacts; the ledger row says so and names what changed. A stale artifact is kept, never deleted.
+- **`/A.project.drift`** checks each artifact's *Valid for* against the current environment (model version, package version, deployment) and marks stale artifacts; the ledger row says so and names what changed. A stale artifact is kept, never deleted.
 - **Superseded**: a new measurement of the same thing adds a new artifact and marks the old row `superseded by <file>`.

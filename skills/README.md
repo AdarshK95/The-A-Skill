@@ -1,28 +1,29 @@
-# Skills — the method
+# Skills — the method, by stage
 
-Each folder holds one `SKILL.md`. Every command's wrapper (in `../commands/`) points at one of these; every skill except `core` sends the agent to `core/SKILL.md` for the shared workflow. There is no `SKILL.md` at this level on purpose: start with `core/SKILL.md`.
+Each folder holds one `SKILL.md`. Command wrappers in `../commands/` point at these; every skill except `core` sends the agent to `core/SKILL.md` for the shared workflow. Folder names mirror the commands: `plan-*` is the plan stage, `project-*` the project stage, `skill-*` the tool itself.
 
 | Folder | What it is |
 | --- | --- |
-| `auto/` | Default mode: locate the activity, classify a new request, stay in the current stage, advance when done |
-| `board/` | /A.board — show the project board or add to it in plain language |
-| `bugfix/` | /A.bugfix — trace to root cause, fix at the root, analyze fix impact |
-| `close/` | /A.close — finish a feature, update the ledgers, move it to Finished |
-| `core/` | The shared spine every command runs on, plus references/ (sizing, lenses, logging, lean, shared, communication …) |
-| `drift/` | /A.drift — documents and decisions versus code |
-| `extend/` | /A.extend and /A.reopen — continue or change what exists |
-| `help/` | /A.help — show the command list |
-| `start-project/` | /A.start-project (aliases init, setup, initialize) — make this folder a project; register it in the machine-wide index |
-| `projects/` | /A.projects — all projects on this machine and how they depend on each other |
-| `map/` | /A.map — map an existing codebase |
-| `plan/` | /A.plan — design and build something new |
-| `resume/` | /A.resume — continue at the exact step work stopped |
-| `review/` | /A.review — triage an outside reviewer's comments |
-| `simplify/` | /A.simplify — behaviour-preserving cleanup of recently modified code |
-| `status/` | /A.status — where are we, from the files |
-| `skill-repair/` | /A.skill-repair — check the skill's own files against the release; restore after confirmation |
-| `skill-uninstall/` | /A.skill-uninstall — remove the skill's own files after confirmation; the user's work is never touched |
-| `skill-update/` | /A.skill-update — check for a newer release of the skill; update after confirmation |
-| `tracker/` | /A.tracker — the project overview diagram |
+| `auto/` | Default mode: locate the subject and project, classify, stay in stage, advance; maps mistyped commands |
+| `build/` | /A.build and /A.build.resume — build the approved plan; realign and simplify inside; resume an interrupted build from the tracker |
+| `close/` | /A.close — finish a feature, update ledgers and element histories |
+| `core/` | The shared spine and references/ (sizing, lenses, logging, lean, shared, communication, hierarchy, elements …) |
+| `plan/` | /A.plan — plan something new |
+| `plan-bugfix/` | /A.plan.bugfix — root cause, fix at the root, fix impact |
+| `plan-lean_overcomplication_check/` | /A.plan.lean_overcomplication_check — is the plan lean |
+| `plan-realign/` | /A.plan.realign — continue or change what exists; reopen a closed feature |
+| `plan-scope_check_drift_check/` | /A.plan.scope_check_drift_check — type still right; plan vs ask; code vs plan |
+| `project-board/` | /A.project.board — the tracker |
+| `project-drift/` | /A.project.drift — documents, decisions, elements and map vs code |
+| `project-list/` | /A.project.list — all projects on this machine |
+| `project-map/` | /A.project.map — the visual map, assembled after resolving name drift; pull the thread on an element |
+| `project-start/` | /A.project.start — make a folder a project |
+| `project-status/` | /A.project.status — where are we, from the files |
+| `review/` | /A.review (and .m .l .xl) — fresh-eyes review, or triage of pasted comments |
+| `skill-help/` | /A.skill.help · /A.help — commands by stage |
+| `skill-repair/` | /A.skill.repair — restore the skill's own files after confirmation |
+| `skill-uninstall/` | /A.skill.uninstall — remove the skill's own files; never the user's data |
+| `skill-update/` | /A.skill.update — update the skill after confirmation |
+| `verify/` | /A.verify — checks, requirements, build vs plan |
 
-Counts for verifying an install: **20 skill folders**, **15 reference files** in `core/references/`, **36 markdown files** under `skills/` including this one. The installer prints the number it copied.
+Counts for verifying an install: **21 skill folders**, **20 reference files** in `core/references/`, **42 markdown files** under `skills/` including this one. The installer prints the number it copied.

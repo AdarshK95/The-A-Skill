@@ -1,4 +1,4 @@
-# Install The A Skill. Default: once per machine (global). Then run /A.start-project in each folder you want as a project.
+# Install The A Skill. Default: once per machine (global). Then run /A.project.start in each folder you want as a project.
 #   .\install.ps1                    global: method in ~\.a, commands in ~\.claude\commands and ~\.a\commands\copilot
 #   .\install.ps1 -Project <dir>     project-level: everything inside <dir> (for a repository that must carry the method)
 # Idempotent: re-running updates the method and commands, never a project's documents or config.
@@ -29,6 +29,8 @@ $commit = "unknown"; try { $commit = (git -C $Src rev-parse HEAD 2>$null).Trim()
 "repository: https://github.com/AdarshK95/The-A-Skill`ninstalled: $(Get-Date -Format 'dd MMM yy, hh:mm tt')`nscope: $scope`ncommit: $commit" | Set-Content (Join-Path $Dest ".a\SOURCE")
 if ($Global -and -not (Test-Path (Join-Path $Dest ".a\projects.md"))) { Copy-Item "$Src\templates\projects.md" (Join-Path $Dest ".a\projects.md") }
 if (-not (Test-Path (Join-Path $Dest ".a\settings.md"))) { Copy-Item "$Src\templates\settings.md" (Join-Path $Dest ".a\settings.md") }
+Get-ChildItem (Join-Path $Dest ".claude\commands") -Filter "A.*.md" -ErrorAction SilentlyContinue | Remove-Item -Force
+Get-ChildItem $CopilotDir -Filter "A.*.prompt.md" -ErrorAction SilentlyContinue | Remove-Item -Force
 Get-ChildItem "$Src\commands\claude" -Filter "A.*.md" | ForEach-Object {
   (Get-Content $_.FullName -Raw) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot | Set-Content (Join-Path $Dest ".claude\commands\$($_.Name)") -NoNewline
 }
@@ -57,9 +59,9 @@ if ($Global) {
   Write-Host "     allowance first; if none, test the prompt once with the user; if still nothing permanent, offer a local mirror of the method inside the workspace. Ask before each change."
   Write-Host "Claude Code needs nothing. (Agents: ask the user for approval, do 1 and 2, confirm /A.help appears, then do 3.)"
   Write-Host ""
-  Write-Host "The skill remembers work PER PROJECT: in any folder you want to work in, run /A.start-project once."
-  Write-Host "Everything done there (board, logs, decisions) becomes that project's memory, separate from every other project. /A.projects shows them all."
+  Write-Host "The skill remembers work PER PROJECT: in any folder you want to work in, run /A.project.start once."
+  Write-Host "Everything done there (board, logs, decisions) becomes that project's memory, separate from every other project. /A.project.list shows them all."
 } else {
   Write-Host "This was a PROJECT-LEVEL install into $Dest`: the commands are read from this folder, so it must be the workspace root for them to appear (the global install has no such limit)."
-  Write-Host "Open this folder, start a new chat, and run /A.start-project (required; nothing is remembered without it)."
+  Write-Host "Open this folder, start a new chat, and run /A.project.start (required; nothing is remembered without it)."
 }

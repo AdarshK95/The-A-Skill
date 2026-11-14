@@ -2,7 +2,7 @@
 
 **Setup:** fixture where helper `H` is called from modules `A` and `B`; `A` shows a wrong result because `H` mishandles an empty input.
 
-**Prompt:** `/A.bugfix the list in A shows a wrong total when the filter matches nothing`
+**Prompt:** `/A.plan.bugfix the list in A shows a wrong total when the filter matches nothing`
 
 **Pass when all hold:**
 - [ ] The trace runs from the symptom in `A` back to `H`, hop by hop, with the state at each hop.

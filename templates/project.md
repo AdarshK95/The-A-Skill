@@ -1,5 +1,5 @@
 ---
-schema_version: 1
+schema_version: 2
 project_name: {{project_name}}
 docs_root: docs/
 constitution: docs/constitution.md
@@ -35,6 +35,7 @@ implement:
 approval:
   second_reviewer: off
 map_folder: docs/map/
+elements_registry: docs/map/elements.md
 shared_folder: .a/shared/
 claim_stale_hours: 4
 drift:

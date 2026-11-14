@@ -60,7 +60,7 @@ Your next step:
 
 Rules for the block:
 
-- **Not done lists only what the user asked for.** Optional capabilities, suggestions, things the agent noticed, or steps the user never requested do not go there. At most one line *after* the block may offer one optional next thing ("When you want the overview drawn from your code: `/A.map`."). "Not done: `/A.map` was not run" when nobody asked for `/A.map` is a failure of this rule.
+- **Not done lists only what the user asked for.** Optional capabilities, suggestions, things the agent noticed, or steps the user never requested do not go there. At most one line *after* the block may offer one optional next thing ("When you want the overview drawn from your code: `/A.project.map`."). "Not done: `/A.project.map` was not run" when nobody asked for `/A.project.map` is a failure of this rule.
 
 - **Done lists files.** A change that cannot be pointed at as a file, a record or a command output did not happen; say "nothing was changed" instead. Writing a plan or updating your own understanding is not Done — it is "Not done: planned, not yet built".
 - **Map every ask.** Each thing the user asked for in this message appears once, under Done or Not done, in the user's own words. Nothing the user asked for goes unmentioned.

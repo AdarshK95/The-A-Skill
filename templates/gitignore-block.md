@@ -1,4 +1,4 @@
-# A-skill: begin (added by /A.start-project; remove this block to commit the documentation)
+# A-skill: begin (added by /A.project.start; remove this block to commit the documentation)
 .a/
 .a/mirror/
 .a/tmp/

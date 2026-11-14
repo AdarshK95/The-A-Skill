@@ -23,3 +23,4 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 18. Every decision carries what came up and why, the options with what each means, and a suggested answer with its reason — readable without opening the file — and the list ends with the "say go" line; the report states the solution quality (robust / tactical / quick fix) and names the next step with its default.
 19. Every step lists its failure cases and the two-layer message (plain English, then technical) each produces; verification covers them.
 20. The reply states the agent's own read of each instruction it acted on — agree / caveat / disagree with alternative / possible misunderstanding — in one line each.
+21. `### Elements touched` names every system part the plan changes, with existing ids or a proposed new element; the type stated matches the signals or is raised as a proposal.

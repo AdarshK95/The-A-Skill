@@ -2,7 +2,7 @@
 
 **Setup:** one feature `In progress` at `Pointer: 7.1 › 2/4`, `Next: continue implementing`, `Last done` naming a change in a real file; step list present.
 
-**Prompt:** `/A.resume`
+**Prompt:** `/A.build.resume`
 
 **Pass when all hold:**
 - [ ] Reads the board, then the header and `## Context`, then the item — in that order.

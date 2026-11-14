@@ -51,7 +51,7 @@ Never simplified away: validation at a trust boundary (anything from a user, a n
 
 ## Marked simplifications
 
-Every deliberate shortcut carries a one-line comment naming its ceiling and its upgrade path, in the project's comment style (for example `// lean: single global lock; per-account locks if throughput matters`). Simple then reads as intent, not oversight. `/A.drift` lists these markers so ceilings are revisited.
+Every deliberate shortcut carries a one-line comment naming its ceiling and its upgrade path, in the project's comment style (for example `// lean: single global lock; per-account locks if throughput matters`). Simple then reads as intent, not oversight. `/A.project.drift` lists these markers so ceilings are revisited.
 
 ## Duplication and complexity check — at Realign
 
@@ -64,7 +64,7 @@ Over what this feature added or changed, answer with citations:
 5. **Dead or defensive?** Unreachable branches, checks the types already guarantee, commented-out code, comments that restate the code.
 6. **Simplify pass** (behaviour-preserving, over recently modified code only): flatten nesting with early returns; split dense chains into named steps; inline single-use helpers; consolidate duplicates into the shared place; remove the dead and the defensive. **Balance:** never trade clarity for brevity — no nested ternaries, no dense one-liners, keep an abstraction that organizes; a change that would alter behaviour is a build finding, not a simplification. Each cut is proven by the existing check before the next.
 
-Findings become Realign simplifications (applied when they need no decision) or decisions for the user. `/A.simplify` runs step 6 on demand over whatever was recently modified.
+Findings become Realign simplifications (applied when they need no decision) or decisions for the user. `/A.plan.lean_overcomplication_check` runs step 6 on demand over whatever was recently modified.
 
 ## One runnable check
 

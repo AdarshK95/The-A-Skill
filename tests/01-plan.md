@@ -1,6 +1,6 @@
 # 01 — Plan on a small repo
 
-**Setup:** fixture installed and `/A.start-project` done; no features on the board.
+**Setup:** fixture installed and `/A.project.start` done; no features on the board.
 
 **Prompt:** `/A.plan add an export of the main list as CSV, downloadable from the existing page`
 

@@ -9,4 +9,4 @@
 - [ ] Any new literal (locale, format string, route) is placed in config or passed in, not hardcoded; the report says where.
 - [ ] After implementation, Realign runs the duplication check and reports zero new duplicates, or names and removes them.
 - [ ] Introduce a hardcoded route string during build (as the user): the `lean` lens or Realign flags it.
-- [ ] `/A.simplify` after build cuts nothing that changes behaviour; each cut is followed by the check.
+- [ ] `/A.plan.lean_overcomplication_check` after build cuts nothing that changes behaviour; each cut is followed by the check.

@@ -16,7 +16,7 @@ Start at **S**. Each signal that applies moves the tier up one step; stop at **X
 | More than one module or layer changes in the same activity | Cross-module effects are where plans drift |
 | New subsystem, new design document, or an extend activity where drift between doc and code is large | The design itself needs fresh eyes before detail |
 
-Limits come from settings (`~/.a/settings.md`, overridable per project): `review.default_floor` is the lowest tier; `review.max_tier` is the highest the rubric may choose on its own; `review.auto_tier: off` disables the rubric and uses the floor unless the user sets a tier. The user may set the tier directly at the gate in either direction; record `Tier: M (user override, rubric said XL)`. The report always says the tier and the signals, in one phrase in chat ("touches shared code and two contracts, so I'll have it reviewed in depth first"), so the user can change it before anything runs.
+Limits come from settings (`~/.a/settings.md`, overridable per project): `review.default_floor` is the lowest tier; `review.max_tier` is the highest the rubric may choose on its own; `review.auto_tier: off` disables the rubric and uses the floor unless the user sets a tier. The user may set the tier directly at the gate in either direction, or run `/A.review.m` / `.l` / `.xl` to review at a chosen effort; record `Tier: M (user override, rubric said XL)`. The report always says the tier and the signals, in one phrase in chat ("touches shared code and two contracts, so I'll have it reviewed in depth first"), so the user can change it before anything runs.
 
 ## What each tier runs
 

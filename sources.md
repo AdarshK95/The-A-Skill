@@ -21,6 +21,6 @@ Adopted in 0.4.0: the full Ponytail rule set (the half that was missing: when no
 
 Adopted in 0.3.0: the two-reader activity file (plain Summary for the user, timed Detailed Event Log for the agent), month/day folders with a per-day sequence, the month ledger, the "other docs" close checklist, and the strict in-content date and time format — from the user's own Activity log guide.
 
-Adopted in 0.2.0: EGM's bootstrap (as `/A.map`), drift report (as `/A.drift`), review-loop stop rules, isolation checking (as the probe), XL hand-off; Spec Kit's clarify taxonomy and requirements checklist; Ponytail's intensity levels for implementation.
+Adopted in 0.2.0: EGM's bootstrap (as `/A.project.map`), drift report (as `/A.project.drift`), review-loop stop rules, isolation checking (as the probe), XL hand-off; Spec Kit's clarify taxonomy and requirements checklist; Ponytail's intensity levels for implementation.
 
 Original to this skill: the Area › Feature › Item › Step hierarchy and pointer; the project board with areas and a state-coloured overview; auto mode's locate / classify / stay / advance; the Realign stage; build findings as a first-class record; the impact lens; three-altitude logging with dual-written decisions; sizing review by signals found in the code.

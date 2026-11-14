@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Install The A Skill. Default: once per machine (global). Then run /A.start-project in each folder you want as a project.
+# Install The A Skill. Default: once per machine (global). Then run /A.project.start in each folder you want as a project.
 #   sh install.sh                 global: method in ~/.a, commands in ~/.claude/commands and ~/.a/commands/copilot
 #   sh install.sh --project DIR   project-level: everything inside DIR (for a repository that must carry the method)
 # Idempotent: re-running updates the method and commands, never a project's documents or config.
@@ -24,6 +24,7 @@ COMMIT="$(git -C "$SRC" rev-parse HEAD 2>/dev/null || echo unknown)"
 printf "repository: https://github.com/AdarshK95/The-A-Skill\ninstalled: %s\nscope: %s\ncommit: %s\n" "$(date '+%d %b %y, %I:%M %p')" "$([ "$GLOBAL" = 1 ] && echo global || echo project)" "$COMMIT" > "$DEST/.a/SOURCE"
 [ -f "$DEST/.a/projects.md" ] || [ "$GLOBAL" = 0 ] || cp "$SRC/templates/projects.md" "$DEST/.a/projects.md"
 [ -f "$DEST/.a/settings.md" ] || cp "$SRC/templates/settings.md" "$DEST/.a/settings.md"
+rm -f "$DEST/.claude/commands"/A.*.md "$COPILOT_DIR"/A.*.prompt.md
 for f in "$SRC"/commands/claude/A.*.md; do sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$f" > "$DEST/.claude/commands/$(basename "$f")"; done
 for f in "$SRC"/commands/copilot/A.*.prompt.md; do sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$f" > "$COPILOT_DIR/$(basename "$f")"; done
 
@@ -47,9 +48,9 @@ if [ "$GLOBAL" = 1 ]; then
   echo "     allowance first; if none, test the prompt once with the user; if still nothing permanent, offer a local mirror of the method inside the workspace. Ask before each change."
   echo "Claude Code needs nothing. (Agents: ask the user for approval, do 1 and 2, confirm /A.help appears, then do 3.)"
   echo
-  echo "The skill remembers work PER PROJECT: in any folder you want to work in, run /A.start-project once."
-  echo "Everything done there (board, logs, decisions) becomes that project's memory, separate from every other project. /A.projects shows them all."
+  echo "The skill remembers work PER PROJECT: in any folder you want to work in, run /A.project.start once."
+  echo "Everything done there (board, logs, decisions) becomes that project's memory, separate from every other project. /A.project.list shows them all."
 else
   echo "This was a PROJECT-LEVEL install into $DEST: the commands are read from this folder, so it must be the workspace root for them to appear (the global install has no such limit)."
-  echo "Open this folder, start a new chat, and run /A.start-project (required; nothing is remembered without it)."
+  echo "Open this folder, start a new chat, and run /A.project.start (required; nothing is remembered without it)."
 fi

@@ -25,4 +25,4 @@ dates:
 
 # About this file
 
-Everything here is a default the skill applies unless a project says otherwise. `/A.start-project` copies `dates` and `review` into a new project's config so each project can diverge. Nothing in this file is project data; deleting it restores the skill's defaults.
+Everything here is a default the skill applies unless a project says otherwise. `/A.project.start` copies `dates` and `review` into a new project's config so each project can diverge. Nothing in this file is project data; deleting it restores the skill's defaults.

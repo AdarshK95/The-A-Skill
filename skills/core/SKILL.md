@@ -12,7 +12,9 @@ Work is organized in a hierarchy and a workflow:
 
 **Hierarchy — Area › Feature › Item › Step.** An *area* is a section of the project (`areas` in config). A *feature* is a board topic with its own activity file and overview node, numbered sequentially (`7`). An *item* is a piece of work inside a feature, numbered `7.1, 7.2 …`, of type *build* (the planned work), *bugfix*, *review* or *change*; it lives as a section in the feature's file. A *step* is one unit of work inside an item with a done-condition. The feature's report defines its items up front (a small feature is one build item); items that emerge later get the next number. Every item runs the full workflow below and stops at the same gate.
 
-**Entry types** decide *how the work is evaluated*: `plan` (new), `extend` (continue or change what exists; also `reopen`), `bugfix` (broken), `review` (comments from an outside reviewer). Each has a skill folder beside this one and supplies the **Evaluate** stage only. At feature level the type is plan or extend; a bugfix or review asked for on its own becomes an item of the feature it belongs to, or a new feature when it belongs to none.
+**Entry commands** decide *how the work is evaluated*: `/A.plan` (new), `/A.plan.realign` (continue or change what exists; also reopens a closed feature), `/A.plan.bugfix` (broken), `/A.review` with pasted comments (an outside reviewer's findings). Each has a skill folder beside this one and supplies the **Evaluate** stage only. A feature's **type** (`feature`, `change`, `fix`) follows the sizing signals, not the command used, and is re-evaluated at Evaluate and Realign (`references/hierarchy.md`); a bug asked for on its own becomes an item of the feature it belongs to, or a standalone `fix`.
+
+**Elements.** Every report names the system parts it touches (`### Elements touched`); Close appends the work to each element's history; Start reads an element's history before the code (`references/elements.md`).
 
 **Stages** are the workflow every feature and item moves through. Each is a command; in auto mode (`../auto/SKILL.md`) you advance through them yourself and say so at each move.
 
@@ -52,23 +54,23 @@ Start → Read → Evaluate → Clarify → Report → Review → Approve → Im
 | Start | (entry type) | Config read; reminders given; constitution and matching decisions summarized into `## Context`; board row under Planned |
 | Read | — | What exists and what the request touches, paraphrased, every claim cited `path:symbol` |
 | Evaluate | (entry type) | The type's questions answered; tier chosen with signals (`references/sizing.md`) |
-| Clarify | `/A.clarify` | Every `[NEEDS CLARIFICATION]` resolved or explicitly parked; at most five questions, one at a time |
+| Clarify | (inside `/A.plan`) | Every `[NEEDS CLARIFICATION]` resolved or explicitly parked; at most five questions, one at a time |
 | Report | — | `## Report` written (`references/report-schema.md`) with numbered steps; chat summary given |
-| Review | `/A.review` | The tier's lenses run (`references/goldfish-lenses.md`); findings resolved (`references/resolve-protocol.md`) |
+| Review | `/A.review` · `.m` `.l` `.xl` | The tier's lenses run (`references/goldfish-lenses.md`); findings resolved (`references/resolve-protocol.md`); effort from the rubric, or chosen |
 | Approve | — | The user has said go. Decisions dual-written. `Phase: Approved` |
-| Implement | `/A.implement` (`/A.build`) | Each step built in order; counter and board current; build findings logged |
-| Realign | `/A.realign` | Build checked against the original ask; creep removed; duplication and hardcoding found and removed; simplify pass run (`/A.simplify` on demand) |
-| Validate | `/A.validate` (`/A.verify`, `/A.test`) | A runnable check passes; build matches the approved steps, with evidence |
-| Close | `/A.close` (`/A.done`, `/A.finish`) | Activity finalized; project ledgers updated; board row to Finished; overview recoloured |
+| Implement | `/A.build` (`/A.build.resume` after an interruption) | Each step built in order; counter and board current; build findings logged |
+| Realign | (inside `/A.build`; `/A.plan.scope_check_drift_check` and `/A.plan.lean_overcomplication_check` at any time) | Build checked against the original ask; creep removed; duplication and hardcoding found and removed; simplify pass run (`/A.plan.lean_overcomplication_check` on demand) |
+| Validate | `/A.verify` | A runnable check passes; build matches the approved steps, with evidence |
+| Close | `/A.close` | Activity finalized; project ledgers updated; board row to Finished; overview recoloured |
 
-Stages run in this order. Clarify and Review may also be called at any time on the current artifact ("clarify this", "review this") and return to the stage that was active. Realign runs on its own whenever the user changes direction. Nothing after Approve runs without the user's go.
+Stages run in this order. Review, the scope/drift check and the lean check may be called at any time on the current artifact and return to the stage that was active. Realign runs inside Build and whenever the user changes direction. Nothing after Approve runs without the user's go.
 
 ## Start
 
 0. **Resolve the subject — this chat first.** Every command is about something, and that something is found in this order, never skipping a level silently: **(a)** what the user pointed at — an argument, a pasted file, a feature number, "the plan above"; **(b)** what *this conversation* is doing — an activity opened or resumed here, else the most recent substantive work in the chat (a report, a plan, a diff, code just written), whether or not the skill produced it; **(c)** nothing in the chat → the board: **fetch the candidates** (features whose stage matches the command, with their next action) and offer them by name — "Nothing here to review yet. On the board: 1 · Merge agent feedback (Gate, next: review) — review that, or tell me what to review?" — never "check the board"; **(d)** chat work and board candidates both plausible → the same one question, both options named. State the subject in one phrase before doing anything ("Reviewing the pilot report above"). Work from the chat that is not on the board is handled per `record_chat_work` in settings (default: offer once, afterwards, to record it as a feature — the user may decline).
-1. **Resolve the project** (`references/projects.md › Which project is this message about?`): named by the user, else the one containing the files involved, else the one this conversation is in, else the only one in the workspace, else ask. Say it in one phrase. Then read that project's `.a/project.md`; every path from here on is relative to that project's folder. No project anywhere in the workspace → say so, offer `/A.start-project <folder>`, stop. Set this session's tag (`references/shared.md › Session identity`). If `depends_on` names other projects, read their rows in `~/.a/projects.md` and their `provides` lines; when the request touches one of those, say so and note it in `## Links` (`references/projects.md › Projects that work together`).
-2. Read the shared folder (`shared_folder`). Non-empty → report in plain words what is in flight, who waits on whom, and whether any of it is this session's to resume, before anything else. Then open the project board (`project_board`). `reminders: on` → say in one line any To do or Deferred item due today or overdue. A Planned or In-progress row matching the request → offer `/A.resume`. Name any In-progress row touching the same files.
-3. Read the constitution and the lessons log whole; search the decisions log, the deferred-decisions log and the artifacts ledger for the request's terms and read the matches (an artifact is measured fact — cite it, do not re-measure it; `references/artifacts.md`) (a deferred decision says "not now, because X; reopen when Y" — check whether Y has arrived). Write `## Context` in the activity file: binding rules, lessons that apply, bearing decisions, references. Read once per activity; a resumed session reads `## Context`, not the sources.
+1. **Resolve the project** (`references/projects.md › Which project is this message about?`): named by the user, else the one containing the files involved, else the one this conversation is in, else the only one in the workspace, else ask. Say it in one phrase. Then read that project's `.a/project.md`; every path from here on is relative to that project's folder. No project anywhere in the workspace → say so, offer `/A.project.start <folder>`, stop. Set this session's tag (`references/shared.md › Session identity`). If `depends_on` names other projects, read their rows in `~/.a/projects.md` and their `provides` lines; when the request touches one of those, say so and note it in `## Links` (`references/projects.md › Projects that work together`).
+2. Read the shared folder (`shared_folder`). Non-empty → report in plain words what is in flight, who waits on whom, and whether any of it is this session's to resume, before anything else. Then open the project board (`project_board`). `reminders: on` → say in one line any To do or Deferred item due today or overdue. A Planned or In-progress row matching the request → offer `/A.build.resume`. Name any In-progress row touching the same files.
+3. Read the constitution and the lessons log whole; search the decisions log, the deferred-decisions log and the artifacts ledger for the request's terms and read the matches (an artifact is measured fact — cite it, do not re-measure it; `references/artifacts.md`). Search the **elements registry** for the parts the request touches and read their entries — purpose, code anchors, history — into `## Context` (`references/elements.md`); the history is the lineage, read before any code is (a deferred decision says "not now, because X; reopen when Y" — check whether Y has arrived). Write `## Context` in the activity file: binding rules, lessons that apply, bearing decisions, references. Read once per activity; a resumed session reads `## Context`, not the sources.
 4. New feature: take the next feature number from the board, create the activity file at the path `activity_naming` gives (month and day folders on demand; status header, then the body from `activity_template` or `templates/activity-template.md`; `E1` is the user's ask, quoted), add its row to the month ledger, add its block under **Planned** in its **Area** (`areas` in config; ask once if none fits), and add its overview node, grey, inside the area's subgraph. New item in an existing feature: add `### 7.n · <title> (<type>)` under `## Items` in the feature's file with its mini header, and a row under the feature's block on the board.
 
 ## Read
@@ -77,7 +79,7 @@ Follow `references/tracing.md`: fill the trace table, the caller inventory and t
 
 ## Evaluate
 
-Run the entry type's Evaluate. The tier comes from `references/sizing.md` within the limits in settings (`review.default_floor`, `review.max_tier`, `review.auto_tier`); the report states the tier and its signals, and the user may change it at the gate. Apply the ladder to anything proposed: needed at all → already here → stdlib → platform → installed dependency → one line → minimum code. End with the tier and its signals in the header.
+Run the entry command's Evaluate. Name the **elements touched**; then set the feature's **type** from the signals (`references/hierarchy.md`) — a type that differs from what the user called it is a proposal in decision shape, not a quiet change. The tier comes from `references/sizing.md` within the limits in settings (`review.default_floor`, `review.max_tier`, `review.auto_tier`); the report states the tier and its signals, and the user may change it at the gate. Apply the ladder to anything proposed: needed at all → already here → stdlib → platform → installed dependency → one line → minimum code. End with the tier and its signals in the header.
 
 ## Clarify
 
@@ -89,7 +91,7 @@ Write `## Report`. For a feature, *Proposed change* lists the **items** (`7.1 �
 
 ## Review
 
-Per tier. Spawn reviewers as `references/hosts.md` says for this host; run the isolation probe once per project per host first. Without fresh reviewers, follow the cold self-review protocol in `hosts.md` step by step, one lens at a time, labelled. A lens that fails is `not run`. Resolve every finding, then write the report, `## Findings`, header, board and event log **once per lens group**, in one consolidated pass — not one edit per finding. L and XL run rounds until two consecutive clean rounds (`goldfish-lenses.md › Rounds`); stopping at the cap is the user's decision, stated plainly. XL uses `review.xl_engine`. A material change revises the report and stays at Gate. Tier S: `Review: none (tier S)`. The same lenses answer "review this" at any stage, on whatever artifact is current. External reviewer comments are the `review` entry type, not this stage. When the user wants to share findings with a colleague, write the findings-and-verdicts list from `## Findings` as a standalone block they can paste.
+Per tier. A zoom-out finding that questions the premise pauses the review and goes to the user as a decision before any further lens runs (`goldfish-lenses.md › A premise finding stops the round`). Spawn reviewers as `references/hosts.md` says for this host; run the isolation probe once per project per host first. Without fresh reviewers, follow the cold self-review protocol in `hosts.md` step by step, one lens at a time, labelled. A lens that fails is `not run`. Resolve every finding, then write the report, `## Findings`, header, board and event log **once per lens group**, in one consolidated pass — not one edit per finding. L and XL run rounds until two consecutive clean rounds (`goldfish-lenses.md › Rounds`); stopping at the cap is the user's decision, stated plainly. XL uses `review.xl_engine`. A material change revises the report and stays at Gate. Tier S: `Review: none (tier S)`. The same lenses answer "review this" at any stage, on whatever artifact is current. External reviewer comments are the `review` entry type, not this stage. When the user wants to share findings with a colleague, write the findings-and-verdicts list from `## Findings` as a standalone block they can paste.
 
 ## Approve
 
@@ -113,7 +115,7 @@ Posture from `implement.posture` (default `full`): `full` enforces the ladder; `
 
 ## Realign
 
-After the last step, and at once when the user changes direction, stops you for drifting, or a finding changes the plan. A stop for drift is logged `DRIFT` in the event log and as a lesson (`references/communication.md › Drift and scope`). Under `## Realign`, dated: Does what exists solve the original ask or a neighbour? What exists that no approved step names — delete or get approved? What does the ladder remove from what was built? Which build findings await the user? Then run the **duplication and complexity check** and the **simplify pass** from `references/lean.md` over what this feature added or changed. Apply simplifications that need no decision; the rest go to the user. A material change returns to Approve.
+After the last step, and at once when the user changes direction, stops you for drifting, or a finding changes the plan. A stop for drift is logged `DRIFT` in the event log and as a lesson (`references/communication.md › Drift and scope`). Under `## Realign`, dated: Does what exists solve the original ask or a neighbour? What exists that no approved step names — delete or get approved? What does the ladder remove from what was built? Which build findings await the user? Then run the **duplication and complexity check** and the **simplify pass** from `references/lean.md` over what this feature added or changed, and recompute the **type** from the signals (`references/hierarchy.md`): promotion or demotion is proposed to the user here if the scope moved. Apply simplifications that need no decision; the rest go to the user. A material change returns to Approve.
 
 ## Validate
 
@@ -121,7 +123,7 @@ Evidence before claims. Run the project checks covering the change; where none e
 
 ## Close
 
-Only on the user's word. The feature has no rows left in the shared folder (release or resolve them first). Finalize the file: Summary points 4–5 current, `## Changes` complete, `## Links` filled, the Done / Not done / Your next step block as the Summary's last lines. Run `close_updates` (`references/logging.md`); ledger status; `Phase: Closed`; board row to **Finished** with a one-line result; overview nodes green. Closing ends the activity, not the project; `/A.reopen` continues it later with `Continues:`.
+Only on the user's word. The feature has no rows left in the shared folder (release or resolve them first). Finalize the file: Summary points 4–5 current, `## Changes` complete, `## Links` filled, the Done / Not done / Your next step block as the Summary's last lines. Append one history line to each element in `### Elements touched` and create any proposed new elements (`references/elements.md`). Run `close_updates` (`references/logging.md`); ledger status; `Phase: Closed`; board row to **Finished** with a one-line result; overview nodes green. Closing ends the activity, not the project; `/A.plan.realign` on a closed feature continues it later with `Continues:`.
 
 ## Items
 
@@ -131,7 +133,7 @@ A different kind of work needed inside the current feature — a quick bug that 
 
 ## Pointer and Next
 
-The header's `Pointer`, `Last done` and `Next` are the exact place work stopped and are authoritative: a resuming session continues there and nowhere else. **Before any turn ends with work pending, rewrite `Next` as one concrete action naming the file and the change** — never "continue implementing". The board row mirrors the pointer. `/A.resume` (`../resume/SKILL.md`) reads these first.
+The header's `Pointer`, `Last done` and `Next` are the exact place work stopped and are authoritative: a resuming session continues there and nowhere else. **Before any turn ends with work pending, rewrite `Next` as one concrete action naming the file and the change** — never "continue implementing". The board row mirrors the pointer. `/A.build.resume` (`../build/SKILL.md`) reads these first.
 
 ## Status header
 
@@ -141,7 +143,8 @@ Feature: 7 · <short title>
 Area: <one of config areas>
 Work item: <id under tracker_label, or "not tracked">
 Session: <host>-<feature>-<date time>   (the session currently working here)
-Type: plan | extend
+Type: feature | change | fix   (from the signals; see hierarchy.md)
+Promoted from / Demoted from: <type, date, reason — when it changed>
 Mode: auto | <command that overrode auto>
 Phase: Start | Read | Evaluate | Clarify | Gate | Approved | Implement | Realign | Verified | Stopped | Closed
 Tier: S | M | L | XL (signals: ...)

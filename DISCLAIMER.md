@@ -10,8 +10,8 @@ The A Skill is a personal project. I built it for my own development work and I'
 - **No warranty of correctness, security or fitness.** The skill may give wrong analysis, miss a bug, mis-classify a request, log something incorrectly, or behave differently on a host or model I haven't tested. Where it says "verified", that means the agent ran a check — not that I have.
 - **No liability.** To the fullest extent the law allows, I am not liable for any loss, damage, cost, data loss, security incident, downtime, or legal consequence arising from installing, using, modifying or distributing this skill, whether in your project, your employer's, or anyone else's.
 - **Your data stays yours and stays with you.** The skill sends nothing anywhere. What your agent sends to its model provider is governed by that provider's terms and your host's settings, not by this project.
-- **Modified copies are not mine.** If you or anyone else changes the skill's files, forks it, or wraps it, the result is yours. `/A.skill-repair` can tell you whether your installed copy matches a release I published.
-- **Check what you run.** The installers and `/A.skill-update` copy files from this repository into your project. Read them before you run them; that is good practice with any script from the internet, including mine. Pin to a version if you need stability.
+- **Modified copies are not mine.** If you or anyone else changes the skill's files, forks it, or wraps it, the result is yours. `/A.skill.repair` can tell you whether your installed copy matches a release I published.
+- **Check what you run.** The installers and `/A.skill.update` copy files from this repository into your project. Read them before you run them; that is good practice with any script from the internet, including mine. Pin to a version if you need stability.
 - **Suitability is your call.** If your work is regulated, safety-critical, or subject to rules about tooling and AI use, confirm with whoever sets those rules before using this. I can't do that for you.
 
 ## What I do commit to

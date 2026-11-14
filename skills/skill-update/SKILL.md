@@ -4,7 +4,7 @@ description: Check whether a newer release of The A Skill exists and, only after
 disable-model-invocation: true
 ---
 
-# /A.skill-update — update The A Skill itself
+# /A.skill.update — update The A Skill itself
 
 This command is about the skill, not the user's code. Nothing in the project's files, config or documents is touched. **No action is taken without the user's explicit yes.**
 
@@ -17,10 +17,10 @@ Releases are not always numbered: the version can stay the same while the reposi
 3. Compare the two commits. Say exactly one of these, then **stop and wait**:
 
    - Commits differ (version may or may not differ):
-     > `/A.skill-update` checks for a newer release of The A Skill — the workflow tooling, not your project code. You have **<installed version>** (commit <short>); the repository is at **<latest version>** (commit <short>), **<n> commits newer**. What changed: <one line per commit message in between — from `git log --oneline <installed>..<latest>` on a shallow fetch, or from the repository's commit page; the CHANGELOG where it has an entry>. Do you want to update now? (yes / no)
+     > `/A.skill.update` checks for a newer release of The A Skill — the workflow tooling, not your project code. You have **<installed version>** (commit <short>); the repository is at **<latest version>** (commit <short>), **<n> commits newer**. What changed: <one line per commit message in between — from `git log --oneline <installed>..<latest>` on a shallow fetch, or from the repository's commit page; the CHANGELOG where it has an entry>. Do you want to update now? (yes / no)
 
    - Commits equal:
-     > `/A.skill-update` checks for a newer release of The A Skill — the workflow tooling, not your project code. You have **<version>** (commit <short>), which is exactly what the repository has. Nothing to do.
+     > `/A.skill.update` checks for a newer release of The A Skill — the workflow tooling, not your project code. You have **<version>** (commit <short>), which is exactly what the repository has. Nothing to do.
 
    - `commit:` is `unknown` (installed before commits were recorded):
      > I can't tell which commit your copy came from, so I can't say whether anything changed. Updating is safe and takes a few seconds: it refreshes the method and commands and touches none of your projects. Do you want to update now? (yes / no)
@@ -32,7 +32,8 @@ Releases are not always numbered: the version can stay the same while the reposi
 
 1. Fetch the release to a folder under the operating system's temp directory (`$env:TEMP` on Windows, `/tmp` elsewhere) — never inside the workspace or a user folder — (`git clone --depth 1`, or the archive when git is unavailable).
 2. Show the user the fetched `install.ps1` / `install.sh` if it differs from the one in `.a/templates` (or in one line say it is unchanged), then run it against this project (`powershell -ExecutionPolicy Bypass -File install.ps1` on Windows — or, when Group Policy refuses even that, from inside the fetched folder: `& ([scriptblock]::Create((Get-Content .\install.ps1 -Raw)))`, `sh install.sh` elsewhere). It writes only `.a/skills`, `.a/templates`, `.a/registry.md`, `.a/VERSION`, `.a/SOURCE`, `.claude/commands/A.*`, `.github/prompts/A.*`. No installer possible → copy exactly those paths by hand.
-3. If `.a/project.md` exists and its `schema_version` is older than the one `../core/references/config-schema.md` expects: list the keys added or renamed with their defaults and **ask again** before writing any of them.
+3. The installer removes the previous release's command files before copying the new ones, so renamed commands do not linger; tell the user in one line which command names changed (from the release's CHANGELOG) and that `/A.help` shows the current set.
+3b. If `.a/project.md` exists and its `schema_version` is older than the one `../core/references/config-schema.md` expects: list the keys added or renamed with their defaults and **ask again** before writing any of them.
 4. **Find and refresh every mirror.** Build the list from three sources: `## Mirrors` in `~/.a/projects.md`; every registered project's path and the current workspace root, checked for `.a/mirror/MIRROR`; and, for registered projects, their parent folder (a workspace block there means a mirror may sit beside it). Any mirror found that is not in `## Mirrors` is added to it. Then for each mirror: copy `skills` and `templates` again, update its `MIRROR` file's commit, and list it in the report with before → after commit. A mirror whose folder no longer exists is marked `missing` in the list and left for the user to remove; nothing is deleted.
 5. Remove that temp folder before reporting; if the host refuses, ask for one approval to delete it and do it in the same turn — the user is never left to clean it up.
 6. Report: `<old version> (<old commit>) → <new version> (<new commit>)`, the installer's file counts, any config keys the user should set, and that a **new chat** is needed before the updated commands load.
