@@ -8,8 +8,10 @@ Names: <current name> · <older name> · <alias>
 Purpose: <one line>
 Code: <path (symbols)> · <path>
 Interfaces: <routes, events, contracts>
+Area: <one of the project's areas>
 Depends on: <element-id> · <element-id>
 Used by: <element-id>
+Sources: <documents that describe it, with dates>
 State: stable | in change | planned | unwired | superseded
 History:
 - <date> · F<n> <title> (<type>) · <decisions> · <one-line result>

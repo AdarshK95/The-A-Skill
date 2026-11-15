@@ -33,6 +33,10 @@ Elements are parts of the system at the level a solution architect would draw: a
 | **Start** | When the request names or touches an element, its entry — purpose, code, history — goes into `## Context`. The lineage is read, not rediscovered |
 | **`/A.project.drift`** | Checks each element's `Code` still exists and still does what `Purpose` says; flags elements whose functions moved or were renamed |
 
+## Area
+
+Each element carries `Area: <one of the project's areas>`; the map groups by it. When absent, the map takes the area of the first feature that touched the element.
+
 ## States
 
 `stable` (in service, no feature touching it) · `in change` (a feature on the board touches it now) · `planned` (does not exist yet) · `unwired` (kept in the repository, nothing calls it) · `superseded` (replaced; kept for history). Close sets them; the map colours them.

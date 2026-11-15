@@ -2,5 +2,6 @@
 .a/
 .a/mirror/
 .a/tmp/
+docs/map/map.html
 {{doc_paths}}
 # A-skill: end

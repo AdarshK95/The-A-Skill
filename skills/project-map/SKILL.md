@@ -26,6 +26,16 @@ One node per element inside its area's subgraph; one edge per `Depends on` / `Us
 
 Where the registry is thin (a new project, or an area no feature has touched), read the code to propose elements for that area — the per-directory contracts (`map_folder`) are the source — and ask before adding them. Never add elements from imports alone.
 
+## 2b. The interactive map
+
+The Mermaid in the board is the lean, always-readable view: elements, relations, state, nothing else. Under it, one pointer line:
+
+> Interactive map: `python .a/scripts/map_build.py` → `docs/map/map.html` (click an element to pull its thread).
+
+The script (`templates/map/map_build.py`, copied to `.a/scripts/` by `/A.project.start`, or on the map's first run when missing) reads the **same sources** — the registry, the board, the decisions and deferred-decisions logs — and writes one self-contained HTML file: elements grouped by area and coloured by state, edges for *depends on*, a badge per element with its feature, decision and relation counts, search and filters, and a side panel that pulls the thread: purpose, names, code anchors, relations, every feature that touched it in order with links to their files, every decision that names it. No network, no dependencies, standard-library Python. It never reads the Mermaid; both views come from the registry, so they cannot disagree.
+
+Whenever the overview is regenerated (by the map or by Close), the agent asks once in one line — "Overview updated. Regenerate `docs/map/map.html` too?" — and runs the script on yes; the user may also run it directly. The HTML is a build output: ignored by git unless the user says otherwise.
+
 ## 3. Pull the thread — `/A.project.map <element | feature | decision>`
 
 Given an element: its purpose, names, code, and its **history in order** — every feature and item that touched it, with types (and promotions), decisions, and one-line results, each linked to its file; then the elements it depends on and that depend on it, one line each. Given a feature: the elements it touched and their histories around that date. Given a decision: the elements it concerned and what happened to them after. This is the answer to "how did we get here" without a keyword search.
