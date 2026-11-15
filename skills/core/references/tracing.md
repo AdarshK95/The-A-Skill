@@ -29,6 +29,10 @@ One line per place in the traced path where data changes shape, is stored or cac
 
 Rules: each boundary gets a line in the report's *Impact*; a cache, permission, timestamp or concurrency boundary raises the tier.
 
+## Every trace is a flow fragment
+
+A trace table (above) or a forward pass (below) walks a path through the system. At the write point that follows it, the agent appends that path to the registry's `## Flows` as a fragment under the flow it belongs to — `### <flow> (fragment, F<n>)`, one numbered line per element with a few words — and any code anchor, `Part of:` or `Layer:` it became sure of on the way (`elements.md › Every pass leaves a drop`). Three lines; no question.
+
 ## 4. Forward pass — where could this error arise? (root cause)
 
 One row per stage from the entry point to the output, continuing past the first candidate.

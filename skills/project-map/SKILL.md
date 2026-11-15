@@ -20,9 +20,15 @@ Name drift is expected: "chat system", "persisted chat system", "chat manager" m
 4. **Present conflicts** to the user in decision shape before any merge: what two names, what the code shows, suggested resolution. No conflict → proceed silently.
 5. **Write the resolution** into the registry on yes: merged names, relations, states. A rename becomes an alias, never a second element.
 
+## 1b. Consolidate the drops
+
+Before drawing, fold what the passes left: merge fragments into their flows by element order (a fragment whose steps all appear in the flow in the same order adds nothing; one with a new element inserts it where its neighbours sit; a conflict — two fragments ordering the same elements differently — is a question in decision shape); dedupe anchors; fill `Layer:` where the code makes it plain (a route → `api`, a sub-agent → `agents`, a Cosmos/blob/index client → `stores`, settings and clients → `platform`, UI → `entry`, planner/router/pipeline → `orchestration`), proposing the rest; set `Part of:` where one element's anchors lie wholly inside another's. Report what was merged and filled in one line each; ask only on conflicts.
+
+**The flow pass** (first run, or when the user asks "map the flows"): read-only, like the coverage pass — from the routes, the pipeline and the sub-agents, propose the main flows as ordered element lists (a chat turn, a Cockpit turn, an approval, feedback to diagnosis, ingestion, a routine), one line per step, with the layer and parent of each element. The user confirms once. After that the flows grow from the drops every pass leaves.
+
 ## 2. Assemble
 
-One node per element inside its area's subgraph; one edge per `Depends on` / `Used by` relation (direction from the code); colour from `State` (grey planned · blue in progress · green finished · orange deferred · dimmed superseded). Board features appear only through the elements they touch — the map shows the system, the board shows the work. Write the mermaid block into the board's `## Overview`; keep it a map of parts, not tasks.
+One node per element; rows by `Layer:` (entry at the top, platform at the bottom; elements with no layer fall back to dependency depth); columns by area; one edge per `Depends on` relation; colour from `State`. A parent (`Part of:` points at it) is one card with a count of its parts, expanded on click in the interactive map; in the Mermaid, parts are a subgraph inside the parent only when the user asks for the detailed view, otherwise the parent alone. Board features appear only through the elements they touch — the map shows the system, the board shows the work. Write the mermaid block into the board's `## Overview`; keep it a map of parts, not tasks.
 
 Where the registry is thin (a new project, or an area no feature has touched), read the code to propose elements for that area — the per-directory contracts (`map_folder`) are the source — and ask before adding them. Never add elements from imports alone.
 
@@ -32,7 +38,7 @@ The Mermaid in the board is the lean, always-readable view: elements, relations,
 
 > Interactive map: `python .a/scripts/map_build.py` → `docs/map/map.html` (click an element to pull its thread).
 
-The script (`templates/map/map_build.py`, copied to `.a/scripts/` by `/A.project.start`, or on the map's first run when missing) reads the **same sources** — the registry, the board, the decisions and deferred-decisions logs — and writes one self-contained HTML file: elements grouped by area and coloured by state, edges for *depends on*, a badge per element with its feature, decision and relation counts, search and filters, and a side panel that pulls the thread: purpose, names, code anchors, relations, every feature that touched it in order with links to their files, every decision that names it. No network, no dependencies, standard-library Python. It never reads the Mermaid; both views come from the registry, so they cannot disagree.
+The script (`templates/map/map_build.py`, copied to `.a/scripts/` by `/A.project.start`, or on the map's first run when missing) reads the **same sources** — the registry, the board, the decisions and deferred-decisions logs — and writes one self-contained HTML file: elements in rows by layer and columns by area, coloured by state; parents collapsed to one card with a count and expanded in place on click; edges for *depends on*; a **flow selector** that lights a flow's path with numbered steps and dims the rest; a badge per element with its feature, decision and relation counts; search and filters; and a side panel that pulls the thread: purpose, names, code anchors, relations, every feature that touched it in order with links to their files, every decision that names it. No network, no dependencies, standard-library Python. It never reads the Mermaid; both views come from the registry, so they cannot disagree.
 
 Whenever the overview is regenerated (by the map or by Close), the agent asks once in one line — "Overview updated. Regenerate `docs/map/map.html` too?" — and runs the script on yes; the user may also run it directly. The HTML is a build output: ignored by git unless the user says otherwise.
 

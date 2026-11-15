@@ -29,6 +29,8 @@ Get the artifacts, not the description of them: outputs, logs, traces, stored re
 
 Each lane returns: its candidates with evidence (`path:symbol`, log line, record id), the chain it followed, and a **coverage statement**: the segments, components and layers it examined. At depth S the agent runs the lanes itself, one after another, writing each lane's result before starting the next (blindness by discipline). At M and above each lane is a fresh subagent (`hosts.md`).
 
+**Lanes leave drops.** Each lane's chain (`origin → … → symptom`) and the forward lane's stage list are flow fragments; the coverage map is a list of elements and the layers beneath them. At the write point after the lanes, append them to the registry's `## Flows` and the elements' `Layer:` / `Code:` where missing (`elements.md › Every pass leaves a drop`). A root cause that walked the chat path has mapped the chat path.
+
 ## 4. Coverage check — before any reconciliation
 
 Draw the **path map**: entry → every stage → output, plus the layer beneath each stage. Mark each segment *examined by* (which lanes) or *not examined*. Gaps have three directions:

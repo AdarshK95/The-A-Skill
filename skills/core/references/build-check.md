@@ -12,6 +12,8 @@ Look around it, every time, however small the step:
 4. **Tests and fixtures** that mention the symbol by name — monkeypatches, mocks, snapshots. They are consumers too.
 5. **Config and environment.** Flags, settings, feature switches, environment differences (dev vs prod containers, TTLs, permissions) the symbol depends on.
 
+**Leave a drop.** The callers, consumers and siblings found in 1–5 are relations; the files touched are anchors. At the step's write point, append to the registry what it lacks (a `Depends on` / `Used by`, a `Code:` anchor, a `Part of:` now evident) — two lines, no question (`elements.md › Every pass leaves a drop`).
+
 ## After editing
 
 6. **Wire it end to end.** Follow the path from where the request enters to where the result leaves, through the change. Does the new piece connect to the old pieces — is it called, does its output reach what needs it, is the dead old path removed?

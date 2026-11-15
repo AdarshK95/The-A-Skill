@@ -26,7 +26,7 @@ Whether the request is sound as stated, what the code already supports, what it 
 One line per instruction in `## Instructions` still in force: `I-n — honoured` with where in the plan, or `I-n — deviation` with the decision number that proposes it, or `I-n — question`. Never empty; a report with an unlisted instruction fails the self-check.
 
 ### Elements touched
-The system parts this work touches (`elements.md`): existing element ids, or `new: <id> — <one-line purpose>`; for each, what this work changes about it. Never empty.
+The system parts this work touches (`elements.md`): existing element ids, or `new: <id> — <one-line purpose>`; for each, what this work changes about it. Never empty. Where known, one line more: `on flow <name>, between <A> and <B>` — and anything the Read learned about layer, containment or a path goes to the registry as a drop (`elements.md › Every pass leaves a drop`).
 
 ### Known facts *(if any)*
 Artifacts from the ledger that bear on this work, cited by file — measured facts the plan relies on instead of re-measuring.

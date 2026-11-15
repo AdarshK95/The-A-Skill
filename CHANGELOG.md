@@ -2,6 +2,14 @@
 
 Version numbers follow the scale of the change, decided per release: the third number for wording, rules and fixes inside existing commands; the second for a new or removed command, stage, reference or config key — anything an installed copy must re-learn; the first for a restructure that breaks existing projects' files (not before 1.0).
 
+## 0.8.0 — 15 Nov 26
+
+Second-number release: new registry fields and a new section, and a rule every stage follows.
+
+- **Structure in the registry**: `Layer:` (entry · api · orchestration · agents · stores · platform), `Part of:` (containment), and a `## Flows` section — named sequences of elements in the order they run, with **fragments** any pass can add under a flow's name.
+- **Every pass leaves a drop** (`elements.md`): any stage that reads code — a plan's Read, a root cause's lanes, a review's spot-checks, the build check's look-around, a coverage pass — appends what it learned about structure to the registry at its write point: anchors, relations, `Part of`, `Layer`, flow fragments. Two or three lines, no question. The map consolidates: merges fragments by element order (or by their step number), fills layers the code makes plain, sets containment, asks only on conflicts. A one-time flow pass seeds the main flows.
+- **Map renders the structure**: rows by layer, columns by area; a parent is one card with "+N parts" that expands in place; a flow selector lights the path with numbered steps and dims the rest; the panel lists the flows an element is on and its position in each.
+
 ## 0.7.1 — 15 Nov 26
 
 - Map builder tolerates hand-written registries: `feature 6` or `F6` in history lines, `State:` with an annotation (kept as a note), a `###` heading ends an element; decisions without an `Elements:` line match by whole id or multi-word name only and are marked ≈ in the panel. `Note:` field documented.

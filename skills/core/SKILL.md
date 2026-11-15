@@ -14,7 +14,7 @@ Work is organized in a hierarchy and a workflow:
 
 **Entry commands** decide *how the work is evaluated*: `/A.rootcause` (something went wrong — find the cause before anything is planned; `references/rootcause.md`), `/A.plan` (new, or the fix from a root-cause report), `/A.plan.realign` (continue or change what exists; also reopens a closed feature), `/A.review` with pasted comments (an outside reviewer's findings). Each has a skill folder beside this one and supplies the **Evaluate** stage only. A feature's **type** (`feature`, `change`, `fix`) follows the sizing signals, not the command used, and is re-evaluated at Evaluate and Realign (`references/hierarchy.md`); a bug asked for on its own becomes an item of the feature it belongs to, or a standalone `fix`.
 
-**Elements.** Every report names the system parts it touches (`### Elements touched`); Close appends the work to each element's history; Start reads an element's history before the code (`references/elements.md`).
+**Elements.** Every report names the system parts it touches (`### Elements touched`); Close appends the work to each element's history; Start reads an element's history before the code (`references/elements.md`). **Every pass leaves a drop:** any stage that reads code appends what it learned about structure — anchors, relations, `Part of`, `Layer`, flow fragments — to the registry at its write point, two or three lines, no question. The map consolidates.
 
 **Stages** are the workflow every feature and item moves through. Each is a command; in auto mode (`../auto/SKILL.md`) you advance through them yourself and say so at each move.
 
