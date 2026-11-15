@@ -30,6 +30,16 @@ Where the registry is thin (a new project, or an area no feature has touched), r
 
 Given an element: its purpose, names, code, and its **history in order** — every feature and item that touched it, with types (and promotions), decisions, and one-line results, each linked to its file; then the elements it depends on and that depend on it, one line each. Given a feature: the elements it touched and their histories around that date. Given a decision: the elements it concerned and what happened to them after. This is the answer to "how did we get here" without a keyword search.
 
+## What the map does on its own, and what it asks
+
+The registry is derived from the code and from the features' reports; most of its upkeep is fact, not judgement. The map **does without asking**: correct a code anchor or path that moved (the code is the truth); move an anchor to the element that owns it; register an element that a feature's `### Elements touched` already named (that report was approved); add relations the code shows; mark an element *unwired* when nothing calls it; redraw the overview from the registry (features never appear as nodes — they appear through the elements they touch). Each is one line in the report.
+
+The map **asks, in decision shape**, only for judgement: merging two names into one element (an alias); drawing or moving an element boundary (splitting a package between two elements); registering a part that no feature has touched (offered in one line, with a default of "not yet"); marking an element *superseded*. Two or three questions is normal on a first run; none on a routine one.
+
+**States** (one per element, from the registry and the board): `stable` — in service, no feature touching it; `in change` — a feature on the board touches it now; `planned` — does not exist yet; `unwired` — kept in the repository, nothing calls it. The overview colours these; "finished" is a feature's state, not an element's.
+
+**First run on an existing project** is a seeding pass: it reads the registry, every report's `### Elements touched`, the board and the code, proposes the registry it would write, and asks the judgement questions once. **After that, Close redraws the overview and appends element history itself**, so the map stays current without being run; `/A.project.map` is for pulling a thread, resolving drift the registry has accumulated, or when the user wants to look.
+
 ## 4. Report
 
 Plain words first: how many elements, how many resolved as the same, what relations were added, what is still ambiguous. Then the diagram. Decisions (merges, relations) in decision shape. `Done / Not done / Your next step`.

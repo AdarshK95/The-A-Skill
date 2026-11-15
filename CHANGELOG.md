@@ -7,6 +7,8 @@ Version numbers follow the scale of the change, decided per release: the third n
 Second-number release: the command set, the stages and the project schema changed. An installed copy needs `/A.skill.update` and a new chat.
 
 - **The user's instructions are the source** (`## Instructions` ledger in every feature, in the user's words; conformance check at every boundary and first in every review lens; a plan that does not honour an instruction is a Blocker; deviations are decisions to the user, never agent resolutions). Replaces the earlier "user-given design is the spec" rule with its general form.
+- **Map asks only for judgement**: anchor corrections, approved elements, relations and the overview redraw happen without asking; merges, boundaries and untouched parts are the questions. Element states `stable / in change / planned / unwired / superseded`; Close redraws the overview and appends element history itself.
+- **Verified means deployed**: user-visible behaviour is verified through the deployed environment's real entry point; a local run against its resources is labelled and does not close a requirement.
 - **Two files per feature**: the report (current state, plain words, for a person) and the `.detail.md` (event log, findings, lanes, verification, reuse/impact, superseded text, in terse agent notation). Records the map, thread, drift, resume and conformance check depend on are listed and never minimized.
 - **Reground** (`lean.md › Reground`, spine standing rule, build-check step 8, lens consistency pass, auto advance, self-check 23): scope, lean and premise asked silently at every stage boundary; one line and the full check when any is no. Robust and lean defined as the same target: the robust solution with the least code.
 

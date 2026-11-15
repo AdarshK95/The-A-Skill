@@ -12,7 +12,7 @@ Code: agent/conversation_store.py (persist_turn, _merge_turn, update_conversatio
 Interfaces: POST /chat · /chat/sync · /chat/read
 Depends on: cosmos-conversations · turn-ids
 Used by: chat-pipeline · frontend-chat
-State: in progress
+State: in change
 History:
 - 23 Sep 26 · F2 Backend owns the turn (feature) · decisions D4, D7 · moved the writer from the browser to the backend
 - 02 Nov 26 · F9 Cockpit handoff (change) · added /chat/handoff-answer writing by position
@@ -32,6 +32,10 @@ Elements are parts of the system at the level a solution architect would draw: a
 | **Close** | Appends one history line to each touched element: date · feature number and title · type (with promotion if any) · decisions · one-line result. Creates proposed new elements |
 | **Start** | When the request names or touches an element, its entry — purpose, code, history — goes into `## Context`. The lineage is read, not rediscovered |
 | **`/A.project.drift`** | Checks each element's `Code` still exists and still does what `Purpose` says; flags elements whose functions moved or were renamed |
+
+## States
+
+`stable` (in service, no feature touching it) · `in change` (a feature on the board touches it now) · `planned` (does not exist yet) · `unwired` (kept in the repository, nothing calls it) · `superseded` (replaced; kept for history). Close sets them; the map colours them.
 
 ## Name drift and resolution
 

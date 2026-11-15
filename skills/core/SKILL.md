@@ -128,7 +128,7 @@ After the last step, and at once when the user changes direction, stops you for 
 
 ## Validate
 
-Evidence before claims. Run the project checks covering the change; where none exists, leave the smallest runnable check that fails if the logic breaks. Record command and result under `## Verification`. Diff the build against the approved steps: each present, nothing extra. Tick every line of `## Requirements` with its evidence; an unticked one is a Blocker. If the work produced project-level evidence (a probe matrix, a baseline, an inventory — `references/artifacts.md`), propose it as an artifact; write it and its ledger row on the user's yes. `Phase: Verified`; tell the user it is ready to close or continue.
+Evidence before claims. Run the project checks covering the change; where none exists, leave the smallest runnable check that fails if the logic breaks. Record command and result under `## Verification`. Diff the build against the approved steps: each present, nothing extra. Tick every line of `## Requirements` with its evidence; an unticked one is a Blocker. For behaviour users see, the evidence comes from the deployed environment's real entry point after deployment, and the report says so; a local run against that environment's resources is labelled as such and does not close the requirement (`../verify/SKILL.md`). If the work produced project-level evidence (a probe matrix, a baseline, an inventory — `references/artifacts.md`), propose it as an artifact; write it and its ledger row on the user's yes. `Phase: Verified`; tell the user it is ready to close or continue.
 
 ## Close
 
