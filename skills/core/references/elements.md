@@ -4,11 +4,15 @@ The **elements registry** (`elements_registry` in config, default `docs/map/elem
 
 ## Structure: layers, containment, flows
 
-A dependency graph shows what calls what; a project's true form is three more things, each one field:
+A dependency graph shows what calls what; a project's true form is its **containers** — the deployable units (a frontend plugin, a proxy, the backend app, the external systems it talks to) — with their parts inside, arranged in the order a request travels, and the **kind of connection** written on each line. Two fields and a section:
 
-- **`Layer:`** — which row an element sits on, top to bottom: `entry` (UI, bots, schedulers — where a request enters), `api` (routes), `orchestration` (planning, routing, pipeline), `agents` (sub-agents and connectors), `stores` (databases, indexes, blobs), `platform` (settings, clients, telemetry). Mostly derivable from the code; the agent proposes, the user corrects once.
-- **`Part of:`** — the element this one is a part of (Scout v2 retrieval is part of the knowledge answer step; six connectors are part of the agent pipeline). The map draws a parent as one card with a count and expands it on click.
+- **Containers are elements.** The top of the registry is the deployable units themselves (`medha-plugin`, `backstage-proxy`, `medha-backend`, `cosmos`, `foundry`, …), each an element with its own anchors; every other element has `Part of:` up to one of them. The map draws a container as a box with its parts inside; a container inside a container is a box inside a box.
+- **The connection type is a label on the relation**, never a grouping: `Depends on: chat-store (Cosmos: conversations) · agent-pipeline (call: _run_generation) · live-feed (SSE: /chat/resume)` — type, colon, name, in parentheses after the element id. The map writes it on the line.
+
+- **`Part of:`** — the element this one is a part of. The test: an element that **runs, hosts or wholly contains** another is its parent (a pipeline and the sub-agents it runs; an answer step and the retrieval inside it); a caller is not a parent, and a module shared by two elements belongs to neither's parts. The map draws a parent as one card with a count and expands it on click.
 - **`## Flows`** — a section at the top of the registry, after the header and before the first element: named sequences of elements in the order they run when something happens — *chat turn*, *Cockpit turn*, *approval*, *feedback to diagnosis* — one numbered line per step: `1. <element-id> · <what happens here, few words>`, then `Sources: F<n> …`. A flow is how the system actually behaves; the map lights it up step by step.
+
+The former `Layer:` field is retired: a technology type is not a place in the system, and grouping by it hides the structure. The map ignores it where it still appears.
 
 ```
 ## Flows
@@ -28,6 +32,8 @@ Sources: F5 root cause (14 Nov 26) · F6 plan
 Sources: F15 plan
 ```
 
+A step whose element does not exist yet, or whose behaviour is designed but not built, carries **`(planned)`** in its note: flows will always mix what runs and what is planned, because every plan traces a path before it is built, and the map dims those steps so a reader sees what runs today.
+
 A **fragment** is a partial path a pass learned — a few steps of a flow, or a new branch — written under the flow's name with `(fragment, F<n>)`; the map merges fragments into the flow by element order. No pass has to know the whole flow to contribute to it.
 
 ## Every pass leaves a drop
@@ -39,8 +45,7 @@ Any command that reads the code learns structure, and writes it down where it al
 ```
 ## chat-persistence
 Names: chat persistence · persisted chat system · chat store   ← every name the project has used; the first is current
-Layer: stores
-Part of: (none)
+Part of: medha-backend
 Purpose: stores conversations and turns; the single writer of chat history
 Code: agent/conversation_store.py (persist_turn, _merge_turn, update_conversation_read_at) · agent/stream_buffer.py
 Interfaces: POST /chat · /chat/sync · /chat/read

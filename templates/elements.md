@@ -16,13 +16,12 @@ Sources: F<n>
 <!--
 ## <element-id>
 Names: <current name> · <older name> · <alias>
-Layer: entry | api | orchestration | agents | stores | platform
-Part of: <element-id, or none>
+Part of: <container or parent element id; top-level containers (the deployable units) have none>
 Purpose: <one line>
 Code: <path (symbols)> · <path>
 Interfaces: <routes, events, contracts>
 Area: <one of the project's areas>
-Depends on: <element-id> · <element-id>
+Depends on: <element-id> (<type>: <name>) · <element-id>
 Used by: <element-id>
 Sources: <documents that describe it, with dates>
 State: stable | in change | planned | unwired | untouched | superseded

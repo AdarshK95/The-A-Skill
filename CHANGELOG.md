@@ -2,12 +2,21 @@
 
 Version numbers follow the scale of the change, decided per release: the third number for wording, rules and fixes inside existing commands; the second for a new or removed command, stage, reference or config key — anything an installed copy must re-learn; the first for a restructure that breaks existing projects' files (not before 1.0).
 
+## 0.9.0 — 15 Nov 26
+
+Second-number release: the map's structure changes and a registry field is retired.
+
+- **Containers are the structure.** The deployable units (plugin, proxy, backend app, external systems) are elements; every other element has `Part of:` up to one of them. The map draws containers as boxes with their parts inside, left to right in the order a request travels (from the flows), nested containers as boxes inside boxes; top level open, inner ones collapsed to a card until clicked.
+- **Connection type is a label on the relation** — `Depends on: chat-store (Cosmos: conversations) · live-feed (SSE: /chat/resume)` — written on the line when an element or a flow is selected. Never a grouping.
+- **`Layer:` retired.** A technology type is not a place in the system; grouping by it hid the structure (0.8.0's mistake). The map ignores it.
+
 ## 0.8.0 — 15 Nov 26
 
 Second-number release: new registry fields and a new section, and a rule every stage follows.
 
 - **Structure in the registry**: `Layer:` (entry · api · orchestration · agents · stores · platform), `Part of:` (containment), and a `## Flows` section — named sequences of elements in the order they run, with **fragments** any pass can add under a flow's name.
 - **Every pass leaves a drop** (`elements.md`): any stage that reads code — a plan's Read, a root cause's lanes, a review's spot-checks, the build check's look-around, a coverage pass — appends what it learned about structure to the registry at its write point: anchors, relations, `Part of`, `Layer`, flow fragments. Two or three lines, no question. The map consolidates: merges fragments by element order (or by their step number), fills layers the code makes plain, sets containment, asks only on conflicts. A one-time flow pass seeds the main flows.
+- Flow steps may carry `(planned)`; the map dims them. `Part of` has a test: runs, hosts or wholly contains.
 - **Map renders the structure**: rows by layer, columns by area; a parent is one card with "+N parts" that expands in place; a flow selector lights the path with numbered steps and dims the rest; the panel lists the flows an element is on and its position in each.
 
 ## 0.7.1 — 15 Nov 26
