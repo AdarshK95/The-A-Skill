@@ -8,6 +8,12 @@
 4. **What was done:** one or two plain sentences; no paths or names.
 5. **The result:** what works now that did not, or what no longer goes wrong. (Updated as the work progresses; the last line always reflects the current state.)
 
+## Instructions
+
+_The user's instructions for this feature, in their words, numbered as they arrive; never paraphrased, never merged. A later instruction that changes an earlier one is added as its own line and the earlier marked `superseded by I-n`. Every stage and every reviewer checks the work against this list._
+
+- I1 · <date time> — "<the user's words>"
+
 ## Context
 
 _Written once at Start: the constitution rules and lessons that bind this work, the decisions that bear on it, with references._
@@ -21,6 +27,7 @@ _Current report (see `report-schema.md`). A revised report is appended below the
 _`### 7.n · <title> (<type>)` with Phase · Pointer · Last done · Next · Result, then its steps._
 
 ## Findings
+_One line: rounds run, last round clean or not, counts by severity; the findings themselves are in `<nn>-<slug>.detail.md`._
 
 _Review findings and verdicts (FIX / CONTEST / ESCALATE / DECLINE), with evidence._
 

@@ -14,7 +14,7 @@ Runs the spine's **Implement** and **Realign** stages (`../core/SKILL.md`) on th
 
 For a build that stopped: session cut, tab closed, planning or realigning happened in between, or the user simply came back. Before writing anything:
 
-1. **Read the tracker**: the feature header (`Pointer`, `Last done`, `Next`), the item list with each step's status (planned / in progress / done / blocked), `## Changes`, `## Build findings` awaiting, the last five event-log lines, the shared folder (another session may hold a claim).
+1. **Read the tracker**: the report first (header (`Pointer`, `Last done`, `Next`), the item list with each step's status (planned / in progress / done / blocked), `## Changes`, `## Build findings` awaiting), then from the detail only what the report points at and the last five event-log lines; the shared folder (another session may hold a claim).
 2. **Verify against the files**: every step marked done has its change present in the named files; every step marked in progress is checked for partial edits (read the file; `git status` / `git diff` where available). Mismatches are reported before anything else — the tracker is corrected to what the files show, not the other way round.
 3. **Re-read the ask and the approved steps**; if the plan was realigned since the build started, name what changed and which steps it affects.
 4. **Announce** in one block: feature › item › step; done since last report; mismatches found; next concrete action; anything awaiting the user.

@@ -6,6 +6,14 @@ The reason the skill exists is to make the user's work lighter. Every rule below
 
 **Scratch and temporary files.** Anything the agent creates that the user did not ask for (clones for comparison, sampling output, test fixtures, extracted data) goes to the **operating system's temp folder** (`$env:TEMP` / `/tmp`) or, when it must be inside the project, to `.a/tmp/` (ignored by git, emptied at Close). Never to the workspace root, a user folder, or beside the user's files. It is deleted **before** the report is written. The report says "temporary files removed" in the Done block, not "please remove". Scratch that contains **personal or project data** — users' conversations, prompts, exported records, credentials — is the strict case: it is never offered to the user for deletion, it is deleted the moment it has served its purpose and in any case before the report, and the fact that such data was copied outside the project at all is reported as a build finding so the next time it is sampled in place or under the project's `.a/tmp/` instead. A host that refuses to delete a location is a reason to choose a location it allows next time — the agent chooses `$env:TEMP` from the start; if it still cannot delete, it asks for one approval to delete and does it, in the same turn.
 
+## The user's instructions are the source, and every stage is checked against them
+
+Every instruction the user gives about a feature is written into the feature's `## Instructions` ledger **in the user's own words**, numbered `I1, I2, …`, as it arrives, never paraphrased or merged. A later instruction that changes an earlier one is added as its own line and the earlier one marked `superseded by I-n` — by the user's words, never by the agent's inference. The ledger is the thing the work is aligned to; the code, the review, the agent's own earlier plan are not.
+
+**The conformance check** runs at every boundary — end of Evaluate, before Report, after every lens group, per item in Build, before Realign, at every auto advance, and in full under `/A.plan.scope_check_drift_check`: for each instruction still in force, does what is about to be done honour it? Three answers only: *honoured*; *deviation — proposed to the user* (in decision shape, with what the instruction says, what the plan does instead, why, and the suggested resolution); *impossible as stated — question to the user*. A deviation is never resolved by the agent, never folded into a plan as a reasonable reading, never argued by the evidence alone. Silent when all honoured; one line per deviation when not.
+
+**Reviewers get the ledger.** Every lens receives `## Instructions` with the plan and checks conformance first: a plan that does not honour an instruction in force, or honours it in form but not in substance, is a **Blocker** against the plan, whatever the lens's other findings. This is how the design the user gave stays the design: not because a rule names each way it could drift, but because every pass re-reads what the user actually said.
+
 ## Do what was asked, or say it cannot be done
 
 The user's instruction is the task. When it can be done, do it as stated — not a nearby thing, not a reinterpretation, not the half you find easier. When it cannot be done, say so plainly ("I can't do X because Y"), and offer the closest thing you *can* do as a question, never as a substitute done silently. Three failures this rule exists to stop:
@@ -69,6 +77,10 @@ Rules for the block:
 - **Say what the user must do**, with the file or command, and what will happen when they do it. Never a chore the agent caused: no "delete the folder I left", no "fix the file I half-wrote". If the agent left something, it is not done.
 
 A turn that only analyzed says `Done: analysis only — no file was changed` and names where the analysis was written. The block is never omitted and never merged into prose; an answer that lays out findings and stops is not finished. The same block, as the Summary's last lines, closes every activity file at Close.
+
+## Documents are for their reader
+
+The report is for a person: current state, plain words, as little as still lets a stranger act. The detail file is for the agent: every record, agent notation, as little as still stops the next agent re-deriving. Neither carries the other's content (`logging.md › Two layers`). A report a person will not finish, or a detail file that narrates, has failed its reader.
 
 ## Paths in chat
 

@@ -81,6 +81,7 @@ Recording and writing are different things. Every event is **recorded** when it 
 
 - a **step** completes (its event lines, its `## Changes` lines, the pointer);
 - a **decision** is made — immediately and alone, because its loss costs the most (dual write);
+- the **user gives an instruction** — appended to `## Instructions` at once, in their words;
 - a **finding** is logged as blocking — immediately;
 - a **stage** changes;
 - **before asking the user** anything, and **before any long-running action** (a reviewer run, a build, a migration);

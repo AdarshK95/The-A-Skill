@@ -1,5 +1,7 @@
 # Report schema
 
+**The report is the current state, written for a person.** Everything historical, every finding transcript, every table a builder needs but a reader does not, goes to the feature's `.detail.md` in agent notation (`logging.md › Two layers`). The agent decides how little the report can say and still let a stranger act on it; the test is a person reading it in minutes and knowing what was asked, what is true, what is decided, what is open and what happens next. Sections that are empty are omitted. The report never carries a superseded sentence: when a decision or a review changes the plan, the text is corrected in place and the old text moves to the detail with its date.
+
 One report format for every type. The user reads the same headings whether the work is a new feature or a one-line fix, so they know where to look. Sections marked *(if relevant)* are omitted when they would say nothing.
 
 Write it under `## Report` in the activity file. Every statement about the code carries a `path:symbol` citation.
@@ -20,13 +22,16 @@ Whether the request is sound as stated, what the code already supports, what it 
 [bugfix] The root cause, stated in one sentence, and why that and not the nearer symptom.
 [review with comments] For each reviewer comment: correct / incorrect / known and deferred — with the evidence for each verdict.
 
+### Instruction check
+One line per instruction in `## Instructions` still in force: `I-n — honoured` with where in the plan, or `I-n — deviation` with the decision number that proposes it, or `I-n — question`. Never empty; a report with an unlisted instruction fails the self-check.
+
 ### Elements touched
 The system parts this work touches (`elements.md`): existing element ids, or `new: <id> — <one-line purpose>`; for each, what this work changes about it. Never empty.
 
 ### Known facts *(if any)*
 Artifacts from the ledger that bear on this work, cited by file — measured facts the plan relies on instead of re-measuring.
 
-### Reuse candidates
+### Reuse candidates *(detail file; the report keeps one line: "reuse: N candidates, M reused — detail › Reuse")*
 The reuse search (`lean.md`): one row per new need — candidate `path:symbol`, match (exact / close / pattern / none), decision. Never empty: a need with no candidate says so and why.
 
 ### Solution quality
@@ -41,10 +46,10 @@ One checkable line per requirement, in the user's terms, `- [ ] R1 …`; ticked 
 ### Proposed change
 What will be modified, file by file, and how. The rung of the ladder each change sits on. For a choice the user must make: the options, the trade-offs, and one line on which way you lean and why; the alternatives stay visible.
 
-### Impact
+### Impact *(detail file; the report keeps the consequences a person must know: what changes for users, what could break, what is reversible)*
 What else this change touches: callers, consumers, data already stored, caches, permissions, concurrent paths. For each: handled how, or accepted as a risk and why. What could break if this is wrong.
 
-### Verification
+### Verification *(the report keeps pass/fail per requirement; commands and output go to the detail)*
 How you will prove the change works and that nothing planned was missed: the checks to run, the one check you will leave behind if none exists.
 
 ### After the change *(if relevant)*

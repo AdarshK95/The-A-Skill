@@ -21,7 +21,7 @@ Spawn one fresh subagent per lens where the host allows. Otherwise run the lens 
 
 Shared preamble for every lens:
 
-> You are reviewing a plan you did not write, for a codebase you are seeing for the first time. You have the plan, the files it cites, and the project's standing rules. Read everything you were given before writing. Report only what you can point at in those files. Tag each finding Blocker, Major or Low. Do not propose rewrites; name the gap.
+> You are reviewing a plan you did not write, for a codebase you are seeing for the first time. You have the plan, the user's instructions for it (`## Instructions`, in the user's words), the files it cites, and the project's standing rules. First check the plan against each instruction: any instruction not honoured, in form or substance, is a Blocker citing the instruction. Then apply your lens. Read everything you were given before writing. Report only what you can point at in those files. Tag each finding Blocker, Major or Low. Do not propose rewrites; name the gap.
 
 ## zoom-out
 

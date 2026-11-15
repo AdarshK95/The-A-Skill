@@ -26,3 +26,5 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 21. `### Elements touched` names every system part the plan changes, with existing ids or a proposed new element; the type stated matches the signals or is raised as a proposal.
 22. A plan that fixes a wrong behaviour names the root-cause report it plans from, with the cause at CONFIRMED or LIKELY; the change sits at the origin, not at a cascade link or the symptom.
 23. The reground questions were answered at this boundary: the plan still serves the ask as stated at its current type, adds no structure the ask did not need, and nothing learned has changed the premise.
+24. `### Instruction check` lists every instruction in `## Instructions` in force, each honoured, a proposed deviation with its decision, or a question; none missing, none resolved by the agent alone.
+25. The report is current state only, in plain words, readable in minutes; history, transcripts and tables are in the detail file in agent notation; every record the map, drift, resume or the conformance check reads (`logging.md › What is never minimized`) is present and complete.
