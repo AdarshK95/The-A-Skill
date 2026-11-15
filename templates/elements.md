@@ -23,6 +23,7 @@ Interfaces: <routes, events, contracts>
 Area: <one of the project's areas>
 Depends on: <element-id> (<type>: <name>) · <element-id>
 Used by: <element-id>
+Events: <telemetry event-name globs this element emits, e.g. scout.* · agent.invoke@SomeAgent>
 Sources: <documents that describe it, with dates>
 State: stable | in change | planned | unwired | untouched | superseded
 Note: <optional, why the state or anything a reader should know>

@@ -36,6 +36,7 @@ approval:
   second_reviewer: off
 map_folder: docs/map/
 elements_registry: docs/map/elements.md
+observed_file: docs/map/observed.jsonl     # optional; the telemetry contract the map reads if present
 shared_folder: .a/shared/
 claim_stale_hours: 4
 drift:

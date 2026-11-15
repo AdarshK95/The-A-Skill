@@ -26,6 +26,10 @@ Before drawing, fold what the passes left: merge fragments into their flows by e
 
 **The flow pass** (first run, or when the user asks "map the flows"): read-only, like the coverage pass — from the routes, the pipeline and the sub-agents, propose the containers, the main flows as ordered element lists (a chat turn, a Cockpit turn, an approval, feedback to diagnosis, ingestion, a routine), one line per step, and the parent of each element. The user confirms once. After that the flows grow from the drops every pass leaves.
 
+## 1c. The observed layer
+
+If `docs/map/observed.jsonl` exists (the contract in `elements.md › Observed`), the build adds telemetry to the map: turns, errors and median duration per element, traffic per relation, observed paths with their share of turns beside the declared flows, and the unmapped-events list. Setting it up in a project is the project's work, handed to the build: an exporter that writes the contract from the project's own telemetry store (read-only, no text, no identities, output git-ignored), and an `Events:` proposal for every element from the project's event-name registry, confirmed by the user; event names that fit no element are proposed as new elements or as external systems. After that, refreshing the file is one command, and the observed layer is a validation of the registry every time: an unmapped name is a gap, an element with patterns and no traffic is a question.
+
 ## 2. Assemble
 
 Containers as subgraphs, parts inside them in flow order, one edge per `Depends on` relation labelled with its connection type and name where known; colour from `State`. In the Mermaid, nested parents are drawn as their card alone unless the user asks for the detailed view. Board features appear only through the elements they touch — the map shows the system, the board shows the work. Write the mermaid block into the board's `## Overview`; keep it a map of parts, not tasks.

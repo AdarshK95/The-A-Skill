@@ -32,9 +32,20 @@ Sources: F5 root cause (14 Nov 26) · F6 plan
 Sources: F15 plan
 ```
 
+**Flow names.** A flow is named by its actor and action — `knowledge-agent-turn`, `cockpit-agent-turn`, `commvault-agent-turn`, `routine-run`, `feedback-diagnosis`, `sharepoint-ingestion` — and its title is the outcome in plain words. "A user sends a message and gets an answer" is the application, not a flow; one flow per agent or actor, each the full path including the external systems it uses.
+
 A step whose element does not exist yet, or whose behaviour is designed but not built, carries **`(planned)`** in its note: flows will always mix what runs and what is planned, because every plan traces a path before it is built, and the map dims those steps so a reader sees what runs today.
 
 A **fragment** is a partial path a pass learned — a few steps of a flow, or a new branch — written under the flow's name with `(fragment, F<n>)`; the map merges fragments into the flow by element order. No pass has to know the whole flow to contribute to it.
+
+## Observed: the telemetry layer
+
+The map can carry what the system *actually did*, next to what the registry says. Two things make that generic across projects:
+
+- **`Events:`** on an element — the telemetry event-name patterns it emits, as globs: `Events: scout.* · knowledge.* · agent.invoke@CommvaultAgent`. `name@tag` also requires the event's `tag` (any discriminator the project's exporter sends — an agent key, a tenant, a region) to match. A note in parentheses after a pattern, such as `(unverified)`, is kept for the reader and ignored by the matcher. Matching is case-sensitive; first match wins.
+- **The contract file**, `docs/map/observed.jsonl` (path in `.a/project.md` as `observed_file`): one event per line, `{"turn","ts","name","kind","status","ms","tag"}` — `turn` groups events into one request, `ts` orders them (ISO), `name` is the event, `kind` its category, `status` `ok` or an error word, `ms` a duration, `tag` optional. Nothing else: no message text, no identities. **The skill never reads a project's telemetry store**; a small exporter in the project writes this file from whatever the project has, and is the project's own code.
+
+From the file the map derives, per element: turns reached, errors, median duration; per relation: traffic; the most common real paths as **observed flows** (with their share of turns), shown beside the declared ones; and the **unmapped names** — events no element claims — which are the map's gaps. **Naming stays consistent by rule:** when a build adds or renames a telemetry event, the event is claimed by an element's `Events:` line in the same change (`build-check.md`), so the two never drift apart silently; where they have, the unmapped list says so.
 
 ## Every pass leaves a drop
 

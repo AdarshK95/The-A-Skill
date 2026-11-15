@@ -1,10 +1,20 @@
 # Changelog
 
-Version numbers follow the scale of the change, decided per release: the third number for wording, rules and fixes inside existing commands; the second for a new or removed command, stage, reference or config key — anything an installed copy must re-learn; the first for a restructure that breaks existing projects' files (not before 1.0).
+Version numbers follow the scale of the change, decided per release. **Third digit:** iteration on an existing capability — wording, rules, fixes, a redesign of something that already exists (a new layout for the map is still the map). **Second digit:** a new capability, or anything an installed copy must re-learn — a new or removed command or stage, a new script, a format change that breaks old files. **First digit:** a restructure that breaks existing projects (not before 1.0).
+
+## 0.9.2 — 15 Nov 26
+
+- **Observed layer** on the map: an element's `Events:` patterns (`scout.*`, `agent.invoke@Key`, notes in parentheses ignored) and a generic contract file `docs/map/observed.jsonl` (`turn, ts, name, kind, status, ms, tag`) written by a project-owned exporter; the map shows turns, errors and median duration per element, traffic on relations, observed paths with their share of turns beside the declared flows, and the unmapped-events list as the registry's gaps. The skill never reads a project's telemetry store.
+- Map page: pan by dragging, Ctrl+wheel and ± zoom, foldable side panel, multi-visit step badges, labels only on selection or an active flow, dotted container boundaries, compact placement of branches under their branch point, no-flow parts as a grid.
+- Flow naming rule (actor and action; one per agent, with the externals it uses). Build check: new telemetry names are claimed by an element.
+
+## 0.9.1 — 15 Nov 26
+
+- Map laid out by flows: inside a container, one row per flow with the steps left to right in order; parts on no flow collapse into one "N other parts" card; externals sit in a column beside the part that uses them; only flow and external connections are drawn by default (labels on them), the rest on selection or with "all connections". An external that sits on a flow between two containers (the proxy) is placed between them.
 
 ## 0.9.0 — 15 Nov 26
 
-Second-number release: the map's structure changes and a registry field is retired.
+Map iteration: containers are the structure; a registry field retired (ignored, not breaking). (Numbered 0.9.0 as pushed; by the rule below this and 0.8.0 would have been third-digit changes — the rule applies from here on.)
 
 - **Containers are the structure.** The deployable units (plugin, proxy, backend app, external systems) are elements; every other element has `Part of:` up to one of them. The map draws containers as boxes with their parts inside, left to right in the order a request travels (from the flows), nested containers as boxes inside boxes; top level open, inner ones collapsed to a card until clicked.
 - **Connection type is a label on the relation** — `Depends on: chat-store (Cosmos: conversations) · live-feed (SSE: /chat/resume)` — written on the line when an element or a flow is selected. Never a grouping.
@@ -12,7 +22,7 @@ Second-number release: the map's structure changes and a registry field is retir
 
 ## 0.8.0 — 15 Nov 26
 
-Second-number release: new registry fields and a new section, and a rule every stage follows.
+Map iteration: structure fields in the registry, flows, and the every-pass-leaves-a-drop rule.
 
 - **Structure in the registry**: `Layer:` (entry · api · orchestration · agents · stores · platform), `Part of:` (containment), and a `## Flows` section — named sequences of elements in the order they run, with **fragments** any pass can add under a flow's name.
 - **Every pass leaves a drop** (`elements.md`): any stage that reads code — a plan's Read, a root cause's lanes, a review's spot-checks, the build check's look-around, a coverage pass — appends what it learned about structure to the registry at its write point: anchors, relations, `Part of`, `Layer`, flow fragments. Two or three lines, no question. The map consolidates: merges fragments by element order (or by their step number), fills layers the code makes plain, sets containment, asks only on conflicts. A one-time flow pass seeds the main flows.

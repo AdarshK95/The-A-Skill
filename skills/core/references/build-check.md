@@ -12,6 +12,8 @@ Look around it, every time, however small the step:
 4. **Tests and fixtures** that mention the symbol by name — monkeypatches, mocks, snapshots. They are consumers too.
 5. **Config and environment.** Flags, settings, feature switches, environment differences (dev vs prod containers, TTLs, permissions) the symbol depends on.
 
+**Telemetry names are claimed.** A new or renamed telemetry event name added in a step is claimed by an element's `Events:` line in the same step; when no element fits, the build says so in its finding rather than leaving the name to show up as unmapped later.
+
 **Leave a drop.** The callers, consumers and siblings found in 1–5 are relations; the files touched are anchors. At the step's write point, append to the registry what it lacks (a `Depends on` / `Used by`, a `Code:` anchor, a `Part of:` now evident) — two lines, no question (`elements.md › Every pass leaves a drop`).
 
 ## After editing
