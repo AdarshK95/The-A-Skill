@@ -12,7 +12,7 @@ Area: <one of the project's areas>
 Depends on: <element-id> · <element-id>
 Used by: <element-id>
 Sources: <documents that describe it, with dates>
-State: stable | in change | planned | unwired | superseded
+State: stable | in change | planned | unwired | untouched | superseded
 History:
 - <date> · F<n> <title> (<type>) · <decisions> · <one-line result>
 -->

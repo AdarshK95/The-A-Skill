@@ -39,7 +39,7 @@ Each element carries `Area: <one of the project's areas>`; the map groups by it.
 
 ## States
 
-`stable` (in service, no feature touching it) · `in change` (a feature on the board touches it now) · `planned` (does not exist yet) · `unwired` (kept in the repository, nothing calls it) · `superseded` (replaced; kept for history). Close sets them; the map colours them.
+`stable` (in service, no feature touching it) · `in change` (a feature on the board touches it now) · `planned` (does not exist yet) · `unwired` (kept in the repository, nothing calls it) · `untouched` (mapped from the code by a coverage pass; no feature has touched it yet — it becomes `stable` or `in change` on its own when a feature's report names it) · `superseded` (replaced; kept for history). Close sets them; the map colours them.
 
 ## Name drift and resolution
 
