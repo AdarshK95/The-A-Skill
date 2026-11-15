@@ -39,11 +39,13 @@ def parse_elements(text):
         if not eid or eid.startswith("<") or eid.startswith("!"):
             continue
         el = {"id": eid, "names": [], "purpose": "", "code": [], "interfaces": [], "depends_on": [],
-              "used_by": [], "state": "stable", "area": "", "sources": [], "history": []}
+              "used_by": [], "state": "stable", "state_note": "", "area": "", "sources": [], "history": []}
         cur = None
         for ln in lines[1:]:
+            if ln.startswith("#"):  # a sub-heading (###) ends the element; nothing below it belongs to it
+                break
             m = re.match(r"^([A-Za-z ]+):\s*(.*)$", ln)
-            if m and m.group(1).strip() in ("Names", "Purpose", "Code", "Interfaces", "Depends on", "Used by", "State", "Area", "Sources", "History"):
+            if m and m.group(1).strip() in ("Names", "Purpose", "Code", "Interfaces", "Depends on", "Used by", "State", "Note", "Area", "Sources", "History"):
                 key, val = m.group(1).strip(), m.group(2).strip()
                 cur = key
                 if key == "Names": el["names"] = [x.strip() for x in re.split(r"\s·\s|,", val) if x.strip()]
@@ -52,14 +54,19 @@ def parse_elements(text):
                 elif key == "Interfaces": el["interfaces"] = [x.strip() for x in re.split(r"\s·\s|,", val) if x.strip()]
                 elif key == "Depends on": el["depends_on"] = [x.strip().strip("`") for x in re.split(r"\s·\s|,", val) if x.strip()]
                 elif key == "Used by": el["used_by"] = [x.strip().strip("`") for x in re.split(r"\s·\s|,", val) if x.strip()]
-                elif key == "State": el["state"] = val.lower().strip("`")
+                elif key == "State":
+                    v = val.lower().strip("`")
+                    el["state"] = next((st for st in ("in change", "untouched", "superseded", "unwired", "planned", "stable") if v.startswith(st)), "stable")
+                    note = v[len(el["state"]):].strip(" ()-—·")
+                    if note: el["state_note"] = note
+                elif key == "Note": el["state_note"] = val
                 elif key == "Area": el["area"] = val
                 elif key == "Sources": el["sources"] = [x.strip() for x in re.split(r"\s·\s", val) if x.strip()]
                 continue
             if cur == "History" and ln.strip().startswith("- "):
                 h = ln.strip()[2:]
                 parts = [x.strip() for x in h.split(" · ")]
-                feat = re.search(r"\bF(\d+)\b", h)
+                feat = re.search(r"\b(?:F|[Ff]eature\s+)(\d+)\b", h)
                 el["history"].append({"date": parts[0] if parts else "", "text": h, "feature": int(feat.group(1)) if feat else None})
         els.append(el)
     return els
@@ -89,11 +96,14 @@ def parse_decisions(text, kind, elements=None):
         els = [x.strip().strip("`") for x in re.split(r"\s·\s|,", m.group(1))] if m else []
         if not els and elements:  # older entries without an Elements field: match an element's id or any of its names in the text
             low = block.lower()
-            els = [e["id"] for e in elements if e["id"].lower() in low or any(n.lower() in low for n in e["names"] if len(n) > 4)]
+            def hit(e):
+                if re.search(r"(?<![\w-])" + re.escape(e["id"].lower()) + r"(?![\w-])", low): return True
+                return any(" " in n and re.search(r"\b" + re.escape(n.lower()) + r"\b", low) for n in e["names"])
+            els = [e["id"] for e in elements if hit(e)]
         dec = re.search(r"^Decision:\s*(.+)$", block, re.M)
         reopen = re.search(r"^Reopen when:\s*(.+)$", block, re.M)
         out.append({"kind": kind, "head": head, "elements": els, "decision": dec.group(1).strip() if dec else "",
-                    "reopen": reopen.group(1).strip() if reopen else ""})
+                    "reopen": reopen.group(1).strip() if reopen else "", "by_name": not bool(m) and bool(els)})
     return out
 
 HTML = r"""<!doctype html><html lang="en"><head><meta charset="utf-8">
@@ -181,6 +191,7 @@ function select(id){
   const feat=h=>{const f=DATA.features[h.feature];return f?` — <a href="${esc(DATA.activity+f.file)}">${esc(f.title)}</a> <span class="muted">(${esc(f.type)}, ${esc(f.phase)})</span>`:` — F${h.feature}`};
   const decs=decsFor(id);
   document.getElementById('panel').innerHTML=`<button class="close" id="close" title="close">×</button><h2>${esc(e.names[0]||e.id)}</h2><div class="muted"><code>${esc(e.id)}</code> · <span style="color:${colors[e.state]||'inherit'}">●</span> ${esc(e.state)} · ${esc(e.area||'')}</div>
+   ${e.state_note?`<div class="muted" style="margin-top:2px">${esc(e.state_note)}</div>`:''}
    ${e.names.length>1?`<div class="muted" style="margin-top:4px">also: ${e.names.slice(1).map(esc).join(' · ')}</div>`:''}
    <p style="margin:10px 0 0">${esc(e.purpose)}</p>
    <h3>Code</h3><ul>${e.code.map(c=>`<li><code>${esc(c)}</code></li>`).join('')||'<li class="muted">none recorded</li>'}</ul>
@@ -189,7 +200,7 @@ function select(id){
    <h3>Used by</h3><ul>${e.used_by.map(d=>`<li><a href="#" data-go="${esc(d)}">${esc(byId[d]?.names[0]||d)}</a></li>`).join('')||'<li class="muted">nothing</li>'}</ul>
    <h3>Thread · ${feats.length} feature${feats.length===1?'':'s'}</h3><ul class="timeline">${feats.map(h=>`<li><div class="d">${esc(h.date)}</div>${esc(h.text.replace(/^[^·]+·\s*/,''))}${feat(h)}</li>`).join('')||'<li class="muted">no feature has touched this yet</li>'}</ul>
    ${notes.length?`<h3>Notes</h3><ul>${notes.map(h=>`<li><span class="d">${esc(h.date)}</span> ${esc(h.text.replace(/^[^·]+·\s*/,''))}</li>`).join('')}</ul>`:''}
-   <h3>Decisions · ${decs.length}</h3><ul>${decs.map(d=>`<li><span class="d">${esc(d.head)}</span>${d.decision?`<br>${esc(d.decision)}`:''}${d.reopen?`<br><span class="muted">reopen when: ${esc(d.reopen)}</span>`:''}</li>`).join('')||'<li class="muted">none name this element</li>'}</ul>
+   <h3>Decisions · ${decs.length}</h3><ul>${decs.map(d=>`<li><span class="d">${esc(d.head)}${d.by_name?' <span title="matched by element name in the text; add an Elements: line to make it exact">≈</span>':''}</span>${d.decision?`<br>${esc(d.decision)}`:''}${d.reopen?`<br><span class="muted">reopen when: ${esc(d.reopen)}</span>`:''}</li>`).join('')||'<li class="muted">none name this element</li>'}</ul>
    ${e.sources.length?`<h3>Sources</h3><ul>${e.sources.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`:''}`;
   document.getElementById('main').classList.add('open');
   document.getElementById('close').addEventListener('click',clear);

@@ -13,6 +13,7 @@ Depends on: <element-id> · <element-id>
 Used by: <element-id>
 Sources: <documents that describe it, with dates>
 State: stable | in change | planned | unwired | untouched | superseded
+Note: <optional, why the state or anything a reader should know>
 History:
 - <date> · F<n> <title> (<type>) · <decisions> · <one-line result>
 -->

@@ -19,6 +19,8 @@ History:
 - 14 Nov 26 · F5 Chat answers under the wrong turn (fix → feature) · removed by-position merge …
 ```
 
+`State:` is one bare word from the list below; anything to say about it goes on a separate `Note:` line. History lines name the feature as `F<n>` so the thread and the map can count it. Any `###` heading ends the element: owner notes belong above the first element or under their own `##` heading that is not an element id.
+
 The id (`chat-persistence`) is stable and never renamed. **Names** is the alias list; a rename adds a name, it does not create an element. **Code** anchors the element to functions and files, which is what lets name drift be detected later. **History** is append-only, one line per feature or item that touched it, with the type and the decisions.
 
 Elements are parts of the system at the level a solution architect would draw: a store, a pipeline, an adapter, an API surface, a frontend module. Not a function, not a file, not a feature.
