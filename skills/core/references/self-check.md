@@ -31,3 +31,4 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 26. Every output another step consumes has a named valid shape and a named, visible failure state for its absence; no step returns an empty collection, `{}`, `unknown` or `none` where it should return a failure.
 27. Nothing a person will read names a thing by a code (D3, R-5, code-03, step 7b); decisions are named by their subject and their options are sentences.
 28. Every file the plan edits is inside `code_scope`; any path outside it appears only as a question to the user or a one-line "out of scope" note.
+29. Every finding in the report has a verdict (blocks / does not block / side work); every change outside `code_scope` is justified as unavoidable, owned to proof, and recorded as a decision; nothing we changed is handed over before it is shown working.

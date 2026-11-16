@@ -2,6 +2,10 @@
 
 Version numbers follow the scale of the change, decided per release. **Third digit:** iteration on an existing capability — wording, rules, fixes, a redesign of something that already exists (a new layout for the map is still the map). **Second digit:** a new capability, or anything an installed copy must re-learn — a new or removed command or stage, a new script, a format change that breaks old files. **First digit:** a restructure that breaks existing projects (not before 1.0).
 
+## 0.9.6 — 16 Nov 26
+
+- **Findings are triaged** (blocks / does not block / side work — every finding carries its verdict; none becomes work by default) and **what we touch we own**: any change, in scope or unavoidably outside it, is ours until built, tested where it runs, verified and handed over with proof; a mistake of ours in someone else's code is fixed and verified by us first. Crossing the scope needs the goal to be unreachable otherwise, the smallest change, and a recorded decision.
+
 ## 0.9.5 — 16 Nov 26
 
 - **Code scope is a wall** (`project.md › code_scope`, spine, build check, self-check 28): the only paths commands may change; anything outside is read-only context, and touching it is a question to the user, never an edit or a planned step. Duplicates and mirrors are named once in `code_out_of_scope` with the reason, so sessions stop rediscovering them.

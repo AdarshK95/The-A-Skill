@@ -2,6 +2,14 @@
 
 A step is not "edit the file the plan names". It is: understand what the change sits inside, make the change, prove the whole still works, and ask whether it still serves the ask. This is the review's lenses applied cheaply, by the implementer, to the code around each step — no subagents, no ceremony — so gaps are caught while building rather than after. Everything found goes to `## Build findings`; the user is interrupted only when a finding changes the plan.
 
+## Findings are triaged, not collected
+
+A build finding carries its verdict in the same line: `blocks` (handled in this step or the plan is realigned), `does not block` (noted, nothing else), or `side work` (proposed as its own item). A finding without a verdict is not recorded.
+
+## Ownership of what we touched
+
+A step that changes code — ours, or outside our scope when unavoidable — is not done until the behaviour that code serves is shown working where it runs, and the hand-over to its owner (if any) says what changed, why, and how it was verified. A mistake found in something we changed earlier is ours to fix first, however long ago, before any new work on that area.
+
 ## The scope wall
 
 Before any edit: is the file inside `code_scope`? If not, stop — the step is a question to the user, not an edit. This applies to tests, docs inside code trees, generated copies and "small" fixes alike. A finding about a file out of scope is one line in the build findings ("out of scope: <path>, noted for its owner") and nothing else.
