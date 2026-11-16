@@ -78,6 +78,10 @@ Rules for the block:
 
 A turn that only analyzed says `Done: analysis only — no file was changed` and names where the analysis was written. The block is never omitted and never merged into prose; an answer that lays out findings and stops is not finished. The same block, as the Summary's last lines, closes every activity file at Close.
 
+## Plain names, not codes, in anything a person reads
+
+In chat, in the report, in decisions and on the board, things are called by what they are: "the delete-dialog decision", "the chat-architecture session", "the Cockpit plugin's finding about the start-up prompt", "the second review round". Never by a code — no D3, R-5, IR-12, BF-7, code-03, h1, step 7b. A code is agent notation: it is right in the detail file and in the event log, and wrong anywhere a person has to read it. When a person must choose, the choices are a short list in reading order, each option a sentence, and the answer expected is the sentence or the gist of it, not a letter. Sessions are named by the work they are doing, not by an id. Features may keep their number because the board and the files use it, but the number always comes with the name.
+
 ## Documents are for their reader
 
 The report is for a person: current state, plain words, as little as still lets a stranger act. The detail file is for the agent: every record, agent notation, as little as still stops the next agent re-deriving. Neither carries the other's content (`logging.md › Two layers`). A report a person will not finish, or a detail file that narrates, has failed its reader.

@@ -2,6 +2,14 @@
 
 A step is not "edit the file the plan names". It is: understand what the change sits inside, make the change, prove the whole still works, and ask whether it still serves the ask. This is the review's lenses applied cheaply, by the implementer, to the code around each step — no subagents, no ceremony — so gaps are caught while building rather than after. Everything found goes to `## Build findings`; the user is interrupted only when a finding changes the plan.
 
+## The scope wall
+
+Before any edit: is the file inside `code_scope`? If not, stop — the step is a question to the user, not an edit. This applies to tests, docs inside code trees, generated copies and "small" fixes alike. A finding about a file out of scope is one line in the build findings ("out of scope: <path>, noted for its owner") and nothing else.
+
+## Absence is a failure, not a value
+
+Where a step is supposed to produce something — a model's reply, a parsed structure, a search result, a response from a service, a file — the plan names **what a valid output looks like** (a schema, a required set of fields, a non-empty result, a status) and **what happens when it is not there**. Empty, malformed or missing output is a failure state with a name that reaches the user or the log (`judge failed: no JSON in reply`), never a default that reads like a conclusion (`nothing answers`, `unknown`, `none found`, `[]`). A function that returns an empty collection where it should have returned a failure hides the failure; a parser that returns `{}` on garbage lies. The build check asks at every step that consumes an output: *if this came back empty, would we know?* If the answer is no, the step is not done.
+
 ## Before editing a symbol
 
 Look around it, every time, however small the step:

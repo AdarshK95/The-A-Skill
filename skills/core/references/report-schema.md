@@ -40,7 +40,8 @@ One line: *robust* / *tactical* / *quick fix*, with what a state-of-the-art team
 ### Assumptions
 Relevant points the ask did not settle and that were not asked (over the five-question cap, or inferable): one line each, so the user can object. Omit only if there are none.
 
-### Requirements *(L and XL)*
+### Requirements
+_For every step that produces an output another step consumes, one requirement names the valid shape of that output and the visible failure state when it is absent or malformed (`build-check.md › Absence is a failure`)._ *(L and XL)*
 One checkable line per requirement, in the user's terms, `- [ ] R1 …`; ticked at Validate with evidence. See `clarify.md`.
 
 ### Proposed change
@@ -58,7 +59,8 @@ What the user or end user will see or experience afterwards, as a reference for 
 ### Tier and type
 `S | M | L | XL` with the signals that chose it, one per line, each naming its file or decision; and the **type** the signals imply (`feature` / `change` / `fix`, `hierarchy.md`) — stated as a proposal when it differs from what the user called the work.
 
-### Decisions needed from you
+### Decisions needed
+_Each decision is named by its subject ("Where the delete confirmation gets its keyboard handling"), not numbered; its options are sentences; the user answers in words. Codes stay in the detail file (`communication.md › Plain names`)._ from you
 A short *where we are* paragraph, then a table — **what came up and why · the options and what each means · suggested (with reason)** — then *what happens after you answer*. Each row readable by someone who has not opened the file. End with: "Say **go** to take all suggested answers, or change any by number." The same shape is used when these decisions are shown in chat (`communication.md › Decisions arrive with their context`).
 ```
 

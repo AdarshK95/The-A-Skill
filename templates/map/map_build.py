@@ -203,7 +203,7 @@ aside a{color:var(--inchange);text-decoration:none;cursor:pointer}aside a:hover{
 .rowlabel{font-size:10px;fill:var(--muted);text-transform:uppercase;letter-spacing:.08em}.rowline{stroke:var(--line);stroke-dasharray:2 4}
 .node.onflow>.card,.box.onflow>.boxrect{stroke:var(--flow)!important;stroke-width:2}.step{font-size:11px;font-weight:700;fill:#fff}.stepbg{fill:var(--flow)}
 .edge{stroke:var(--muted);stroke-width:1.2;fill:none;opacity:.55;marker-end:url(#arrow)}.edge.hidden{display:none}.edge.hi{stroke:var(--hi);opacity:1;stroke-width:1.8;display:block}
-.edge.flow{stroke:var(--flow);opacity:.9;stroke-width:2;marker-end:url(#arrowflow)}.edge.ext{opacity:.5}
+.edge.flow{stroke:var(--flow);opacity:.9;stroke-width:2;marker-end:url(#arrowflow)}.edge.norel{opacity:.6}.edge.ext{opacity:.5}
 .node .err{font-size:10.5px;font-weight:700;fill:#d1242f}.node .obs{font-size:10.5px;fill:var(--muted)}.edge.obs{opacity:.75}
 .elabel{font-size:10.5px;fill:var(--fg)}.elabelbg{fill:var(--bg);stroke:var(--line);rx:4}
 footer{padding:4px 14px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;background:var(--card)}
@@ -248,7 +248,7 @@ const isOpen=id=>open.has(id);
 const repRaw=id=>{const e=byId[id];if(!e)return null;const chain=ancestors(id).reverse();for(const anc of chain){if(!isOpen(anc))return anc}return id};
 const rep=id=>{const r=repRaw(id);if(r==null)return id;if(r!==id)return r;const e=byId[id];if(e.part_of&&byId[e.part_of]&&!onAnyFlowRow(id)&&!othersOpen.has(e.part_of))return 'others:'+e.part_of;return id};
 function onAnyFlowRow(id){return flowPos[id]!=null||children(id).some(k=>onAnyFlowRow(k.id))}
-const W=200,H=54,GX=26,GY=30,PAD=18,TITLE=36,LABELW=86,OTHCOLS=4;
+const W=236,H=76,GX=34,GY=38,PAD=20,TITLE=40,LABELW=96,OTHCOLS=4;const textW=t=>String(t).length*7.2;
 // --- layout ---
 const geo={};
 function measure(e){const kids=children(e.id);if(!kids.length||!isOpen(e.id)){geo[e.id]={w:W,h:H,leaf:true};return geo[e.id]}const nested=!!(e.part_of&&byId[e.part_of]);const LW=nested?0:LABELW,PD=nested?12:PAD;
@@ -273,7 +273,8 @@ function measure(e){const kids=children(e.id);if(!kids.length||!isOpen(e.id)){ge
   const rowH=rowsMeta.map(()=>H);for(const id in cell){const c=cell[id];const h=c.othersCard?H:geo[id].h;rowH[c.row]=Math.max(rowH[c.row],h)}
   // column widths from the widest child in the column (an open sub-container is wider than a card)
   const colW=Array.from({length:ncols},()=>W);for(const id in cell){const c=cell[id];const w=c.othersCard?W:geo[id].w;colW[c.col]=Math.max(colW[c.col],w)}
-  const w=colW.reduce((a,b)=>a+b,0)+GX*(ncols-1),h=rowH.reduce((a,b)=>a+b,0)+GY*(rowsMeta.length-1);
+  let w=colW.reduce((a,b)=>a+b,0)+GX*(ncols-1);const h=rowH.reduce((a,b)=>a+b,0)+GY*(rowsMeta.length-1);
+  const headW=14+textW(e.names[0]||e.id)+textW(`${kids.length} parts`)+110;if(w+PD*2+LW<headW){colW[ncols-1]+=headW-(w+PD*2+LW);w=headW-PD*2-LW}
   geo[e.id]={w:w+PD*2+LW,h:TITLE+PD+h+PD,leaf:false,cell,rowsMeta,rowH,colW,nested,PD,LW};return geo[e.id]}
 function place(e,x,y){const g=geo[e.id];g.x=x;g.y=y;if(g.leaf)return;
   const rowY=[];let cy=y+TITLE+g.PD;g.rowsMeta.forEach((r,i)=>{rowY[i]=cy;r.y=cy;cy+=g.rowH[i]+GY});
@@ -300,20 +301,20 @@ let render=function(){
     if(!g.leaf){const grp=el('g',{class:'box'+(onflow?' onflow':'')});grp.dataset.id=e.id;grp.appendChild(el('rect',{class:'boxrect',x:g.x,y:g.y,width:g.w,height:g.h}));
       grp.appendChild(el('rect',{x:g.x,y:g.y+11,width:4,height:TITLE-16,rx:2,fill:colors[e.state]||colors.stable}));
       const t=el('text',{class:'boxtitle',x:g.x+14,y:g.y+23});t.textContent=e.names[0]||e.id;grp.appendChild(t);
-      const st=el('text',{class:'boxsub',x:g.x+14+((e.names[0]||e.id).length*7.4),y:g.y+23});st.textContent=`${kids.length} parts`;grp.appendChild(st);
-      const c=el('text',{class:'collapse',x:g.x+g.w-12,y:g.y+23,'text-anchor':'end'});c.textContent='−';c.addEventListener('click',ev=>{ev.stopPropagation();open.delete(e.id);render()});grp.appendChild(c);
+      const st=el('text',{class:'boxsub',x:g.x+14+textW(e.names[0]||e.id)+6,y:g.y+23});st.textContent=`${kids.length} parts`;grp.appendChild(st);
+      const c=el('text',{class:'collapse',x:g.x+g.w-12,y:g.y+23,'text-anchor':'end'});c.textContent='−';const ct=el('title',{});ct.textContent='collapse';c.appendChild(ct);c.addEventListener('click',ev=>{ev.stopPropagation();open.delete(e.id);render()});grp.appendChild(c);
+      const hasOthers=kids.some(k=>!g.cell[k.id]||g.rowsMeta[g.cell[k.id].row]?.others);if(hasOthers){const oc=el('text',{class:'collapse',x:g.x+g.w-34,y:g.y+23,'text-anchor':'end'});oc.textContent='⋯';const ot=el('title',{});ot.textContent=othersOpen.has(e.id)?'hide the parts that are on no flow':'show the parts that are on no flow';oc.appendChild(ot);oc.addEventListener('click',ev=>{ev.stopPropagation();othersOpen.has(e.id)?othersOpen.delete(e.id):othersOpen.add(e.id);render()});grp.appendChild(oc)}
       grp.querySelector('.boxrect').addEventListener('click',()=>select(e.id));grp.querySelector('.boxtitle').addEventListener('click',()=>select(e.id));svg.appendChild(grp);
       if(!g.nested)g.rowsMeta.forEach(r=>{if(r.label){const l=el('text',{class:'rowlabel',x:g.x+PAD,y:r.y+16});l.textContent=r.label.slice(0,13);svg.appendChild(l)}});
       for(const id in g.cell){const c=g.cell[id];if(c.othersCard){const og=geo[id];const n=el('g',{class:'node others',transform:`translate(${og.x},${og.y})`});n.dataset.id=id;n.appendChild(el('rect',{class:'card',width:W,height:H}));const tt=el('text',{class:'name',x:14,y:22});tt.textContent=`${c.count} other parts`;n.appendChild(tt);const ss=el('text',{class:'sub',x:14,y:42});ss.textContent='not on any flow · click to open';n.appendChild(ss);n.addEventListener('click',()=>{othersOpen.add(c.of);render()});svg.appendChild(n)}else drawNode(byId[id])}
-      if(othersOpen.has(e.id)){const oc=el('text',{class:'collapse',x:g.x+g.w-34,y:g.y+23,'text-anchor':'end'});oc.textContent='hide others';oc.addEventListener('click',ev=>{ev.stopPropagation();othersOpen.delete(e.id);render()});grp.appendChild(oc)}
       return}
     const g2=el('g',{class:'node'+((flow?flowIds.includes(e.id):visible(e))?'':' dim')+(onflow?' onflow':''),transform:`translate(${g.x},${g.y})`});g2.dataset.id=e.id;
     g2.appendChild(el('rect',{class:'card',width:W,height:H}));g2.appendChild(el('rect',{class:'stripe',x:0,y:8,width:4,height:H-16,fill:colors[e.state]||colors.stable}));
-    const t=el('text',{class:'name',x:14,y:22});t.textContent=(e.names[0]||e.id).slice(0,24);g2.appendChild(t);
-    const fc=featCount(e),dc=decsFor(e.id).length;const sub=el('text',{class:'sub',x:14,y:41});sub.textContent=`${fc} feat · ${dc} dec`;g2.appendChild(sub);
-    const ob=obsFor(e.id);if(ob){const ot=el('text',{class:ob.errors?'err':'obs',x:W-10,y:41,'text-anchor':'end'});ot.textContent=(ob.errors?`⚠ ${ob.errors} err · `:'')+`${ob.turns} turns`+(ob.ms!=null?` · ${ob.ms}ms`:'');g2.appendChild(ot)}
-    if(kids.length){const pt=el('text',{class:'parts',x:W-10,y:22,'text-anchor':'end'});pt.textContent='+'+kids.length;pt.addEventListener('click',ev=>{ev.stopPropagation();open.add(e.id);render()});g2.appendChild(pt)}
-    if(flow){const idx=flowIds.map((v,i)=>v===e.id?i:-1).filter(i=>i>=0);if(idx.length){const planned=idx.every(i=>/\(planned\)/i.test(flow.steps[i].note||''));const txt=idx.map(i=>i+1).join('·');const bw=Math.max(20,txt.length*7+10);g2.appendChild(el('rect',{class:'stepbg',x:W-bw-6,y:H-24,width:bw,height:18,rx:9,opacity:planned?.35:1}));const s2=el('text',{class:'step',x:W-bw/2-6,y:H-11,'text-anchor':'middle'});s2.textContent=txt;g2.appendChild(s2);if(planned)g2.classList.add('dim')}}
+    const t=el('text',{class:'name',x:14,y:23});t.textContent=(e.names[0]||e.id).slice(0,kids.length?24:30);g2.appendChild(t);
+    const fc=featCount(e),dc=decsFor(e.id).length;const sub=el('text',{class:'sub',x:14,y:43});sub.textContent=`${fc} feature${fc===1?'':'s'} · ${dc} decision${dc===1?'':'s'}`;g2.appendChild(sub);
+    const ob=obsFor(e.id);if(ob){const ot=el('text',{class:ob.errors?'err':'obs',x:14,y:63});ot.textContent=(ob.errors?`⚠ ${ob.errors} errors · `:'')+`${ob.turns} turns`+(ob.ms!=null?` · ${ob.ms} ms`:'');g2.appendChild(ot)}
+    if(kids.length){const pt=el('text',{class:'parts',x:W-12,y:23,'text-anchor':'end'});pt.textContent='+'+kids.length;const ptt=el('title',{});ptt.textContent='open';pt.appendChild(ptt);pt.addEventListener('click',ev=>{ev.stopPropagation();open.add(e.id);render()});g2.appendChild(pt)}
+    if(flow){const idx=flowIds.map((v,i)=>v===e.id?i:-1).filter(i=>i>=0);if(idx.length){const planned=idx.every(i=>/\(planned\)/i.test(flow.steps[i].note||''));const txt=String(idx[0]+1)+(idx.length>1?' +'+(idx.length-1):'');const bw=Math.max(22,txt.length*7+12);g2.appendChild(el('rect',{class:'stepbg',x:W-bw-10,y:H-26,width:bw,height:18,rx:9,opacity:planned?.35:1}));const s2=el('text',{class:'step',x:W-bw/2-10,y:H-13,'text-anchor':'middle'});s2.textContent=txt;const stt=el('title',{});stt.textContent='steps '+idx.map(i=>i+1).join(', ');s2.appendChild(stt);g2.appendChild(s2);if(planned)g2.classList.add('dim')}}
     g2.addEventListener('click',()=>select(e.id));svg.appendChild(g2)};
   roots.slice().sort(byOrder).forEach(drawNode);
   // edges
@@ -327,10 +328,14 @@ let render=function(){
     const cls='edge'+(onFlow?' flow':'')+(ext&&!onFlow?' ext':'')+((onFlow||ext||allEdges)?'':' hidden')+(flow&&!onFlow?' dim':'');
     const traffic=OBS?(OBS.edges[from+'>'+to]||0)+(OBS.edges[to+'>'+from]||0):0;
     const path=el('path',{class:cls+(traffic?' obs':''),d});if(traffic)path.setAttribute('stroke-width',(1.2+Math.min(3,Math.log10(traffic+1)*1.5)).toFixed(1));path.dataset.from=from;path.dataset.to=to;path.dataset.label=(e.dep_labels[d0]||'')+(traffic?(e.dep_labels[d0]?' · ':'')+traffic+' turns':'');const tt=el('title',{});tt.textContent=`${byId[e.id].names[0]||e.id} → ${byId[d0]?.names[0]||d0}${path.dataset.label?' · '+path.dataset.label:''}`;path.appendChild(tt);edgeLayer.appendChild(path)}}
+  if(flow){const ids=flow.steps.map(st=>rep(st.el));for(let i=0;i<ids.length-1;i++){const a=ids[i],b=ids[i+1];if(a===b||!geo[a]||!geo[b]||seen.has(a+'>'+b)||seen.has(b+'>'+a))continue;seen.add(a+'>'+b);
+    const A=geo[a],B=geo[b];const p1=anchor(A,B),p2=anchor(B,A);const mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2;const horiz=Math.abs(p2.x-p1.x)>Math.abs(p2.y-p1.y);
+    const d=horiz?`M${p1.x} ${p1.y} C ${mx} ${p1.y}, ${mx} ${p2.y}, ${p2.x} ${p2.y}`:`M${p1.x} ${p1.y} C ${p1.x} ${my}, ${p2.x} ${my}, ${p2.x} ${p2.y}`;
+    const path=el('path',{class:'edge flow norel',d,'stroke-dasharray':'5 4'});path.dataset.from=a;path.dataset.to=b;path.dataset.label='flow step '+(i+1)+'→'+(i+2)+' · no relation in the registry';const tt=el('title',{});tt.textContent=path.dataset.label;path.appendChild(tt);edgeLayer.appendChild(path)}}
   const c=document.getElementById('canvas');c.innerHTML='';c.appendChild(svg);
   if(selected&&byId[selected])highlight(selected);else labelEdges(p=>!!flow&&p.classList.contains('flow'));
 }
-function labelEdges(pred){const svg=document.querySelector('#canvas svg');if(!svg)return;const ns='http://www.w3.org/2000/svg';document.querySelectorAll('.elabel,.elabelbg').forEach(n=>n.remove());document.querySelectorAll('.edge').forEach(p=>{if(!pred(p)||!p.dataset.label||p.classList.contains('hidden'))return;const len=p.getTotalLength();const m=p.getPointAtLength(len/2);const t=document.createElementNS(ns,'text');t.setAttribute('class','elabel');t.setAttribute('x',m.x);t.setAttribute('y',m.y+4);t.setAttribute('text-anchor','middle');t.textContent=p.dataset.label;svg.appendChild(t);const bb=t.getBBox();const r=document.createElementNS(ns,'rect');r.setAttribute('class','elabelbg');r.setAttribute('x',bb.x-5);r.setAttribute('y',bb.y-2);r.setAttribute('width',bb.width+10);r.setAttribute('height',bb.height+4);svg.insertBefore(r,t)})}
+function labelEdges(pred){const svg=document.querySelector('#canvas svg');if(!svg)return;const ns='http://www.w3.org/2000/svg';document.querySelectorAll('.elabel,.elabelbg').forEach(n=>n.remove());document.querySelectorAll('.edge').forEach(p=>{if(!pred(p)||!p.dataset.label||p.classList.contains('hidden')||p.classList.contains('norel'))return;const len=p.getTotalLength();if(len<Math.max(160,p.dataset.label.length*7+40))return;const m=p.getPointAtLength(len*0.45);const t=document.createElementNS(ns,'text');t.setAttribute('class','elabel');t.setAttribute('x',m.x);t.setAttribute('y',m.y+4);t.setAttribute('text-anchor','middle');t.textContent=p.dataset.label;svg.appendChild(t);const bb=t.getBBox();const r=document.createElementNS(ns,'rect');r.setAttribute('class','elabelbg');r.setAttribute('x',bb.x-5);r.setAttribute('y',bb.y-2);r.setAttribute('width',bb.width+10);r.setAttribute('height',bb.height+4);svg.insertBefore(r,t)})}
 function highlight(id){const r=rep(id);const e=byId[id];const nb=new Set([r,...e.depends_on.map(rep),...e.used_by.map(rep),...children(id).map(k=>rep(k.id))]);
   document.querySelectorAll('.node,.box').forEach(n=>{n.classList.toggle('hi',n.dataset.id===r);if(!activeFlow&&n.classList.contains('node'))n.classList.toggle('dim',!nb.has(n.dataset.id))});
   document.querySelectorAll('.edge').forEach(p=>{const on=p.dataset.from===r||p.dataset.to===r;p.classList.toggle('hi',on);if(!activeFlow)p.classList.toggle('dim',!on)});

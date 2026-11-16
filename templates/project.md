@@ -11,6 +11,13 @@ activity_template: docs/activity/_template.md
 project_board: docs/activity/BOARD.md
 reminders: on
 gitignore: on
+# Code scope: the only paths any command may change. Everything else in the workspace is read-only context.
+# A plan step, an edit or a suggestion that touches a path outside this list is a question to the user, never done,
+# and reports mention such a path only to say it is out of scope. Globs, relative to the workspace.
+code_scope:
+  - <path/to/the/code/you/own/**>
+code_out_of_scope:            # optional: named exclusions inside the scope, with the reason, so sessions stop asking
+  - <path/**>  # <reason>
 areas: General
 depends_on: []
 provides: []

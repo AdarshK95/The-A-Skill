@@ -28,3 +28,6 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 23. The reground questions were answered at this boundary: the plan still serves the ask as stated at its current type, adds no structure the ask did not need, and nothing learned has changed the premise.
 24. `### Instruction check` lists every instruction in `## Instructions` in force, each honoured, a proposed deviation with its decision, or a question; none missing, none resolved by the agent alone.
 25. The report is current state only, in plain words, readable in minutes; history, transcripts and tables are in the detail file in agent notation; every record the map, drift, resume or the conformance check reads (`logging.md › What is never minimized`) is present and complete.
+26. Every output another step consumes has a named valid shape and a named, visible failure state for its absence; no step returns an empty collection, `{}`, `unknown` or `none` where it should return a failure.
+27. Nothing a person will read names a thing by a code (D3, R-5, code-03, step 7b); decisions are named by their subject and their options are sentences.
+28. Every file the plan edits is inside `code_scope`; any path outside it appears only as a question to the user or a one-line "out of scope" note.

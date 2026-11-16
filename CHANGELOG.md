@@ -2,6 +2,19 @@
 
 Version numbers follow the scale of the change, decided per release. **Third digit:** iteration on an existing capability — wording, rules, fixes, a redesign of something that already exists (a new layout for the map is still the map). **Second digit:** a new capability, or anything an installed copy must re-learn — a new or removed command or stage, a new script, a format change that breaks old files. **First digit:** a restructure that breaks existing projects (not before 1.0).
 
+## 0.9.5 — 16 Nov 26
+
+- **Code scope is a wall** (`project.md › code_scope`, spine, build check, self-check 28): the only paths commands may change; anything outside is read-only context, and touching it is a question to the user, never an edit or a planned step. Duplicates and mirrors are named once in `code_out_of_scope` with the reason, so sessions stop rediscovering them.
+
+## 0.9.4 — 16 Nov 26
+
+- **Plain names, not codes** (`communication.md`, report schema, self-check 27): anything a person reads names things by what they are, never by a code (D3, R-5, code-03, step 7b); decisions are named by their subject with options as sentences and answered in words; sessions are named by their work. Codes stay in the detail file and the event log.
+
+## 0.9.3 — 15 Nov 26
+
+- **Absence is a failure, not a value** (`build-check.md`, report requirements, verify, self-check 26): every expected output has a named valid shape and a named, visible failure state; empty or malformed output never becomes a default conclusion. Model and service calls are verified by what they send (request-content test) and by a recorded real reply through the parser, plus a test for the absent case.
+- Map page: three-line cards, header-width containers, `⋯` toggle for no-flow parts, compact step badge with the full visit list on hover, dashed connectors for flow steps with no registered relation, length-gated labels.
+
 ## 0.9.2 — 15 Nov 26
 
 - **Observed layer** on the map: an element's `Events:` patterns (`scout.*`, `agent.invoke@Key`, notes in parentheses ignored) and a generic contract file `docs/map/observed.jsonl` (`turn, ts, name, kind, status, ms, tag`) written by a project-owned exporter; the map shows turns, errors and median duration per element, traffic on relations, observed paths with their share of turns beside the declared flows, and the unmapped-events list as the registry's gaps. The skill never reads a project's telemetry store.
