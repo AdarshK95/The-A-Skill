@@ -22,12 +22,13 @@ This is a personal, experimental project, shared as is. Your agent acts on these
 | | |
 | --- | --- |
 | **Auto mode** | No command needed. Say what you want; it picks plan / extend / bugfix / review, stays in the current stage, and stops at every approval. |
-| **One workflow** | Read → Evaluate → Clarify → Report → Review → Approve → Implement → Realign → Validate → Close. Each stage is a command. |
+| **One workflow** | Read → Evaluate → Clarify → Report → Review → Approve → Implement → Realign → Build review → Validate → Close. Each stage is a command. |
 | **Root cause first** | A wrong behaviour is diagnosed before it is planned: parallel passes to the origin, a coverage check, a confirming test. A cause, never a symptom treatment. |
 | **Gate** | Nothing is built until you approve a report that cites the code it describes. |
 | **Project board** | Planned · In progress · Finished · Deferred · To do, per area, plus an overview diagram coloured by state. |
 | **Exact resume** | Every feature carries a pointer to the step it stopped at and the next concrete action. |
 | **Review that scales** | Small change, no ceremony. Shared callers or a contract change: fresh-eyes reviewers on the plan first. |
+| **Built, not just looking built** | After the build, `/A.build.review` checks the code against your own words, not the builder's account: every rule traced to where it is enforced and back from every way in. Catches work that is finished on the screen and open underneath, and decisions made without asking you. |
 | **Logs you own** | A plain-language summary for you and a timed, append-only event log for the agent, per feature; decisions with reasons; lessons from drift — all in your project's files, readable by any agent. |
 | **Lean by construction** | Searches for what already exists before proposing anything new; one path per purpose; nothing varying hardcoded; a behaviour-preserving simplify pass before close. |
 | **Many projects, one install** | Install once; `/A.project.start` gives each folder its own memory. Projects that work together declare it in their config; `/A.project.list` shows the map. Undeclared means independent. |

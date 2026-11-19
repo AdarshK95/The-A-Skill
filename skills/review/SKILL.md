@@ -6,11 +6,13 @@ disable-model-invocation: true
 
 # /A.review — fresh-eyes review, or triage of a reviewer's comments
 
-**Place in the flow:** needs something to review — a report, a plan, a build, or pasted comments; produces findings with verdicts and a revised report; next: Approve, or back to the report if material. With no plan behind the subject, ends by offering to make it one. See `../core/references/flow.md`.
+**Place in the flow:** needs something to review — a report, a plan, or pasted comments; produces findings with verdicts and a revised report; next: Approve, or back to the report if material. With no plan behind the subject, ends by offering to make it one. See `../core/references/flow.md`.
 
 Runs the core spine (`../core/SKILL.md`). This file is its **Evaluate** step.
 
-**Input:** with **no** input, `/A.review` is the Review *stage* on the current subject — resolved chat-first (spine Start step 0): the plan, report or build most recently in this conversation, else a board candidate offered by name; it never picks a board feature over work present in the chat without asking. The effort comes from the sizing rubric. **`/A.review.m`, `/A.review.l`, `/A.review.xl`** run the same review at that tier regardless of the rubric (recorded as `Tier: L (user)`); `/A.review` alone lets the rubric decide. With pasted comments or a link to a PR or review, `/A.review` **triages** them as below. Each comment is a finding from a cold reader: it may be right, it may lack context, or it may be known and deferred. All three are expected.
+**A build is not reviewed here.** When the subject is something built — a feature at Implement or later, a diff, code just written — say so in one line and run `/A.build.review` (`../build-review/SKILL.md`) instead: the plan lenses read a design text and cannot see whether code is wired, reachable or enforced.
+
+**Input:** with **no** input, `/A.review` is the Review *stage* on the current subject — resolved chat-first (spine Start step 0): the plan or report most recently in this conversation, else a board candidate offered by name; it never picks a board feature over work present in the chat without asking. The effort comes from the sizing rubric. **`/A.review.m`, `/A.review.l`, `/A.review.xl`** run the same review at that tier regardless of the rubric (recorded as `Tier: L (user)`); `/A.review` alone lets the rubric decide. With pasted comments or a link to a PR or review, `/A.review` **triages** them as below. Each comment is a finding from a cold reader: it may be right, it may lack context, or it may be known and deferred. All three are expected.
 
 ## Evaluate
 

@@ -54,6 +54,7 @@ One per feature, at the path `activity_naming` gives (month folder, day folder, 
 
 | Section | Reader | Rule |
 | --- | --- | --- |
+| `## Instructions` · `## Clarifications` | Both | First in the file. The user's instructions, then every question asked and the user's answer, all in the user's words, in order (`communication.md`, `clarify.md › The record`). The standard every stage and every reviewer checks against |
 | `## Summary (plain language)` | User | Five points: the ask, the situation, what was decided and why, what was done, the result. No paths, no symbols. Kept current; the result line always reflects now. Written so it could become a work item on its own |
 | `## Context` | Agent | Once at Start: binding rules, lessons, bearing decisions |
 | `## Report` | Both — chat summary for the user, full text for the agent | A revision is appended under a dated heading; earlier reports stay |
@@ -82,6 +83,7 @@ Recording and writing are different things. Every event is **recorded** when it 
 - a **step** completes (its event lines, its `## Changes` lines, the pointer);
 - a **decision** is made — immediately and alone, because its loss costs the most (dual write);
 - the **user gives an instruction** — appended to `## Instructions` at once, in their words;
+- the **user answers a question** — the question and the answer appended to `## Clarifications` at once, in their words;
 - a **finding** is logged as blocking — immediately;
 - a **stage** changes;
 - **before asking the user** anything, and **before any long-running action** (a reviewer run, a build, a migration);
@@ -122,7 +124,14 @@ Then `Phase: Closed` in the header, the feature block replaced by one row under 
 
 ## Drift and lessons
 
-When the user stops the agent for drifting, over-building or leaving scope, or Realign finds it: an event-log line tagged `DRIFT` (what happened, what was wanted), and an entry in `lessons_log` (date · what happened · instead · activity). Start reads the lessons log; a lesson that applies to the current work is quoted in `## Context`.
+When the user stops the agent for drifting, over-building or leaving scope, when Realign finds it, or when a build review finds a decision taken silently: an event-log line tagged `DRIFT` (what happened, what was wanted), at once. What it becomes after that is decided by the **lesson ladder** — the cheapest thing that stops it happening again, first rung that holds:
+
+1. **Nothing.** It would not recur, or the code now makes the right way obvious. The `DRIFT` line says so.
+2. **A check.** A test, a lint rule or an assert that goes red if it recurs — proposed to the user as a step, and trusted only once it has been seen to fail.
+3. **A standing rule.** Proposed wording for the constitution or the project's `rules`; the user adds it.
+4. **A lesson.** An entry in `lessons_log`: date · what happened · instead · activity · **retire when** — the condition under which it stops being needed (the check exists, the rule is in the constitution, the module is gone).
+
+A written lesson is the last rung because every lesson is read at every Start: a log that only grows buries the lessons that matter. Start reads the lessons **in force**, checks each one's retire condition against the project as it is now, and marks one whose condition has arrived `retired <date> — <why>` (the entry stays; the log is append-only). An entry with no retire condition is in force. A lesson that applies to the current work is quoted in `## Context`. Close asks the ladder's question once per feature: did this work correct a wrong belief about how the system behaves — and if so, which rung holds it?
 
 ## Token discipline
 

@@ -1,5 +1,5 @@
 ---
-description: Fresh-eyes review of the current plan or build at the effort the rubric chooses; pasted reviewer comments are triaged.
+description: Fresh-eyes review of the current plan at the effort the rubric chooses; pasted reviewer comments are triaged. Built code goes to /A.build.review.
 ---
 
 Run the `/A.review` command of The A Skill.

@@ -14,6 +14,14 @@ Ideas this method absorbed, pinned to where they came from. The skill carries it
 | Check-before-write: search by meaning and text, categorize exact / close / pattern, reuse → extend → new-with-reason; duplicate purpose as the risk; a capability index | anti-duplication (marcusgoll), code-deduplication (alinaqi/claude-bootstrap), find-similar-functions (millionco) | smithery.ai/skills/marcusgoll/anti-duplication; github.com/alinaqi/claude-bootstrap | 13 Nov 26 |
 | Deep modules, the deletion test, accept dependencies don't create them, one adapter is a hypothetical seam | Matt Pocock codebase-design (Ousterhout) | skills/codebase-design/SKILL.md | 13 Nov 26 |
 | Dotted command names (`/x.y`) via per-host command files | Spec Kit | generated `.claude/commands/speckit.*.md`, `.github/prompts/speckit.*.prompt.md` | 13 Nov 26 |
+| The four ways a built thing is not real — missing, stub, orphaned, hollow (exists → substantive → wired → data flows) | GSD Core (Open GSD, MIT) | github.com/open-gsd/gsd-core — agents/gsd-verifier.md | 19 Nov 26 |
+| An absence is a finding only with the searches that were tried; refuted findings stay visible | Trail of Bits skills (CC-BY-SA 4.0 — ideas only, no wording) | github.com/trailofbits/skills — plugins/spec-to-code-compliance | 19 Nov 26 |
+| The lesson ladder: a check, then a standing rule, then a written lesson with the condition that retires it; often nothing | Compound Engineering (Every, MIT) | github.com/EveryInc/compound-engineering-plugin — skills/ce-compound | 19 Nov 26 |
+| A check is trusted only once seen to fail; the agent's own rulings listed for the user | Superpowers (Jesse Vincent, MIT) | github.com/obra/superpowers — skills/test-driven-development, skills/subagent-driven-development | 19 Nov 26 |
+| A finding caused by the plan is fixed in the plan, not patched in the code | BMAD-METHOD (MIT) | github.com/bmad-code-org/BMAD-METHOD — bmm-skills/ship/bmad-build | 19 Nov 26 |
+
+Adopted in 0.10.0: the build review. Which lessons came from which upstream, and what is original, is in `references/build-review-lessons.md`; the full research, LLM reviews and decisions are indexed in `references/README.md` (maintainer documentation, outside the skill; not installed).
+
 
 Adopted in 0.6.0: Ponytail's per-response reflex, as *Reground* — scope, lean and premise asked silently at every stage boundary, with the full checks as escalation; the earlier adoption had moved Ponytail's content into fixed stages and two commands, which is not how Ponytail works.
 

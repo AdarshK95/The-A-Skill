@@ -31,6 +31,10 @@ Groups run in sequence because later lenses read the text the earlier ones corre
 
 Lens prompts are in `goldfish-lenses.md`. Findings are handled with `resolve-protocol.md`.
 
+## Build review depth
+
+The review of what was built (`build-review.md › Depth`) uses the same tier, **recomputed over what the build actually touched** — a plan sized M whose build crossed a permission path is reviewed at L. S: none. M: `intent` + one depth reviewer (Forward then Reverse) + `correctness`. L: `intent`, `forward`, `reverse`, `correctness`, `impact` in parallel, with rounds. XL: L plus `lean` and the critic on what was held. Never below M when the user runs `/A.build.review` by name.
+
 ## Writing the tier
 
 In the status header: `Tier: L (signals: shared callers in api/handlers.ts, contract change on /v2/items, contradicts decision 2026-03-14 "version-based invalidation")`. The signals are what the user checks, so name the file or decision for each.

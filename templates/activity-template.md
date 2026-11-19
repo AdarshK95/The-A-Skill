@@ -1,4 +1,16 @@
-<!-- The status header is written above this by the skill. Two readers: the Summary is for the user, in plain words; everything below it is for agents, fully technical. Nothing in this file is deleted or rewritten; corrections are new lines that point back. -->
+<!-- The status header is written above this by the skill. The file opens with the user's own words: what they asked, then what they answered. Then two readers: the Summary is for the user, in plain words; everything below it is for agents, fully technical. Nothing in this file is deleted or rewritten; corrections are new lines that point back. -->
+
+## Instructions
+
+_The user's instructions for this feature, in their words, numbered as they arrive; never paraphrased, never merged. A later instruction that changes an earlier one is added as its own line and the earlier marked `superseded by I-n`. Every stage and every reviewer checks the work against this list._
+
+- I1 · <date time> — "<the user's words>"
+
+## Clarifications
+
+_Every question the agent asked about this feature and the user's answer, in their words, in order, at any stage (`clarify.md › The record`). An answer that changes the ask is also added to Instructions. Read by every reviewer with the instructions._
+
+- Q1 · <date time> — "<the question as asked>" → "<the user's answer>" · <adds I-n | changes I-n | no change to the ask>
 
 ## Summary (plain language)
 
@@ -7,12 +19,6 @@
 3. **What was decided and why:** one or two plain sentences.
 4. **What was done:** one or two plain sentences; no paths or names.
 5. **The result:** what works now that did not, or what no longer goes wrong. (Updated as the work progresses; the last line always reflects the current state.)
-
-## Instructions
-
-_The user's instructions for this feature, in their words, numbered as they arrive; never paraphrased, never merged. A later instruction that changes an earlier one is added as its own line and the earlier marked `superseded by I-n`. Every stage and every reviewer checks the work against this list._
-
-- I1 · <date time> — "<the user's words>"
 
 ## Context
 
@@ -29,7 +35,7 @@ _`### 7.n · <title> (<type>)` with Phase · Pointer · Last done · Next · Res
 ## Findings
 _One line: rounds run, last round clean or not, counts by severity; the findings themselves are in `<nn>-<slug>.detail.md`._
 
-_Review findings and verdicts (FIX / CONTEST / ESCALATE / DECLINE), with evidence._
+_Review findings and verdicts (FIX / CONTEST / ESCALATE / DECLINE), with evidence. The build review's verdict, its obligation rows that are not held, and what it did not examine are recorded here too (`build-review.md`)._
 
 ## Decisions
 

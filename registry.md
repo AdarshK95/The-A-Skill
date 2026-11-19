@@ -22,7 +22,7 @@ Type `/A.` and keep typing: the picker filters on any word in a name (`/A.scope`
 
 | Command | Does |
 |---|---|
-| `/A.review` | Fresh-eyes review of the current plan or build; effort chosen by the rubric. Paste reviewer comments and it triages them instead |
+| `/A.review` | Fresh-eyes review of the current plan; effort chosen by the rubric. Paste reviewer comments and it triages them instead. Something already built goes to `/A.build.review` |
 | `/A.review.m` · `/A.review.l` · `/A.review.xl` | The same review at the effort you choose |
 
 ## build — make it
@@ -31,6 +31,7 @@ Type `/A.` and keep typing: the picker filters on any word in a name (`/A.scope`
 |---|---|
 | `/A.build` | Build the approved plan step by step: look around before each edit, wire and check after; realign and simplify inside |
 | `/A.build.resume` | Pick up an interrupted build: tracker read, done steps verified against the files, continue at the pointer |
+| `/A.build.review` | Is it really built, and is it what you asked? Fresh reviewers get your own words and the code — not the builder's account — and run three passes in parallel: intent (your words → the need → the plan → the code), forward (each promised behaviour followed to where it lands), reverse (each protected thing traced back to every way in, including code the build never touched). Output: Sound / Sound once fixed / Shallow / Off target, with where each rule is enforced, what was decided without you, what was not examined. Never a fix. Add "at L" or "xl" to set the depth |
 
 ## verify · close — prove it, finish it
 

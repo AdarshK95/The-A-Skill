@@ -1,6 +1,8 @@
 # Review lenses
 
-Each lens is a prompt for a reviewer that has **not** seen the working conversation. Give it: the activity file (at least the `## Report` section), the project files the report cites, and the constitution. Nothing else. It reads, it reports, it changes nothing.
+These lenses review a **plan** — a design text, before it is built. Something already built is reviewed with `build-review.md`, which has its own lanes; these prompts read a description and cannot see whether code is wired, reachable or enforced.
+
+Each lens is a prompt for a reviewer that has **not** seen the working conversation. Give it: the activity file (at least the `## Instructions`, `## Clarifications` and `## Report` sections), the project files the report cites, and the constitution. Nothing else. It reads, it reports, it changes nothing.
 
 The reviewer returns findings as a list, each tagged **Blocker** (the plan cannot proceed as written), **Major** (must be addressed or explicitly accepted), or **Low** (worth knowing, never worth a discussion), and each with a **confidence** (`high` — pointed at in the files; `medium` — inferred from them; `low` — suspected). Any finding that contradicts the project's constitution is a Blocker regardless of the lens. **"No findings" is a complete and valid review**: a reviewer that found nothing says so in one line and stops; it does not manufacture Lows to have something to say.
 
@@ -21,7 +23,7 @@ Spawn one fresh subagent per lens where the host allows. Otherwise run the lens 
 
 Shared preamble for every lens:
 
-> You are reviewing a plan you did not write, for a codebase you are seeing for the first time. You have the plan, the user's instructions for it (`## Instructions`, in the user's words), the files it cites, and the project's standing rules. First check the plan against each instruction: any instruction not honoured, in form or substance, is a Blocker citing the instruction. Then apply your lens. Read everything you were given before writing. Report only what you can point at in those files. Tag each finding Blocker, Major or Low. Do not propose rewrites; name the gap.
+> You are reviewing a plan you did not write, for a codebase you are seeing for the first time. You have the plan, the user's instructions for it (`## Instructions`, in the user's words), their answers to the questions they were asked (`## Clarifications`), the files it cites, and the project's standing rules. First check the plan against each instruction and each answer: any one not honoured, in form or substance, is a Blocker citing it; a point the plan settles that neither the instructions, the answers nor the plan's own Assumptions cover is a Major — the plan decided it without the user. Then apply your lens. Read everything you were given before writing. Report only what you can point at in those files. Tag each finding Blocker, Major or Low. Do not propose rewrites; name the gap.
 
 ## zoom-out
 

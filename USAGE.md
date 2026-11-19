@@ -38,6 +38,12 @@ You get the design versus the code, every drift marked *doc is right / code is r
 
 Before anything is planned: your account split into what you saw, what you expected, your own suspicions (each tested, none assumed), and what you want next (kept for later). Then the real artifacts, three passes run in parallel — backward from the error, forward from the entry, and a step back to the design — a check that nothing between them was skipped, and a test that confirms the cause. You get the cause with its confidence and condition, what was ruled out, and your suspicions each with a verdict — never a fix. Then `/A.plan` plans the fix exactly where the passes converged.
 
+**It's built — is it really done?**
+
+> `/A.build.review`
+
+After the build, reviewers who never saw the conversation get your own words — what you asked and what you answered — and the code, but not the builder's description of what it did. Three passes run in parallel: from your words to the need behind them and down to the code; forward from each promised behaviour to where it actually lands; and backward from each thing you wanted protected to every way of reaching it, including code the build never touched. You get one verdict — **Sound**, **Sound once fixed**, **Shallow** (it looks finished and is not) or **Off target** — with where each rule is enforced, what was decided without asking you, and what was not examined. Nothing is fixed until you say go.
+
 **Reviewer comments**
 
 > `/A.review` *(paste the comments)*

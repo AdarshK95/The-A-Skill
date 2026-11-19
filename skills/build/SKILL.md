@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # /A.build — build the approved plan
 
-**Place in the flow:** build stage; needs `Phase: Approved`; produces built steps, changes, build findings, a realigned and verified-ready build; next: Verify. See `../core/references/flow.md`.
+**Place in the flow:** build stage; needs `Phase: Approved`; produces built steps, changes, build findings, a realigned build; next: the build review (`/A.build.review`; tier M and above), then Verify. See `../core/references/flow.md`.
 
 Runs the spine's **Implement** and **Realign** stages (`../core/SKILL.md`) on the current feature — subject resolved chat-first. Not approved → say which stage the feature is at; if the report has decisions with suggested answers, offer "take the suggested answers and approve" as one question. Realign (original ask, creep, the lean pass) and the simplify pass are part of this command, not separate ones.
 

@@ -12,7 +12,7 @@ Every instruction the user gives about a feature is written into the feature's `
 
 **The conformance check** runs at every boundary — end of Evaluate, before Report, after every lens group, per item in Build, before Realign, at every auto advance, and in full under `/A.plan.scope_check_drift_check`: for each instruction still in force, does what is about to be done honour it? Three answers only: *honoured*; *deviation — proposed to the user* (in decision shape, with what the instruction says, what the plan does instead, why, and the suggested resolution); *impossible as stated — question to the user*. A deviation is never resolved by the agent, never folded into a plan as a reasonable reading, never argued by the evidence alone. Silent when all honoured; one line per deviation when not.
 
-**Reviewers get the ledger.** Every lens receives `## Instructions` with the plan and checks conformance first: a plan that does not honour an instruction in force, or honours it in form but not in substance, is a **Blocker** against the plan, whatever the lens's other findings. This is how the design the user gave stays the design: not because a rule names each way it could drift, but because every pass re-reads what the user actually said.
+**Reviewers get the ledger.** Every lens receives `## Instructions` and `## Clarifications` (the questions asked and the user's answers, `clarify.md › The record`) with the plan and checks conformance first: a plan that does not honour an instruction in force, or honours it in form but not in substance, is a **Blocker** against the plan, whatever the lens's other findings. This is how the design the user gave stays the design: not because a rule names each way it could drift, but because every pass re-reads what the user actually said.
 
 ## Do what was asked, or say it cannot be done
 
@@ -127,7 +127,7 @@ Every proposal carries a one-line verdict on its **quality**: *robust* (what a w
 
 ## Drift and scope
 
-When the user stops you because you drifted, over-built or left scope — or when Realign finds it — record it twice: an event-log line tagged `DRIFT` (what happened, what the user wanted instead), and an entry in the project's **lessons log** (`lessons_log` in config): date · what went wrong · what to do instead · the activity. Start reads the lessons log alongside the constitution, so the same drift is not repeated.
+When the user stops you because you drifted, over-built or left scope — or when Realign finds it — record it at once as an event-log line tagged `DRIFT` (what happened, what the user wanted instead), then take it up the **lesson ladder** (`logging.md › Drift and lessons`): nothing, a check, a standing rule, or — last — an entry in the project's **lessons log** (`lessons_log` in config) with the condition that retires it. Start reads the lessons in force alongside the constitution, so the same drift is not repeated and the log does not grow into noise.
 
 ## Tests of a good update
 

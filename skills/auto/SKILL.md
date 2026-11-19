@@ -12,7 +12,7 @@ Auto is on whenever the user did not type an `/A.*` command. It never does the w
 
 ## A mistyped or unknown command is auto
 
-Anything the user types that looks like a command but matches none (`/A.scopecheck`, `/A.drif`, `/A.plan.fix`, `/A review`) arrives as plain text. Treat it as auto with a strong hint: map the words to the nearest command by stage and action (`scope`, `drift` → `/A.plan.scope_check_drift_check`; `lean`, `simplif`, `overcompl` → `/A.plan.lean_overcomplication_check`; `fix`, `bug`, `root`, `cause`, `why`, `diagnose` → `/A.rootcause`; `extend`, `continue`, `reopen`, `realign plan` → `/A.plan.realign`; `implement`, `build` → `/A.build`; `resume`, `pick up` → `/A.build.resume`; `validate`, `test`, `verify` → `/A.verify`; `board`, `tracker`, `todo` → `/A.project.board`; `map`, `overview`, `diagram`, `thread` → `/A.project.map`; `status`, `where`, `pending` → `/A.project.status`; `init`, `setup`, `start project` → `/A.project.start`; `update skill`, `upgrade` → `/A.skill.update`), say the command you took it as in one line, and run it. No guess among several → one question naming them.
+Anything the user types that looks like a command but matches none (`/A.scopecheck`, `/A.drif`, `/A.plan.fix`, `/A review`) arrives as plain text. Treat it as auto with a strong hint: map the words to the nearest command by stage and action (`scope`, `drift` → `/A.plan.scope_check_drift_check`; `lean`, `simplif`, `overcompl` → `/A.plan.lean_overcomplication_check`; `fix`, `bug`, `root`, `cause`, `why`, `diagnose` → `/A.rootcause`; `extend`, `continue`, `reopen`, `realign plan` → `/A.plan.realign`; `build review`, `review code`, `review build`, `shallow`, `loophole`, `is it really done` → `/A.build.review`; `implement`, `build` → `/A.build`; `resume`, `pick up` → `/A.build.resume`; `validate`, `test`, `verify` → `/A.verify`; `board`, `tracker`, `todo` → `/A.project.board`; `map`, `overview`, `diagram`, `thread` → `/A.project.map`; `status`, `where`, `pending` → `/A.project.status`; `init`, `setup`, `start project` → `/A.project.start`; `update skill`, `upgrade` → `/A.skill.update`), say the command you took it as in one line, and run it. No guess among several → one question naming them.
 
 ## On every message, in order
 
@@ -41,7 +41,7 @@ An activity opens when code will change or when analysis is to be kept. A `chat`
 |---|---|
 | Clarify / Gate | An answer, a revision to the plan, or a new clarification — the report is revised; still Gate |
 | Approved / Implement | A refinement of a step, a build finding, or a change of direction (→ Realign now) — still Implement |
-| Realign / Verified | Acceptance, a further simplification, or a reopen of a step — still here |
+| Realign / Verified | Acceptance, a further simplification, or a reopen of a step — still here. "Review this", "is it really done", "check what you built" → `/A.build.review`, never the plan lenses |
 
 Auto never reclassifies an open feature. The user changes type by command (`/A.rootcause` inside a feature opens an item) or by saying so.
 
@@ -51,7 +51,7 @@ Auto never reclassifies an open feature. The user changes type by command (`/A.r
 
 An `/A.*` command typed inside an open activity is a temporary override:
 
-- A **stage** command (`review`, `build`, `verify`, `close`, the scope/drift and lean checks) runs that stage on the current activity now, then returns to where it was.
+- A **stage** command (`review`, `build`, `build.review`, `verify`, `close`, the scope/drift and lean checks) runs that stage on the current activity now, then returns to where it was.
 - An **entry** command (`rootcause`, `plan`, `plan.realign`, `review` with pasted comments) opens a new **item** inside the current feature (spine → Items), runs it to its result, then returns the pointer to the item that was active. Promote it to its own feature when it is feature-sized.
 
 Set `Mode:` in the header to the command that overrode auto for as long as the override lasts; back to `auto` afterwards.

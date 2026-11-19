@@ -14,9 +14,11 @@ Spawn one subagent per lens with the Agent tool. Give it:
 
 Give it nothing else: no summary of the conversation, no "the user wants", no instruction files. If the host offers a setting to withhold project instruction files from subagents, use it. Run the lenses of one round in parallel; rounds in sequence.
 
+For a **build review** the list is different and stricter — the ask, the approved plan, the diff, the constitution, and nothing of the builder's account (`build-review.md › Who reviews`). Where no fresh reviewer exists, a new conversation is the fresh reviewer for it.
+
 ## GitHub Copilot in VS Code
 
-As of this version, treat Copilot as **no fresh subagent** unless the isolation probe below passes with a delegated agent in your version. Default: cold self-review — run each lens prompt yourself, in a reply that quotes only the report and the cited files, and label every finding `cold self-review`. Say so to the user once per activity.
+The isolation probe below decides, per project and per version; nothing is assumed either way. VS Code's documentation (read 19 Nov 26) describes subagents that receive the delegated task and not the main conversation, and custom agents (`.github/agents/*.agent.md`) whose tool list can be limited to reading and searching — so run the probe with such a read-only agent first. Probe passes → fresh review as on Claude Code. Probe fails or no such agent is available → cold self-review — run each lens prompt yourself, in a reply that quotes only the report and the cited files, and label every finding `cold self-review`. Say so to the user once per activity.
 
 ## Cold self-review — the protocol when no fresh reviewer exists
 
