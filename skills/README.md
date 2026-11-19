@@ -20,7 +20,7 @@ Each folder holds one `SKILL.md`. Command wrappers in `../commands/` point at th
 | `project-status/` | /A.project.status — where are we, from the files |
 | `rootcause/` | /A.rootcause (and .m .l .xl) — understand, observe, three parallel lanes, coverage check, reconcile, confirm; a cause, never a fix |
 | `review/` | /A.review (and .m .l .xl) — fresh-eyes review of a plan, or triage of pasted comments |
-| `build-review/` | /A.build.review — review of what was built against the user's words: intent, forward and reverse lanes; shallow work, loopholes, silent decisions; a verdict, never a fix |
+| `build-review/` | /A.build.review (and .s .m .l .xl) — review of what was built against the user's words: intent, forward and reverse lanes; shallow work, loopholes, silent decisions; a verdict, never a fix |
 | `skill-help/` | /A.skill.help · /A.help — commands by stage |
 | `skill-repair/` | /A.skill.repair — restore the skill's own files after confirmation |
 | `skill-uninstall/` | /A.skill.uninstall — remove the skill's own files; never the user's data |

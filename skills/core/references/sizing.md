@@ -33,7 +33,7 @@ Lens prompts are in `goldfish-lenses.md`. Findings are handled with `resolve-pro
 
 ## Build review depth
 
-The review of what was built (`build-review.md › Depth`) uses the same tier, **recomputed over what the build actually touched** — a plan sized M whose build crossed a permission path is reviewed at L. S: none. M: `intent` + one depth reviewer (Forward then Reverse) + `correctness`. L: `intent`, `forward`, `reverse`, `correctness`, `impact` in parallel, with rounds. XL: L plus `lean` and the critic on what was held. Never below M when the user runs `/A.build.review` by name.
+The review of what was built (`build-review.md › Depth`) uses the same tier, **recomputed over what the build actually touched** — a plan sized M whose build crossed a permission path is reviewed at L. S: not a stage in the flow; run by name it is the quick check — one reviewer, the weighted places only. M: `intent` + one depth reviewer (Forward then Reverse) + `correctness`. L: `intent`, `forward`, `reverse`, `correctness`, `impact` in parallel, with rounds. XL: L plus `lean` and the critic on what was held. `/A.build.review.s`, `.m`, `.l`, `.xl` force the depth.
 
 ## Writing the tier
 

@@ -31,7 +31,8 @@ Type `/A.` and keep typing: the picker filters on any word in a name (`/A.scope`
 |---|---|
 | `/A.build` | Build the approved plan step by step: look around before each edit, wire and check after; realign and simplify inside |
 | `/A.build.resume` | Pick up an interrupted build: tracker read, done steps verified against the files, continue at the pointer |
-| `/A.build.review` | Is it really built, and is it what you asked? Fresh reviewers get your own words and the code — not the builder's account — and run three passes in parallel: intent (your words → the need → the plan → the code), forward (each promised behaviour followed to where it lands), reverse (each protected thing traced back to every way in, including code the build never touched). Output: Sound / Sound once fixed / Shallow / Off target, with where each rule is enforced, what was decided without you, what was not examined. Never a fix. Add "at L" or "xl" to set the depth |
+| `/A.build.review` | Is it really built, and is it what you asked? Fresh reviewers get your own words and the code — not the builder's account — and run three passes in parallel: intent (your words → the need → the plan → the code), forward (each promised behaviour followed to where it lands), reverse (each protected thing traced back to every way in, including code the build never touched). Output: Sound / Sound once fixed / Shallow / Off target, with where each rule is enforced, what was decided without you, what was not examined. Never a fix. Depth chosen from what the build touched |
+| `/A.build.review.s` · `.m` · `.l` · `.xl` | The same build review at the depth you choose. `.s` is the quick check: one reviewer, the places that matter most for what you asked, and it says what it left out |
 
 ## verify · close — prove it, finish it
 

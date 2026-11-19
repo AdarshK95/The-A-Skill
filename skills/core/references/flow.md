@@ -13,7 +13,7 @@ Every command knows three things: what it **needs** to exist, what it **produces
 | `/A.review` with pasted comments | the comments and the change they refer to | verdicts per comment; FIX steps | Approve the FIX steps → Implement |
 | `/A.build` | an **approved** plan with steps | built steps, changes, build findings | Realign → Build review (M+) → Validate |
 | Realign (inside `/A.build`); `/A.plan.scope_check_drift_check`, `/A.plan.lean_overcomplication_check` at any time | something built | simplifications, findings for the user | Build review (M+), else Validate |
-| `/A.build.review` | something built, and the user's words for it (`## Instructions`, `## Clarifications`, or the request in the chat) | a verdict — Sound / Sound once fixed / Shallow / Off target — with evidence per obligation, what was not examined, the decisions taken without the user | Sound → Validate; otherwise the fixes as a new item at Gate → Build → the review again |
+| `/A.build.review` (`.s` `.m` `.l` `.xl` choose the depth) | something built, and the user's words for it (`## Instructions`, `## Clarifications`, or the request in the chat) | a verdict — Sound / Sound once fixed / Shallow / Off target — with evidence per obligation, what was not examined, the decisions taken without the user | Sound → Validate; otherwise the fixes as a new item at Gate → Build → the review again |
 | `/A.verify` | something built; at L and XL, a build review on it | verification evidence | Close |
 | `/A.close` | a verified feature | ledgers updated, board row to Finished | nothing; or `/A.plan` for the next thing |
 | `/A.build.resume` | a feature with a pointer | continuation at the pointer | whatever stage the pointer is in |

@@ -232,11 +232,11 @@ After the fixes are built, two things happen. Every earlier Blocker's prediction
 
 ## Depth
 
-The feature's tier, recomputed with `sizing.md` over what the build actually touched (not what the plan expected to touch). Never below **M** when the user runs the command by name; "at L" or "xl" in the request sets it (`Tier: L (user)`).
+The feature's tier, recomputed with `sizing.md` over what the build actually touched (not what the plan expected to touch). Plain `/A.build.review` chooses from those signals. `/A.build.review.s`, `.m`, `.l`, `.xl` force the depth, as does "quick", "at L" or "xl" in the request (`Tier: L (user)`). In the flow after a build, tier S is not a stage — small changes carry no ceremony, and the build check and Validate cover them; run by name on a small build, it is the quick check.
 
 | Tier | Runs |
 | --- | --- |
-| **S** | No build review; the build check and Validate carry it |
+| **S** — the quick check | One fresh reviewer runs `intent`, then Forward, then Reverse, writing each before starting the next, on the places each instruction's kind puts weight on (§2, step one) and no others. No lenses, no targeted passes, no rounds. Checks first, reconcile and confirm still apply. The verdict is labelled `quick check`, and *Not examined* names what this depth leaves out: the correctness and impact lenses, and every place outside the weighted ones |
 | **M** | `intent` · one **depth** reviewer running Forward then Reverse, writing the first before starting the second · `correctness`. Coverage check, reconcile, confirm |
 | **L** | `intent` · `forward` · `reverse` · `correctness` · `impact`, in parallel. Coverage check with targeted passes, reconcile, confirm; rounds |
 | **XL** | L, plus `lean`, plus the critic on what was held; rounds |

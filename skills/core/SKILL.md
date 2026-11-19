@@ -73,7 +73,7 @@ Root cause is its own stage before planning, with its own gate: a cause at CONFI
 | Approve | — | The user has said go. Decisions dual-written. `Phase: Approved` |
 | Implement | `/A.build` (`/A.build.resume` after an interruption) | Each step built in order; counter and board current; build findings logged |
 | Realign | (inside `/A.build`; `/A.plan.scope_check_drift_check` and `/A.plan.lean_overcomplication_check` at any time) | Build checked against the original ask; creep removed; duplication and hardcoding found and removed; simplify pass run (`/A.plan.lean_overcomplication_check` on demand) |
-| Build review | `/A.build.review` | A verdict on the build against the user's words, with evidence and what was not examined; findings resolved (`references/build-review.md`) |
+| Build review | `/A.build.review` · `.s` `.m` `.l` `.xl` | A verdict on the build against the user's words, with evidence and what was not examined; findings resolved (`references/build-review.md`) |
 | Validate | `/A.verify` | A runnable check passes; build matches the approved steps, with evidence |
 | Close | `/A.close` | Activity finalized; project ledgers updated; board row to Finished; overview recoloured |
 
@@ -133,7 +133,7 @@ After the last step, and at once when the user changes direction, stops you for 
 
 ## Build review
 
-Per tier, on what was built: the method is `references/build-review.md`, entered through `../build-review/SKILL.md`. Its standard is the user's words (`## Instructions`, `## Clarifications`), not the plan and not the diff. It changes no code; its verdict goes to the header's `Build review:` line. Tier S: `Build review: none (tier S)`. At L and XL a build is not validated or closed without it.
+Per tier, on what was built: the method is `references/build-review.md`, entered through `../build-review/SKILL.md`. Its standard is the user's words (`## Instructions`, `## Clarifications`), not the plan and not the diff. It changes no code; its verdict goes to the header's `Build review:` line. Tier S: not a stage in the flow (`Build review: none (tier S)`); run by name it is the quick check. At L and XL a build is not validated or closed without it.
 
 ## Validate
 
@@ -166,7 +166,7 @@ Promoted from / Demoted from: <type, date, reason — when it changed>
 Mode: auto | <command that overrode auto>
 Phase: Start | Read | Evaluate | Clarify | Gate | Approved | Implement | Realign | Verified | Stopped | Closed
 Tier: S | M | L | XL (signals: ...)
-Build review: none (tier S) | pending | Sound | Sound once fixed | Shallow | Off target — <date>, round <n>, <fresh | cold self-review>
+Build review: none (tier S) | pending | quick check: <verdict> | Sound | Sound once fixed | Shallow | Off target — <date>, round <n>, <fresh | cold self-review>
 Pointer: 7.2 › 3/5 — <step name> — in progress | done | blocked
 Last done: 7.2 step 2 — <what, where> (13 Nov 26, 05:31 PM)
 Next: <one concrete action: file and change>

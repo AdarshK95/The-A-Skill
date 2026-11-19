@@ -8,6 +8,6 @@ disable-model-invocation: true
 
 **Place in the flow:** after the build, before verify; needs something built; produces a verdict (Sound · Sound once fixed · Shallow · Off target) with evidence; next: Verify, or the fixes as a new item at Gate. See `../core/references/flow.md`.
 
-Runs the spine (`../core/SKILL.md`) with `../core/references/build-review.md` as its method — read it whole, it is the skill. Subject resolved chat-first (Start step 0): the feature built in this conversation, else a diff or code the user pointed at, else board features at Implement or Realign, offered by name. A word in the request sets the depth ("at L", "xl"); otherwise the tier is recomputed from what the build touched, never below M.
+Runs the spine (`../core/SKILL.md`) with `../core/references/build-review.md` as its method — read it whole, it is the skill. Subject resolved chat-first (Start step 0): the feature built in this conversation, else a diff or code the user pointed at, else board features at Implement or Realign, offered by name. Plain `/A.build.review` chooses the depth itself: the tier is recomputed from what the build touched. `/A.build.review.s` (the quick check), `.m`, `.l`, `.xl` force the depth (recorded as `Tier: L (user)`).
 
 This file is this command's **Evaluate** step, and nothing more: run `build-review.md` §1–§7 in order, then its *Gate*, *Resolution and rounds* and *Without a plan* sections. `/A.review` reviews a plan; this reviews the build, and they are not interchangeable.

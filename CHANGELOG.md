@@ -2,6 +2,10 @@
 
 Version numbers follow the scale of the change, decided per release. **Third digit:** iteration on an existing capability — wording, rules, fixes, a redesign of something that already exists (a new layout for the map is still the map). **Second digit:** a new capability, or anything an installed copy must re-learn — a new or removed command or stage, a new script, a format change that breaks old files. **First digit:** a restructure that breaks existing projects (not before 1.0).
 
+## 0.10.1 — 20 Nov 26
+
+- **Build review depth commands.** `/A.build.review.s`, `.m`, `.l`, `.xl` force the depth, as `/A.review.m/.l/.xl` do for plans (recorded `Tier: L (user)`). Plain `/A.build.review` now chooses among all four from what the build touched; the "never below M when run by name" floor is gone. `.s` is the **quick check**: one fresh reviewer runs intent, forward and reverse in turn on only the places the kind of ask puts weight on; no lenses, no targeted passes, no rounds; checks-first, reconcile and confirm still apply; the verdict is labelled `quick check` and *Not examined* names what that depth leaves out. In the flow, a tier S build still has no build-review stage; `.s` is what runs when it is called by name.
+
 ## 0.10.0 — 19 Nov 26
 
 Second-number release: a new command and stage (`/A.build.review`), a new section in the activity file (`## Clarifications`), a new header line, a new field in the lessons log. An installed copy needs `/A.skill.update`.
