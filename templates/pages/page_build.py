@@ -88,7 +88,8 @@ def read_config(root: Path) -> dict:
     cfg = {"activity_folder": "docs/activity/", "pages_folder": "docs/pages/", "project_name": root.name,
            "pages_server": "ask", "project_board": "docs/activity/BOARD.md", "decisions_log": "docs/decisions.md", "lessons_log": "docs/lessons.md",
            "constitution": "docs/constitution.md", "deferred_decisions_log": "docs/deferred-decisions.md",
-           "implementation_log": "docs/implementation-log.md", "api_docs": "docs/api.md", "map_folder": "docs/map/"}
+           "implementation_log": "docs/implementation-log.md", "api_docs": "docs/api.md", "map_folder": "docs/map/",
+           "floorplan_url": "", "floorplan_start": ""}
     p = root / ".a" / "project.md"
     if p.exists():
         for line in p.read_text(encoding="utf-8", errors="replace").splitlines():
@@ -349,7 +350,7 @@ def collect(root: Path, cfg: dict, out_dir: Path) -> list:
 
 # ---------------------------------------------------------------- drawing
 def chip(text, cls=""):
-    return f'<span class="chip {cls}">{html.escape(text)}</span>' if text else ""
+    return f'<span class="chip {cls}" title="{html.escape(text, quote=True)}">{html.escape(text)}</span>' if text else ""
 
 
 def phase_class(phase: str) -> str:
@@ -357,16 +358,79 @@ def phase_class(phase: str) -> str:
     return "done" if p.startswith(("closed", "verified")) else "stop" if p.startswith("stopped") else "wait" if p.startswith(("gate", "clarify")) else "run" if p else ""
 
 
-def trail(header: dict) -> str:
-    phase = header.get("Phase", "").strip()
-    idx = next((v for k, v in PHASE_STEP.items() if phase.lower().startswith(k)), None)
-    if idx is None:
+def step_of(word: str):
+    """Which of the eight steps a phase word belongs to ('Start' and 'Gate' are the plan step), or None."""
+    w = word.strip().lower()
+    for k in ("build review", "plan review"):
+        if w.startswith(k):
+            return STEPS.index("Build review" if k == "build review" else "Plan review")
+    if w.startswith("build"):
+        return STEPS.index("Build")
+    return next((v for k, v in PHASE_STEP.items() if w.startswith(k)), None)
+
+
+INF = 10 ** 12
+
+
+def phase_model(f: dict) -> dict:
+    """When each step ran, from the dated lines under 'What happened' ('20 Nov 26, 04:15 PM · Plan — ...'). An entry belongs to the
+    step of the latest such line before it; entries before the first line belong to the first step. A file with no such lines
+    (an older layout) only knows its current step, and everything on the page belongs to it."""
+    hd = f["header"]
+    cur = step_of(hd.get("Phase", ""))
+    evs = []
+    for d in f["docs"]:
+        for name, body in d["sections"]:
+            if name.lower().startswith("user summary"):
+                for e in events(body, datetime.min):
+                    if e["dated"] and e["kind"] == "done":
+                        m = re.match(r"^([A-Za-z][A-Za-z ]*?)\s*(?:[—–·:]|\s-\s)", e["text"])
+                        st = step_of(m.group(1)) if m else None
+                        if st is not None:
+                            evs.append((e["when"], st))
+    evs.sort(key=lambda x: x[0])
+    spans = {i: [] for i in range(len(STEPS))}
+    first = {}
+    for k, (t, st) in enumerate(evs):
+        end = evs[k + 1][0].timestamp() if k + 1 < len(evs) else INF
+        spans[st].append((-INF if k == 0 else t.timestamp(), end))
+        first.setdefault(st, t)
+    known = bool(evs)
+    if not known and cur is not None:
+        spans[cur] = [(-INF, INF)]
+        opened, _ = parse_when(hd.get("Updated", "") or hd.get("Opened", ""))
+        if opened:
+            first[cur] = opened
+    return {"cur": cur, "spans": spans, "first": first, "known": known}
+
+
+def trail(f: dict) -> str:
+    """The step bar: every step, when it ran, and a click filters the page's dated entries to that step. 'All' shows everything."""
+    m = phase_model(f)
+    if m["cur"] is None and not m["known"]:
         return ""
-    cells = []
-    for n, s in enumerate(STEPS):
-        cls = "past" if n < idx else "here" if n == idx else "todo"
-        cells.append(f'<li class="{cls}">{html.escape(s)}</li>')
-    return '<ol class="trail">' + "".join(cells) + "</ol>"
+    cells = ['<li class="all"><button type="button" data-all="1" data-label="All" class="sel" title="Everything on this page">All</button></li>']
+    for n, name in enumerate(STEPS):
+        cls = "past" if m["cur"] is not None and n < m["cur"] else "here" if n == m["cur"] else "later"
+        sp = m["spans"][n]
+        when = m["first"].get(n)
+        stamp = when.strftime("%d %b, %I:%M %p" if m["known"] else "%d %b") if when else ""
+        title = (f"{name}: first ran {when.strftime('%d %b %y, %I:%M %p')}" if m["known"] and when else f"{name}: no dated line says it ran" if not sp else f"{name}: the current step") + ("" if sp else "")
+        attrs = f' data-spans="{",".join(f"{a:.0f}:{b:.0f}" for a, b in sp)}"' if sp else " disabled"
+        cells.append(f'<li class="{cls}"><button type="button" data-label="{html.escape(name, quote=True)}"{attrs} title="{html.escape(title, quote=True)}">{html.escape(name)}'
+                     f'{"<small>" + html.escape(stamp) + "</small>" if stamp else ""}</button></li>')
+    note = "" if m["known"] else '<p class="legend">Only the current step is known: this file has no dated lines under "What happened" saying when each step ran.</p>'
+    return f'<ol class="trail" id="phases">{"".join(cells)}</ol><p class="legend" id="phasenote"></p>{note}'
+
+
+def stamp_items(page_html: str) -> str:
+    """Marks every list item that starts with a date (after an optional id such as 'E12 ·') with its time, for the step filter."""
+    def one(m):
+        text = re.sub(r"<[^>]+>", "", page_html[m.end():m.end() + 400])
+        text = re.sub(r"^\s*[A-Z]{1,2}\d+[a-z]?\s*[·:—–-]?\s*", "", text)
+        when, _ = parse_when(text)
+        return f'<li data-ts="{when.timestamp():.0f}"{m.group(1) or ""}>' if when and "data-ts" not in (m.group(1) or "") else m.group(0)
+    return re.sub(r"<li( [^>]*)?>", one, page_html)
 
 
 def draw_summary(body: str, header: dict) -> str:
@@ -375,7 +439,6 @@ def draw_summary(body: str, header: dict) -> str:
     out = ['<section class="summary">']
     if f.get("What this is"):
         out.append(f'<p class="lead" data-h="{h(f["What this is"])}">{inline(f["What this is"])}</p>')
-    out.append(trail(header))
     tiles = []
     for k in ("Now", "Running", "Next", "Waiting on you"):
         v = f.get(k, "")
@@ -388,7 +451,7 @@ def draw_summary(body: str, header: dict) -> str:
     for k, v in f.items():
         if k not in SUMMARY_FIELDS:
             out.append(f'<p data-h="{h(k + v)}"><strong>{html.escape(k)}:</strong> {inline(v)}</p>')
-    out.append(md(rest))
+    out.append(stamp_items(md(rest)))
     out.append("</section>")
     return "".join(out)
 
@@ -400,7 +463,9 @@ def draw_instructions(body: str, status: dict) -> str:
         sup = "superseded" in text.lower()
         st = "superseded" if sup else status.get(iid, "")
         cls = {"honoured": "ok", "deviation": "bad", "question": "wait", "superseded": "old"}.get(st, "")
-        rows.append(f'<li class="{"sup" if sup else ""}" data-h="{h(text)}"><span class="iid">{iid}</span><span class="itext">{inline(text)}</span>{chip(st, cls)}</li>')
+        when, _ = parse_when(text)
+        ts = f' data-ts="{when.timestamp():.0f}"' if when else ""
+        rows.append(f'<li class="{"sup" if sup else ""}"{ts} data-h="{h(text)}"><span class="iid">{iid}</span><span class="itext">{inline(text)}</span>{chip(st, cls)}</li>')
     return '<ul class="instr">' + "".join(rows) + "</ul>" if rows else md(body)
 
 
@@ -415,7 +480,8 @@ def draw_questions(body: str, ref: str = "") -> str:
         whole = q["id"] + json.dumps(f, sort_keys=True)
         copy = (f'<button class="copy" data-copy="{html.escape(ref + " " + q["id"] + " — my answer: ", quote=True)}" title="Copies a line to paste into the chat, so the agent knows which question you are answering">copy reply line</button>'
                 if q["state"] == "open" else "")
-        card = [f'<div class="q {q["state"]}" id="{q["id"]}" data-h="{h(whole)}"><div class="qh"><span class="iid">{q["id"]}</span>{chip(q["state"], cls)}<span class="when">{html.escape(q["when"])}</span>{copy}</div>']
+        qw, _ = parse_when(q["when"])
+        card = [f'<div class="q {q["state"]}" id="{q["id"]}"{f" data-ts=" + chr(34) + format(qw.timestamp(), ".0f") + chr(34) if qw else ""} data-h="{h(whole)}"><div class="qh"><span class="iid">{q["id"]}</span>{chip(q["state"], cls)}<span class="when">{html.escape(q["when"])}</span>{copy}</div>']
         card.append(f'<p class="qq">{inline(f.get("Question", "")) or "<i class=miss>no question written</i>"}</p>')
         for k in ("Context", "Options", "Suggested", "Answer"):
             v = f.get(k, "")
@@ -448,19 +514,24 @@ def draw_doc(d: dict, first: bool, ref: str = "") -> str:
         for m in re.finditer(r"\b(I\d+)\s*[—–-]\s*(honoured|deviation|question)", body, re.I):
             status[m.group(1)] = m.group(2).lower()
     pre = re.sub(r"^#\s+.+$", "", d["preamble"], count=1, flags=re.M).strip()
-    if pre:
-        out.append('<section class="pre">' + md(pre) + "</section>")
+    pre_html = md(pre).strip() if pre else ""
+    if pre_html:
+        out.append('<section class="pre">' + pre_html + "</section>")
     front = {"user summary": "u", "summary": "u", "instructions": "i", "clarifications": "q", "questions and answers": "q"}
     for name, body in secs:
         kind = next((v for k, v in front.items() if name.lower().startswith(k)), "")
         if kind == "u":
             out.append(f"<h2>{html.escape(name)}</h2>" + (draw_summary(body, d["header"]) if name.lower().startswith("user") else '<section class="summary">' + md(body) + "</section>"))
         elif kind == "i":
-            out.append("<h2>Your instructions</h2>" + draw_instructions(body, status))
+            # a long list is collapsed by default so the page does not start with a wall of the owner's own words
+            drawn = draw_instructions(body, status)
+            n = drawn.count('<li ')
+            attn = sum(1 for v in status.values() if v in ("deviation", "question"))
+            out.append(f'<details class="sec"><summary>Your instructions{f" ({n})" if n else ""}{f" · {attn} to look at" if attn else ""}</summary>{drawn}</details>')
         elif kind == "q":
             out.append("<h2>Questions and answers</h2>" + draw_questions(body, ref))
         elif body.strip():
-            inner = md(body)
+            inner = stamp_items(md(body))
             out.append(f'<details class="sec"><summary>{html.escape(name)}</summary>{inner}</details>')
     return "".join(out)
 
@@ -475,8 +546,9 @@ a{color:var(--acc)}main{max-width:1000px;margin:0 auto;padding:16px}
 header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 header.top h1{font-size:17px;margin:0;flex:1;min-width:200px}header.top .meta{color:var(--mut);font-size:12px}
 button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:6px;padding:4px 10px;cursor:pointer}
+#fpnote{margin:8px 16px;padding:10px 12px;border:1px solid var(--line);background:var(--card);border-radius:6px}#fpnote p{margin:0 0 6px}#fpnote code{user-select:all;word-break:break-all}
 button.on{border-color:var(--acc);color:var(--acc)}
-.chip{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:0 8px;margin-left:6px;color:var(--mut);white-space:nowrap}
+.chip{display:inline-block;box-sizing:border-box;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:0 8px;margin-left:6px;color:var(--mut);white-space:nowrap}
 .chip.ok,.chip.done{color:var(--ok);border-color:var(--ok)}.chip.bad,.chip.stop{color:var(--bad);border-color:var(--bad)}.chip.wait{color:var(--wait);border-color:var(--wait)}.chip.run{color:var(--acc);border-color:var(--acc)}.chip.old{opacity:.6}
 .tabs{display:flex;gap:4px;flex-wrap:wrap;margin:12px 0;border-bottom:1px solid var(--line)}
 .tabs button{border-radius:6px 6px 0 0;border-bottom:none}.tabs button.on{background:var(--card);font-weight:600}
@@ -484,9 +556,15 @@ button.on{border-color:var(--acc);color:var(--acc)}
 h2{font-size:16px;margin:22px 0 8px}h3{font-size:14.5px;margin:16px 0 6px}h4,h5,h6{font-size:14px;margin:12px 0 4px}
 .summary,.q,.pre,details.sec,.card,.warn{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:8px 0}
 .lead{font-size:16px;margin:0 0 8px}
-.trail{list-style:none;display:flex;flex-wrap:wrap;gap:4px;padding:0;margin:8px 0;font-size:12.5px}
-.trail li{padding:2px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
-.trail li.past{color:var(--ok);border-color:var(--ok)}.trail li.here{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.trail{list-style:none;display:flex;flex-wrap:wrap;align-items:baseline;padding:0;margin:8px 0 2px;font-size:13px}
+.trail li{display:inline-flex;align-items:baseline;color:var(--mut)}
+.trail li:not(:last-child)::after{content:"→";margin:0 7px;opacity:.5}.trail li.all:not(:last-child)::after{content:"|";margin:0 9px}
+.trail li button{display:inline;border:0;background:none;padding:1px 2px;color:inherit;font:inherit;border-radius:3px;cursor:pointer}
+.trail li button small{margin-left:5px;font-size:11px;font-weight:400;opacity:.75}
+.trail li.past{color:var(--ok)}.trail li.here{color:var(--acc);font-weight:600}
+.trail li button:disabled{cursor:default;opacity:.45}
+.trail li button.sel{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.phase-off{display:none!important}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin:8px 0}
 .tile{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.tile b{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
 .tile.need{border-color:var(--wait)}.tile.need b{color:var(--wait)}
@@ -503,7 +581,7 @@ blockquote{margin:6px 0;padding:2px 12px;border-left:3px solid var(--line);color
 .warn{border-color:var(--bad)}.warn b{color:var(--bad)}.warn ul{margin:4px 0}
 [data-h].new{background:var(--new);box-shadow:inset 3px 0 0 var(--newb)}[data-h].prev{background:var(--prev);box-shadow:inset 3px 0 0 var(--prevb)}
 .legend{font-size:12px;color:var(--mut)}.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 3px 0 8px;vertical-align:-1px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}.card{margin:0;display:block;color:inherit;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}.card{margin:0;display:block;min-width:0;overflow:hidden;color:inherit;text-decoration:none}
 .card:hover{border-color:var(--acc)}.card h3{margin:0 0 4px;font-size:15px}.card .row{font-size:13px;margin:2px 0}.card .row b{color:var(--mut);font-weight:500}
 .card.need{border-color:var(--wait)}.badge{background:var(--newb);color:#fff;border-radius:999px;font-size:11.5px;padding:0 7px;margin-left:6px}
 .todo{background:var(--card);border:1px solid var(--wait);border-radius:8px;padding:10px 14px;margin:8px 0}.todo h3{margin:0 0 4px}.todo ul{margin:4px 0 0;padding-left:20px}
@@ -543,13 +621,13 @@ JS = r"""
       var y=sessionStorage.getItem(KEY+':y');if(y)window.scrollTo(0,+y)}catch(e){}
   var ar=document.getElementById('auto'),AK='a-pages:auto';
   function live(){try{return localStorage.getItem(AK)!=='0'}catch(e){return true}}
-  var srv=/^https?:$/.test(location.protocol)&&/^(localhost|127\.0\.0\.1)$/.test(location.hostname),rs=document.getElementById('resync'),rev=null;
+  var srv=/^https?:$/.test(location.protocol)&&/^(localhost|127\.0\.0\.1)$/.test(location.hostname),rs=document.getElementById('resync'),rev=null,boot=null;
   function stay(){try{sessionStorage.setItem(KEY+':y',window.scrollY)}catch(e){}}
   function hhmm(){var d=new Date();return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
   function poll(){fetch('/status',{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){
-      if(rev===null){rev=j.rev;if(rs&&!rs.dataset.busy)rs.textContent='Resync'}
-      else if(j.rev!==rev){stay();location.reload()}
-    }).catch(function(){if(rs&&!rs.dataset.busy){rs.textContent='Server stopped';rs.title='Start it again: python .a/scripts/page_build.py --serve'}})}
+      if(rev===null){rev=j.rev;boot=j.boot;if(rs&&!rs.dataset.busy)rs.textContent='Resync'}
+      else if(j.rev!==rev||j.boot!==boot){stay();location.reload()}
+    }).catch(function(){if(rs&&!rs.dataset.busy){rs.textContent='Server stopped (reconnects by itself)';rs.title='It restarts itself after the builder script changes. If it does not come back, start it again: python .a/scripts/page_build.py --serve'}})}
   function arm(){if(live()){ar&&ar.classList.add('on');
     if(srv){poll();setInterval(poll,4000)}else{setTimeout(function(){stay();location.reload()},15000)}}}
   if(rs){
@@ -559,6 +637,24 @@ JS = r"""
         rs.textContent='Synced '+hhmm()+(j.warnings?' · '+j.warnings+' format problem(s)':'');setTimeout(function(){stay();location.reload()},500)
       }).catch(function(){rs.textContent='Server not running';rs.title='Start it: python .a/scripts/page_build.py --serve';rs.disabled=false;delete rs.dataset.busy})}}
   if(ar)ar.onclick=function(){try{localStorage.setItem(AK,live()?'0':'1')}catch(e){}location.reload()};
+  var ph=document.getElementById('phases');
+  if(ph){var bs=[].slice.call(ph.querySelectorAll('button')),pn=document.getElementById('phasenote'),PK=KEY+':phase';
+    var pick=function(i){var b=bs[i];if(!b||b.disabled)return;bs.forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');
+      var all=b.dataset.all==='1',sp=(b.dataset.spans||'').split(',').filter(Boolean).map(function(q){var p=q.split(':');return[+p[0],+p[1]]}),n=0;
+      [].forEach.call(document.querySelectorAll('[data-ts]'),function(el){var t=+el.dataset.ts,ok=all||sp.some(function(r){return t>=r[0]&&t<r[1]});
+        el.classList.toggle('phase-off',!ok);if(ok)n++});
+      pn.textContent=all?'':'Showing '+b.dataset.label+': '+n+' dated entr'+(n===1?'y':'ies')+'. Parts without a date stay visible. Click All for everything.';
+      try{sessionStorage.setItem(PK,String(i))}catch(e){}};
+    bs.forEach(function(b,i){b.onclick=function(){pick(i)}});
+    try{var sv=sessionStorage.getItem(PK);if(sv!==null&&+sv>0)pick(+sv)}catch(e){}}
+  var fp=document.getElementById('fplink');
+  if(fp)fp.onclick=function(){var note=document.getElementById('fpnote'),url=fp.dataset.url,w=window.open('','a-code-map');
+    fetch(url,{mode:'no-cors',cache:'no-store'}).then(function(){note.hidden=true;if(w)w.location.href=url;else location.href=url},function(){
+      if(w)w.close();note.textContent='';note.hidden=false;
+      var p=document.createElement('p'),c=document.createElement('code');
+      p.textContent='The code map is not running. Start it by running this in a terminal, then click Code map again:';
+      c.textContent=fp.dataset.start||'(no start command is set: add floorplan_start to .a/project.md)';
+      note.appendChild(p);note.appendChild(c)})};
   [].forEach.call(document.querySelectorAll('button.copy'),function(b){b.onclick=function(){
     var t=b.dataset.copy,done=function(){var o=b.textContent;b.textContent='copied';setTimeout(function(){b.textContent=o},1200)};
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){})}
@@ -584,9 +680,10 @@ def shell(title: str, project: str, page: str, top: str, body: str) -> str:
             f'<span class="legend"><span id="newcount"></span><i style="background:var(--newb)"></i>new<i style="background:var(--prevb)"></i>the time before</span>'
             f'<button id="markread">Mark as read</button>'
             f'<button id="resync" title="Rebuilds the pages from the files, in the background">Resync</button>'
+            + (f'<button id="fplink" data-url="{html.escape(CODEMAP["url"], quote=True)}" data-start="{html.escape(CODEMAP["start"], quote=True)}" title="Opens the code map (Floorplan)">Code map</button>' if CODEMAP["url"] else "") +
             f'<button id="auto" title="Follows the agent by itself. Click to switch off.">live</button>'
             f'<span class="meta">built {built}</span></header>'
-            f"<main>{body}</main><script>{JS}</script></body></html>")
+            f'<div id="fpnote" hidden></div><main>{body}</main><script>{JS}</script></body></html>')
 
 
 def feature_page(f: dict, project: str) -> str:
@@ -600,6 +697,7 @@ def feature_page(f: dict, project: str) -> str:
     checks = [f'<b>{k}:</b> {html.escape(hd[k])}' for k in ("Scope check", "Lean check", "Build review", "Pointer", "Updated") if hd.get(k)]
     if checks:
         body.append('<div class="pre" style="font-size:13px">' + " &nbsp;·&nbsp; ".join(checks) + "</div>")
+    body.append(trail(f))
     docs = f["docs"]
     if len(docs) > 1:
         body.append('<div class="tabs">' + "".join(f'<button data-tab="t{n}" class="{"on" if n == 0 else ""}">{html.escape(tab_label(d, n == 0))}</button>' for n, d in enumerate(docs)) + "</div>")
@@ -672,8 +770,12 @@ def index_page(feats: list, project: str, links: list) -> str:
     return shell(project, project, "index.html", top, "".join(body))
 
 
+CODEMAP = {"url": "", "start": ""}  # the optional link to the code map (Floorplan); set by build() from .a/project.md
+
+
 def build(root: Path, out: Path, quiet=False) -> int:
     cfg = read_config(root)
+    CODEMAP.update(url=cfg["floorplan_url"], start=cfg["floorplan_start"])
     out.mkdir(parents=True, exist_ok=True)
     feats = collect(root, cfg, out.resolve())
     warns = 0
@@ -709,6 +811,7 @@ def signature(root: Path) -> tuple:
     act = root / cfg["activity_folder"]
     files = list(act.rglob("*.md")) if act.exists() else []
     files += [root / cfg[k] for k, _ in DOCS if (root / cfg[k]).is_file()]
+    files += [p for p in (root / ".a" / "project.md",) if p.is_file()]
     return tuple(sorted((str(p), p.stat().st_mtime_ns) for p in files))
 
 
@@ -721,9 +824,26 @@ def pick_port(root: Path) -> int:
 
 class Live:
     """Holds the project, rebuilds under a lock, and counts builds so pages know when to reload."""
-    def __init__(self, root: Path, out: Path):
+    def __init__(self, root: Path, out: Path, script: Path = None):
         self.root, self.out, self.rev, self.warns, self.at, self.lock = root, out, 0, 0, "", threading.Lock()
         self.stop = threading.Event()
+        self.boot = time.time_ns()  # pages compare this, so they reload after a restart even when the build count happens to match
+        self.script = script or Path(__file__).resolve()
+        self.script_mtime = self.script.stat().st_mtime_ns
+        self.restart = False
+        self.on_restart = lambda: None
+
+    def script_changed(self) -> bool:
+        """True when this script was edited and the new text still compiles (a half-saved file must not take the server down)."""
+        try:
+            m = self.script.stat().st_mtime_ns
+            if m == self.script_mtime:
+                return False
+            self.script_mtime = m
+            compile(self.script.read_text(encoding="utf-8"), str(self.script), "exec")
+            return True
+        except (OSError, SyntaxError, ValueError):
+            return False
 
     def rebuild(self) -> int:
         with self.lock:
@@ -737,6 +857,11 @@ class Live:
     def watch(self):
         sig = signature(self.root)
         while not self.stop.wait(2):
+            if self.script_changed():  # the builder itself changed: start a fresh copy so the new look and rules apply
+                self.restart = True
+                self.stop.set()
+                self.on_restart()
+                return
             now = signature(self.root)
             if now != sig:
                 sig = now
@@ -771,7 +896,7 @@ def make_server(live: Live, port: int):
             if not self.host_ok():
                 return self.reply(403, {"error": "host"})
             if self.path.split("?")[0] == "/status":
-                return self.reply(200, {"ok": True, "rev": live.rev, "at": live.at, "warnings": live.warns, "project": live.root.name})
+                return self.reply(200, {"ok": True, "rev": live.rev, "at": live.at, "warnings": live.warns, "project": live.root.name, "boot": live.boot})
             self.path = self.path.split("?")[0]
             return super().do_GET()
 
@@ -805,22 +930,27 @@ def call(port: int, path: str, post: bool = False, timeout: float = 4):
         return None
 
 
+def spawn_hidden(root: Path, out: Path, port: int):
+    """Starts a copy of this script as the server, with no window, detached from the terminal that asked."""
+    cmd = [sys.executable, str(Path(__file__).resolve()), "--serve", "--foreground", "--root", str(root), "--out", str(out), "--port", str(port)]
+    kw = {"stdin": subprocess.DEVNULL, "stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL, "close_fds": True}
+    if os.name == "nt":
+        pyw = Path(sys.executable).with_name("pythonw.exe")
+        if pyw.exists():
+            cmd[0] = str(pyw)
+        kw["creationflags"] = 0x00000008 | 0x08000000  # DETACHED_PROCESS | CREATE_NO_WINDOW: no window, survives this terminal
+    else:
+        kw["start_new_session"] = True
+    return subprocess.Popen(cmd, **kw)
+
+
 def serve(root: Path, out: Path, port: int, foreground: bool) -> int:
     url = f"http://localhost:{port}/index.html"
     if call(port, "/status"):
         print(f"already running: {url}")
         return 0
     if not foreground:  # start a hidden copy of ourselves and come back with the address
-        cmd = [sys.executable, str(Path(__file__).resolve()), "--serve", "--foreground", "--root", str(root), "--out", str(out), "--port", str(port)]
-        kw = {"stdin": subprocess.DEVNULL, "stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL, "close_fds": True}
-        if os.name == "nt":
-            pyw = Path(sys.executable).with_name("pythonw.exe")
-            if pyw.exists():
-                cmd[0] = str(pyw)
-            kw["creationflags"] = 0x00000008 | 0x08000000  # DETACHED_PROCESS | CREATE_NO_WINDOW: no window, survives this terminal
-        else:
-            kw["start_new_session"] = True
-        subprocess.Popen(cmd, **kw)
+        spawn_hidden(root, out, port)
         for _ in range(40):
             time.sleep(0.25)
             if call(port, "/status"):
@@ -830,11 +960,18 @@ def serve(root: Path, out: Path, port: int, foreground: bool) -> int:
         return 1
     live = Live(root, out)
     live.rebuild()
-    try:
-        httpd = make_server(live, port)
-    except OSError as e:
-        print(f"port {port} is not available: {e}", file=sys.stderr)
+    httpd = None
+    for _ in range(25):  # a restart hands the port over: the old copy may need a moment to let go of it
+        try:
+            httpd = make_server(live, port)
+            break
+        except OSError as e:
+            err = e
+            time.sleep(0.2)
+    if httpd is None:
+        print(f"port {port} is not available: {err}", file=sys.stderr)
         return 1
+    live.on_restart = lambda: threading.Thread(target=httpd.shutdown, daemon=True).start()
     threading.Thread(target=live.watch, daemon=True).start()
     print(f"serving {url} - Ctrl+C or --stop to end")
     try:
@@ -844,6 +981,9 @@ def serve(root: Path, out: Path, port: int, foreground: bool) -> int:
     finally:
         live.stop.set()
         httpd.server_close()
+    if live.restart:
+        print("the builder script changed: starting a fresh copy")
+        spawn_hidden(root, out, port)
     return 0
 
 
@@ -937,10 +1077,20 @@ def selftest() -> int:
         warns = build(root, out, quiet=True)
         page = (out / "f-f11.html").read_text(encoding="utf-8")
         index = (out / "index.html").read_text(encoding="utf-8")
+        no_btn = 'id="fplink"' not in page
+        (root / ".a").mkdir()
+        (root / ".a" / "project.md").write_text("floorplan_url: http://127.0.0.1:4378\nfloorplan_start: node C:/tools/fp.mjs map --keep\n", encoding="utf-8")
+        build(root, out, quiet=True)
+        page_btn = (out / "f-f11.html").read_text(encoding="utf-8")
         checks = {
+            "no code-map button unless one is configured": no_btn,
+            "code-map button carries its address and start command when configured": 'id="fplink"' in page_btn and 'data-url="http://127.0.0.1:4378"' in page_btn and "node C:/tools/fp.mjs map --keep" in page_btn and 'id="fpnote"' in page_btn,
             "three tabs for the feature": page.count('data-tab="t') == 3,
             "summary tiles drawn": 'class="tile need"' in page and "Plan written" in page,
-            "step trail marks Plan as current": '<li class="here">Plan</li>' in page,
+            "step trail marks Plan as current": '<li class="here"><button type="button" data-label="Plan"' in page,
+            "the step bar shows when Plan ran and filters on click": 'id="phases"' in page and "20 Nov, 03:50 PM" in page and 'data-all="1"' in page and bool(re.search(r'data-label="Plan" data-spans="[-\d]+:\d+', page)),
+            "dated entries carry their time (summary trail, instruction, question)": page.count('data-ts="') >= 4,
+            "steps that did not run cannot be picked": 'data-label="Build" disabled' in page,
             "instruction shows honoured": ">honoured<" in page,
             "open question card with context": "Some admins have the page bookmarked" in page,
             "question without context is flagged": "Q2 has no Context" in page and warns >= 3,
@@ -952,6 +1102,8 @@ def selftest() -> int:
             "home: project documents linked and built": 'href="d-decisions-log.html"' in index and (out / "d-decisions-log.html").exists(),
             "open question has an anchor and a reply line to copy": 'id="Q1"' in page and "Feature 11 Q1" in page,
             "pages are live unless switched off": "!=='0'" in page,
+            "your instructions are a collapsed section with their count": bool(re.search(r'<details class="sec"><summary>Your instructions \(\d+\)', page)) and "<details class=\"sec\" open>" not in page.split("Your instructions")[0][-60:],
+            "a long chip is cut to the card and keeps its full text as a title": 'title="' in page and bool(re.search(r'<span class="chip [^"]*" title="[^"]+">', index)),
         }
         # the server, on a free port, in this process
         live = Live(root, out)
@@ -963,6 +1115,16 @@ def selftest() -> int:
         try:
             st = call(port, "/status")
             checks["server: status answers"] = bool(st and st["ok"] and st["project"])
+            checks["server: status carries a start id so pages reload after a restart"] = bool(st.get("boot"))
+            tmp_script = root / "script_copy.py"
+            tmp_script.write_text("x = 1\n", encoding="utf-8")
+            probe = Live(root, out, script=tmp_script)
+            same = probe.script_changed()
+            tmp_script.write_text("x = 2\n", encoding="utf-8"); os.utime(tmp_script, ns=(probe.script_mtime + 10**9, probe.script_mtime + 10**9))
+            edited = probe.script_changed()
+            tmp_script.write_text("def broken(:\n", encoding="utf-8"); os.utime(tmp_script, ns=(probe.script_mtime + 3 * 10**9, probe.script_mtime + 3 * 10**9))
+            broken = probe.script_changed()
+            checks["server: an edited script asks for a restart, an unchanged or broken one does not"] = (not same) and edited and not broken
             checks["server: a resync without the header is refused"] = urllib.request.urlopen is not None and _post_status(port, {}, "localhost") == 403
             checks["server: a request for another host name is refused"] = _post_status(port, {"X-Resync": "1"}, "evil.example") == 403
             r1 = st["rev"]

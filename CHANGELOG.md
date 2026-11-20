@@ -2,6 +2,19 @@
 
 Version numbers follow the scale of the change, decided per release. **Third digit:** iteration on an existing capability — wording, rules, fixes, a redesign of something that already exists (a new layout for the map is still the map). **Second digit:** a new capability, or anything an installed copy must re-learn — a new or removed command or stage, a new script, a format change that breaks old files. **First digit:** a restructure that breaks existing projects (not before 1.0).
 
+## 0.12.0 — 21 Nov 26
+
+Second-number release: a new script (`templates/map/floorplan_export.py`), so an installed copy must re-run the installer (`/A.skill.update`).
+
+**Pages**
+
+- **A "Code map" button on the pages** (optional; `floorplan_url` and `floorplan_start` in `.a/project.md`): opens the Floorplan code map when it answers and otherwise shows the command to start it. It starts nothing itself. The Floorplan map has the matching "Project status" button.
+- **Long phase chips stay inside their card**: a chip is cut to the card's width with an ellipsis and keeps its full text as a hover title (a feature whose `Phase:` line carried a whole sentence spilled out of its card).
+- **"Your instructions" is a collapsed section** on a feature page, headed with its count (and "N to look at" when an instruction has a deviation or a question), so the page no longer opens with the whole list of the owner's words.
+- **The step bar on every feature page** (Root cause, Plan, Plan review, Approved, Build, Build review, Verify, Closed), drawn above the tabs for every file layout (before, it only appeared inside a new-format "User summary", so older files showed an empty box). Each step shows the date and time it first ran, taken from the dated lines under *What happened* (`20 Nov 26, 04:15 PM · Plan — ...`); steps that did not run are greyed out. **Click a step and the page shows only the dated entries of that step** (what happened, decided without you, instructions, questions, the event log; an entry belongs to the step of the latest *What happened* line before it, and entries before the first line belong to the first step); **All** shows everything. The choice survives the live reload. A file with no dated *What happened* lines says so and only knows its current step.
+- **The page server restarts itself when the builder script changes** (and rebuilds when `.a/project.md` changes). It checks every 2 seconds; a changed script that still compiles starts a fresh copy on the same port, and a half-saved one is ignored. `/status` carries a start id, so open pages reload by themselves after the restart. Before this, a change to the builder needed `--stop` and `--serve` by hand.
+- `page_build.py --selftest` now has 31 checks, up from 24 (two cover the Code map button, one the chip fix, one the collapsed instructions, three the step bar), including the server: a refused request without the header, a refused foreign host name, a rebuild on Resync, a rebuild by itself when a file changes, and a clean stop.
+
 ## 0.11.1 — 20 Nov 26
 
 - **The live server and the Resync button** (`page_build.py --serve`): started hidden, one fixed address per project; the page follows the agent by itself; a **Resync** button rebuilds in the background and shows *Syncing…* / *Synced*; `--stop`; on Windows `--install-startup` starts it at login. It listens on this machine only and accepts only a rebuild and a stop, from this page. The skill detects Python: missing → no page step is offered or mentioned and documentation is unchanged; present → one offer, remembered in the new config key `pages_server`.

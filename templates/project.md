@@ -24,6 +24,8 @@ provides: []
 activity_naming: "{feature}-{slug}/{feature}-{slug}.md"
 pages_folder: docs/pages/
 pages_server: ask          # ask: offer the live page server once · on: start it whenever it is not running · off: never
+# floorplan_url: http://127.0.0.1:4378                      # optional: adds a "Code map" button to every page; it opens this address if something answers
+# floorplan_start: node <path to>/fp.mjs map --keep # ...and otherwise shows this command to run (the page never starts anything itself)
 ledger_pattern: "docs/activity/{yyyy}-{mm}/_ledger.md"
 date_format: DD MMM YY
 time_format: 12h
