@@ -15,6 +15,8 @@ For a person, or for an agent asked to "install this repo into my project". Step
 | `~/.a/settings.md` | Your behaviour settings: verbosity, interrupts, review tier limits, date formats | Edit any time; projects may override |
 | `~/.claude/commands/A.*.md` | One file per command | Claude Code shows `/A.rootcause`, `/A.plan`, … in every folder |
 | `~/.a/commands/copilot/A.*.prompt.md` | One file per command | Copilot in VS Code, after adding that folder to `chat.promptFilesLocations` |
+| `~/.a/auto-pointer.md` + one `UserPromptSubmit` hook in `~/.claude/settings.json` | A short pointer printed in front of every message | **On by default**: a message with no `/A.*` command runs auto mode. The installer backs up `settings.json` to `settings.json.bak-a-skill` and touches no other key |
+| `~/.copilot/instructions/a-skill.instructions.md` | The same pointer for Copilot (`applyTo: '**'`) | On by default where Copilot loads user instructions — confirm with the probe under *Verify* |
 | **Inside each project:** `.a/project.md`, the docs it names, the board, `.a/shared/`, the always-on block in `CLAUDE.md` / `AGENTS.md` / `.github/copilot-instructions.md` | That project's memory | Created by `/A.project.start`, never by the installer |
 
 Project-level install (`install.sh --project DIR` / `install.ps1 -Project DIR`) puts the method and commands inside one repository instead, for teams that want it to travel with the code. Not both for the same folder.
@@ -93,6 +95,9 @@ Plugin commands are namespaced by Claude Code: `/a:A.plan` instead of `/A.plan`.
 - `/A.help` prints the command table in any folder.
 - In a started project: `.a/project.md` exists and its paths point where you expect; the board file exists with your areas; `CLAUDE.md` / `.github/copilot-instructions.md` contain the block between `A-skill: begin` and `A-skill: end`.
 - `/A.project.list` lists the project.
+- **On by default, Claude Code:** in a new chat, type a plain request with no command (for example "add a CSV export"). The reply's first line says how auto classified it ("Treating this as a plan"). `/hooks` lists the `UserPromptSubmit` hook printing `auto-pointer.md`.
+- **On by default, Copilot:** run *Chat: Open Customizations* and confirm `a-skill.instructions.md` is listed under Instructions; then the same plain-request test. Not listed → your Copilot version does not read `~/.copilot/instructions/`; the per-project always-on block still applies.
+- **Hook by hand** (the installer says `NOT added` when `settings.json` is not plain JSON, or Python is missing on macOS/Linux): add `{"hooks": {"UserPromptSubmit": [{"hooks": [{"type": "command", "command": "cat \"<home>/.a/auto-pointer.md\""}]}]}}` to `~/.claude/settings.json`, merged with what is there.
 
 ## Command names on your host
 
@@ -122,7 +127,7 @@ A command fails to load, or a file under `.a/` or the command folders was change
 
 ## Uninstall
 
-Run `/A.skill.uninstall`, or the script directly: `powershell -ExecutionPolicy Bypass -File ~/.a/templates/uninstall.ps1 -Yes` (`sh ~/.a/templates/uninstall.sh --yes`; add `-Project <dir>` / `--project <dir>` for a project-level install). Without `-Yes` it only lists what it would remove. It removes exactly what the installer created: the method, templates, registry, version, source note, and the `/A.*` command files. It never touches any project's `.a/project.md`, `.a/shared/`, documentation, board, activity files, decisions, lessons, or `~/.a/projects.md` — that is your work. If you also want the `A-skill` block out of a project's instruction files, `/A.skill.uninstall` offers that as a separate question.
+Run `/A.skill.uninstall`, or the script directly: `powershell -ExecutionPolicy Bypass -File ~/.a/templates/uninstall.ps1 -Yes` (`sh ~/.a/templates/uninstall.sh --yes`; add `-Project <dir>` / `--project <dir>` for a project-level install). Without `-Yes` it only lists what it would remove. It removes exactly what the installer created: the method, templates, registry, version, source note, the `/A.*` command files, the pointer and its Copilot instructions file, and the one hook entry in `~/.claude/settings.json` (other hooks and settings stay; a backup is written first). It never touches any project's `.a/project.md`, `.a/shared/`, documentation, board, activity files, decisions, lessons, or `~/.a/projects.md` — that is your work. If you also want the `A-skill` block out of a project's instruction files, `/A.skill.uninstall` offers that as a separate question.
 
 ## Git and the documentation
 

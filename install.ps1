@@ -39,6 +39,36 @@ Get-ChildItem "$Src\commands\copilot" -Filter "A.*.prompt.md" | ForEach-Object {
 }
 
 if (Get-ChildItem (Join-Path $Dest ".claude\commands"),$CopilotDir -Filter "A.*" -File | Select-String -Pattern "{{SKILLS_ROOT}}" -List) { throw "A command file still has an unfilled {{SKILLS_ROOT}}; install incomplete." }
+
+# On by default (global only): a pointer every message starts with, so a message with no /A.* command runs auto mode.
+# ponytail: project-level installs get no hook (no path that works for every clone); their always-on block stays at the top of CLAUDE.md instead.
+$HookNote = "not added (project-level install)"
+if ($Global) {
+  $Pointer = (Join-Path $Dest ".a\auto-pointer.md") -replace "\\","/"
+  $PointerText = (Get-Content "$Src\templates\auto-pointer.md" -Raw) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot
+  [IO.File]::WriteAllText($Pointer, $PointerText)
+  $CopilotInstr = Join-Path $Dest ".copilot\instructions"
+  New-Item -ItemType Directory -Force -Path $CopilotInstr | Out-Null
+  [IO.File]::WriteAllText((Join-Path $CopilotInstr "a-skill.instructions.md"), "---`napplyTo: '**'`ndescription: The A Skill is the default workflow`n---`n`n$PointerText")
+  # Merge the hook into ~/.claude/settings.json. Never print that file: it can hold tokens.
+  $Settings = Join-Path $Dest ".claude\settings.json"
+  try {
+    $raw = if (Test-Path $Settings) { Get-Content $Settings -Raw } else { "" }
+    $s = if ([string]::IsNullOrWhiteSpace($raw)) { [pscustomobject]@{} } else { $raw | ConvertFrom-Json }
+    if (Test-Path $Settings) { Copy-Item -Force $Settings "$Settings.bak-a-skill" }
+    if (-not $s.PSObject.Properties['hooks']) { $s | Add-Member -NotePropertyName hooks -NotePropertyValue ([pscustomobject]@{}) }
+    $groups = @()
+    foreach ($g in @($s.hooks.UserPromptSubmit)) {   # drop an older A Skill hook, keep everything else
+      if ($null -eq $g) { continue }
+      $kept = @(@($g.hooks) | Where-Object { $_ -and ("$($_.command)" -notlike "*auto-pointer.md*") })
+      if ($kept.Count) { $g.hooks = $kept; $groups += $g }
+    }
+    $groups += [pscustomobject]@{ hooks = @([pscustomobject]@{ type = "command"; command = "cat `"$Pointer`"" }) }
+    if ($s.hooks.PSObject.Properties['UserPromptSubmit']) { $s.hooks.UserPromptSubmit = $groups } else { $s.hooks | Add-Member -NotePropertyName UserPromptSubmit -NotePropertyValue $groups }
+    [IO.File]::WriteAllText($Settings, ($s | ConvertTo-Json -Depth 100))
+    $HookNote = "added (UserPromptSubmit in $Settings; backup $Settings.bak-a-skill)"
+  } catch { $HookNote = "NOT added: $Settings could not be read as JSON; add it by hand (SETUP.md)" }
+}
 $nSkills  = (Get-ChildItem (Join-Path $Dest ".a\skills") -Recurse -Filter *.md -File).Count
 $nClaude  = (Get-ChildItem (Join-Path $Dest ".claude\commands") -Filter "A.*.md" -File).Count
 $nCopilot = (Get-ChildItem $CopilotDir -Filter "A.*.prompt.md" -File).Count
@@ -47,6 +77,8 @@ Write-Host "Installed (version $ver, commit $($commit.Substring(0, [Math]::Min(7
 Write-Host "  $Dest\.a\skills                  $nSkills files   (the method)"
 Write-Host "  $Dest\.claude\commands\A.*.md    $nClaude files   (Claude Code: /A.plan, /A.bugfix, ...)"
 Write-Host "  $CopilotDir\A.*.prompt.md       $nCopilot files   (Copilot in VS Code)"
+Write-Host "  On by default (auto mode every message): Claude Code hook $HookNote"
+if ($Global) { Write-Host "                                   Copilot: $CopilotInstr\a-skill.instructions.md" }
 Write-Host ""
 if ($Global) {
   Write-Host "INSTALLATION COMPLETE. The A Skill $ver is installed for this machine (global)."

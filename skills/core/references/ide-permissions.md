@@ -6,7 +6,7 @@ With a global install the method lives under the user's home folder, outside the
 
 Before asking the user anything, find out whether the IDE can be told to trust the method folder permanently:
 
-- Search the IDE's settings (settings UI and the user `settings.json`) for a way to trust a folder or auto-approve file reads. Names to search, in this order: `chat.tools`, `autoApprove`, `external files`, `trusted`, `promptFiles`, `workspace trust`. Read each candidate's description.
+- Search the IDE's settings (settings UI and the user `settings.json`) for a way to trust a folder or auto-approve file reads. Names to search, in this order: `chat.tools`, `autoApprove`, `external files`, `trusted`, `promptFiles`, `workspace trust`. Read each candidate's description. Read `settings.json` by key, never whole: it can hold tokens (`communication.md › Secrets stay unprinted`).
 - Check the IDE's own documentation or release notes if the settings are unclear (the host's help command or docs search).
 
 Found one that allows a folder or path pattern → show the user the exact setting and value, explain in one line what it does, and ask approval to set it. On yes: set it, Reload Window, read a method file to confirm the prompt is gone, report. Stop here.

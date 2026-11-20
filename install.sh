@@ -29,6 +29,19 @@ for f in "$SRC"/commands/claude/A.*.md; do sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g
 for f in "$SRC"/commands/copilot/A.*.prompt.md; do sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$f" > "$COPILOT_DIR/$(basename "$f")"; done
 
 if grep -rl "{{SKILLS_ROOT}}" "$DEST/.claude/commands" "$COPILOT_DIR" >/dev/null 2>&1; then echo "ERROR: a command file still has an unfilled {{SKILLS_ROOT}}; install incomplete."; exit 1; fi
+
+# On by default (global only): a pointer every message starts with, so a message with no /A.* command runs auto mode.
+# ponytail: project-level installs get no hook (no path that works for every clone); their always-on block stays at the top of CLAUDE.md instead.
+HOOK_NOTE="not added (project-level install)"
+if [ "$GLOBAL" = 1 ]; then
+  POINTER="$DEST/.a/auto-pointer.md"
+  sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$SRC/templates/auto-pointer.md" > "$POINTER"
+  mkdir -p "$DEST/.copilot/instructions"
+  { printf -- "---\napplyTo: '**'\ndescription: The A Skill is the default workflow\n---\n\n"; cat "$POINTER"; } > "$DEST/.copilot/instructions/a-skill.instructions.md"
+  PY=""; for c in python3 python; do "$c" -c "" 2>/dev/null && PY="$c" && break; done   # skips stubs that exist but do not run
+  if [ -n "$PY" ]; then HOOK_NOTE="$("$PY" "$SRC/templates/settings_hook.py" "$DEST/.claude/settings.json" "cat \"$POINTER\"" || echo "NOT added: settings.json could not be updated; add it by hand (SETUP.md)")"
+  else HOOK_NOTE="NOT added: Python not found; add it by hand (SETUP.md)"; fi
+fi
 n_skills=$(find "$DEST/.a/skills" -type f -name '*.md' | wc -l | tr -d ' ')
 n_claude=$(ls "$DEST/.claude/commands"/A.*.md 2>/dev/null | wc -l | tr -d ' ')
 n_copilot=$(ls "$COPILOT_DIR"/A.*.prompt.md 2>/dev/null | wc -l | tr -d ' ')
@@ -36,6 +49,8 @@ echo "Installed (version $(cat "$DEST/.a/VERSION"), commit $(echo "$COMMIT" | cu
 echo "  $DEST/.a/skills                  $n_skills files   (the method)"
 echo "  $DEST/.claude/commands/A.*.md    $n_claude files   (Claude Code: /A.plan, /A.bugfix, ...)"
 echo "  $COPILOT_DIR/A.*.prompt.md       $n_copilot files   (Copilot in VS Code)"
+echo "  On by default (auto mode every message): Claude Code hook $HOOK_NOTE"
+[ "$GLOBAL" = 1 ] && echo "                                   Copilot: $DEST/.copilot/instructions/a-skill.instructions.md"
 echo
 if [ "$GLOBAL" = 1 ]; then
   echo "INSTALLATION COMPLETE. The A Skill $(cat "$DEST/.a/VERSION") is installed for this machine (global)."

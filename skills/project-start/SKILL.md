@@ -39,7 +39,7 @@ If several folders could be the project (step 1 found siblings, or none at the r
 1. Write `.a/project.md` from `../../templates/project.md` with the inferred values.
 2. Create what the config names and does not exist, from `../../templates/`: constitution, decisions log, deferred-decisions log, implementation log, API docs, lessons log, artifacts folder with its ledger, the map folder with the elements registry (`templates/elements.md`) and `.a/scripts/map_build.py` (from `templates/map/`), `.a/scripts/page_build.py` (from `templates/pages/`; on an existing project it is copied or refreshed the same way, and run once), activity folder with `_template.md`, board with one `### Area:` heading per area and one `subgraph` per area. Existing files are kept untouched. Numbered central docs (`01.…`) get the next numbers.
 3. Create `shared_folder` from `../../templates/shared/`.
-4. Append `../../templates/always-on.md` to each `always_on_files` entry (create if missing), `{{skills_root}}` filled with the real method path; skip files that already carry the marker.
+4. Put `../../templates/always-on.md` at the **top** of each `always_on_files` entry (create if missing; after a leading front-matter block if the file has one), `{{skills_root}}` filled with the real method path (a block at the bottom of a long file loses to the older rules above it). A file that already carries the marker: replace the text between `A-skill: begin` and `A-skill: end` with the current template and move it to the top if it is lower down; nothing outside the markers changes.
 5. `.gitignore`: the marked block, unless `gitignore: off`.
 6. Add or refresh the row in `~/.a/projects.md`; redraw its dependency diagram.
 6a. Detect Python (`python --version`, else `py -3 --version`). Missing → skip every page step and say nothing about pages. Present → run `.a/scripts/page_build.py` once so the page exists, and add to the report: "Pages are ready at `docs/pages/index.html`. Want me to start the live page server so they follow the agent by themselves? (yes / no)" — the answer goes to `pages_server` in `.a/project.md` (`references/logging.md › The pages`).
@@ -53,4 +53,4 @@ One optional line after the block, and only one: "When you want the overview dra
 
 ## Re-running
 
-Safe. Existing files are kept and reported; the index row is refreshed; the summary says "refresh" instead of "make".
+Safe. Existing files are kept and reported; the index row is refreshed; the always-on block is refreshed and moved to the top (step 3.4); the summary says "refresh" instead of "make".

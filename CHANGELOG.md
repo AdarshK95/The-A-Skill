@@ -4,7 +4,12 @@ Version numbers follow the scale of the change, decided per release. **Third dig
 
 ## 0.12.0 — 21 Nov 26
 
-Second-number release: a new script (`templates/map/floorplan_export.py`), so an installed copy must re-run the installer (`/A.skill.update`).
+Second-number release: the installer now writes into `~/.claude/settings.json`, and there is a new script (`templates/map/floorplan_export.py`), so an installed copy must re-run the installer (`/A.skill.update`). Cause: in a real session auto never switched on, and an older CLAUDE.md rule decided where documents went.
+
+- **On by default.** The global install adds one Claude Code `UserPromptSubmit` hook that prints `~/.a/auto-pointer.md` before every message. A message with no command runs auto mode, `.a/project.md` wins over other instruction files and memory, a folder with no project is told so and still follows the stages, and code in any answer follows `lean.md`. The installer backs up `settings.json`, never adds the hook twice, and touches no other key; uninstall removes only that entry; repair checks it. Copilot gets the same pointer as `~/.copilot/instructions/a-skill.instructions.md`, with a probe in SETUP to confirm the host loads it. Project-level installs get no hook. New templates `auto-pointer.md` and `settings_hook.py` (used by the shell installers).
+- **The always-on block goes at the top** of `CLAUDE.md` / `AGENTS.md` / `.github/copilot-instructions.md` and says `.a/project.md` wins. Re-running `/A.project.start` refreshes an existing block and moves it to the top.
+- **Auto classifier:** "is this possible", "how would we" and design questions are **plan**; chat only when nothing is decided or kept; between chat and an activity, choose the activity.
+- **Two rules for every answer** (`communication.md`): finish the checks you can run (self-check 32); read config files by key and never print a secret.
 
 **Pages**
 

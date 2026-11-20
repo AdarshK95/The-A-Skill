@@ -7,7 +7,9 @@ param([string]$Project = "", [switch]$Yes)
 $ErrorActionPreference = "Stop"
 if ($Project) { $Dest = (Resolve-Path $Project).Path; $Global = $false } else { $Dest = $env:USERPROFILE; $Global = $true }
 $targets = @((Join-Path $Dest ".a\skills"), (Join-Path $Dest ".a\templates"), (Join-Path $Dest ".a\registry.md"), (Join-Path $Dest ".a\VERSION"), (Join-Path $Dest ".a\SOURCE"))
-if ($Global) { $targets += (Join-Path $Dest ".a\commands") }
+if ($Global) { $targets += (Join-Path $Dest ".a\commands"), (Join-Path $Dest ".a\auto-pointer.md"), (Join-Path $Dest ".copilot\instructions\a-skill.instructions.md") }
+$Settings = Join-Path $Dest ".claude\settings.json"
+$hasHook = $Global -and (Test-Path $Settings) -and ((Get-Content $Settings -Raw) -match "auto-pointer\.md")
 $globs = @(Join-Path $Dest ".claude\commands\A.*.md")
 if (-not $Global) { $globs += (Join-Path $Dest ".github\prompts\A.*.prompt.md") }
 $scope = if ($Global) { "global" } else { "project: $Dest" }
@@ -15,7 +17,21 @@ Write-Host "The A Skill uninstall ($scope) - would remove:"
 $existing = @(); foreach ($t in $targets) { if (Test-Path $t) { $existing += $t } }
 foreach ($g in $globs) { Get-ChildItem $g -ErrorAction SilentlyContinue | ForEach-Object { $existing += $_.FullName } }
 $existing | ForEach-Object { Write-Host "  $_" }
+if ($hasHook) { Write-Host "  the A Skill hook in $Settings (only that entry; backup first)" }
 Write-Host "Kept (yours): every project's .a\project.md, .a\shared\, documentation, board, activity files, instruction-file blocks; ~\.a\projects.md"
 if (-not $Yes) { Write-Host "Nothing removed (dry run). Re-run with -Yes to remove the paths above."; exit 0 }
 foreach ($p in $existing) { Remove-Item -Recurse -Force $p }
+if ($hasHook) {   # remove only hooks whose command mentions auto-pointer.md; never print the file (it can hold tokens)
+  Copy-Item -Force $Settings "$Settings.bak-a-skill"
+  $s = Get-Content $Settings -Raw | ConvertFrom-Json
+  $groups = @()
+  foreach ($g in @($s.hooks.UserPromptSubmit)) {
+    if ($null -eq $g) { continue }
+    $kept = @(@($g.hooks) | Where-Object { $_ -and ("$($_.command)" -notlike "*auto-pointer.md*") })
+    if ($kept.Count) { $g.hooks = $kept; $groups += $g }
+  }
+  if ($groups.Count) { $s.hooks.UserPromptSubmit = $groups } else { $s.hooks.PSObject.Properties.Remove('UserPromptSubmit') }
+  if (-not @($s.hooks.PSObject.Properties).Count) { $s.PSObject.Properties.Remove('hooks') }
+  [IO.File]::WriteAllText($Settings, ($s | ConvertTo-Json -Depth 100))
+}
 Write-Host "Removed. Start a new chat for the commands to disappear."

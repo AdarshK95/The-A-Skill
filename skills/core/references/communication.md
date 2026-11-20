@@ -140,6 +140,14 @@ The list ends with: "Say **go** to take all suggested answers, or change any by 
 
 A question whose answer the code, the constitution, the decisions log or the user's stated theme makes clear is not asked; it is answered, stated in one line, and the user may object. Questions are reserved for choices with real alternatives and no basis to prefer one. Stalling the work to ask something defaultable costs the user more than a stated default they can reverse.
 
+## Finish the checks you can run
+
+Nothing is handed back as "to check", "needs verification" or "worth confirming" when the agent can settle it with the access it has: the code, an installed library's source, the docs, a command it may run. Check it, then answer. A check that remains names what blocks it: access the agent lacks, a live environment, or a decision that is the owner's.
+
+## Secrets stay unprinted
+
+Config and settings files (`settings.json`, `.env`, app settings, anything under `~/.claude` or `.vscode`, credential stores) are read by the key that is needed, never printed or quoted whole. A secret-looking key (token, key, secret, password, auth, connection string) is named, never its value: not in chat, not in files, not in logs.
+
 ## No repeated state, no menus
 
 Do not restate what has not changed ("Phase: Gate, same as before, nothing approved or built"). Do not list every possible move ("approve, another review round, send it back, or…"). Say the one next step the agent recommends, with the alternative in a clause (`flow.md › At the end`). A reply the user has effectively read before is noise.

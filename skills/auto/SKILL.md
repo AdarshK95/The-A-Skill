@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 **Place in the flow:** the router; needs nothing; hands the message to the right command. See `../core/references/flow.md`.
 
-Auto is on whenever the user did not type an `/A.*` command. It never does the work itself; it decides *where* the message belongs, says so in one line, and runs the spine (`../core/SKILL.md`) from there.
+Auto is on whenever the user did not type an `/A.*` command. On Claude Code the global install makes this certain: a hook puts a short pointer (`~/.a/auto-pointer.md`) in front of every message; on Copilot the user instructions file does the same where the host loads it. It never does the work itself; it decides *where* the message belongs, says so in one line, and runs the spine (`../core/SKILL.md`) from there.
 
 ## A mistyped or unknown command is auto
 
@@ -24,14 +24,14 @@ Anything the user types that looks like a command but matches none (`/A.scopeche
 
 | Type | Signals in the request |
 |---|---|
-| **plan** | something that does not exist yet: add, build, create, design, new, support X |
+| **plan** | something that does not exist yet, or a question whose answer settles how to build it: add, build, create, design, new, support X, is this possible, how would we, how should we, what is the best way to |
 | **plan.realign** | something exists and should change or continue: change, update, continue, finish, rework, "you did X but I wanted Y", reopen |
 | **rootcause** | something went wrong and the cause is not known: broken, fails, error, wrong answer, wrong result, crash, regression, "used to work", "why did it do that", "is this a bug". The shape of a likely fix never decides this: a wrong behaviour is a root-cause investigation until the cause is CONFIRMED or LIKELY; only then does `/A.plan` plan the fix |
 | **review** | comments from someone or something outside this conversation: pasted review notes, a PR link, "Copilot says" |
 | **status** | a question about state: where are we, what is pending, what did we do, what is next → `/A.project.status`, no activity |
-| **chat** | a question that changes no code and keeps no analysis: explain, what does this do, how does X work → answer it, no activity |
+| **chat** | a question that changes no code, settles no decision and keeps no analysis: explain, what does this do, how does X work → answer it, no activity |
 
-When two types fit, pick the one whose *first step* the user needs now and say the other is available. When none fits, ask one question with the two likeliest choices.
+When two types fit, pick the one whose *first step* the user needs now and say the other is available. When none fits, ask one question with the two likeliest choices. **Between chat and anything else, choose the activity**: a decision made in chat is lost when the chat ends, and a small activity file costs little.
 
 An activity opens when code will change or when analysis is to be kept. A `chat` answer that the user then wants kept becomes a `plan` or `extend` activity at that point.
 
