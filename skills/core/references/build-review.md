@@ -1,10 +1,10 @@
 # Build review — the method
 
-A plan review (`goldfish-lenses.md`) asks, before anything is built, whether the design is right. This asks, after the build, whether what now exists is **what the user asked for, built all the way down** — or something that only looks like it from where the user stands. Its output is a verdict with evidence for every obligation, and findings. Never a fix.
+A plan review (`goldfish-lenses.md`) asks, before anything is built, whether the design is right. This asks, after the build, whether what now exists is **what the user asked for, built all the way down** — or something that only looks like it from where the user stands. Its output is a verdict with evidence for every obligation, and findings that each say whose they are and where they go next (§7). Never a fix, and never a plan.
 
 It is a different review, not the same lenses pointed at code. A plan fails by describing the wrong thing. A build fails in ways a plan cannot: a behaviour present at the surface and absent beneath it; a rule enforced where the user looks and not where the thing lives; a decision the builder took alone on an ambiguous point; a check that passes without proving anything.
 
-**The scope is the ask, not the diff.** The diff shows what was built. The ask says what has to be true. Code the build never touched is in scope whenever the ask depends on it: the door that was always open, the caller nobody updated, the job that still writes the old shape. A review that reads only the diff confirms the work that was done and never sees the work that was not.
+**The scope is the ask, not the diff.** The diff shows what was built. The ask says what has to be true. Code the build never touched is in scope whenever the ask depends on it: the door that was always open, the caller nobody updated, the job that still writes the old shape. A review that reads only the diff confirms the work that was done and never sees the work that was not. The ask also bounds it: a problem the ask does not depend on is noted in one line and left for later, however real — a review that chases everything it can find turns one feature into the upkeep of the whole codebase.
 
 ## 1. Four sources, kept apart
 
@@ -68,7 +68,7 @@ Each obligation ends in one state. A row that is not held says **how**:
 
 **A clean result is evidence too, and so is an absence.** `held` without a citation is `not examined`. `missing` without the searches that were run is `not examined`: the code will not use the ask's words, so the vocabulary is varied before nothing is concluded. A review cannot say "looks fine" or "it isn't there"; it says where, or what it searched, or that it did not look.
 
-**An obligation comes from the user's words, not from the reviewer's taste.** A place belongs on the list when the rule the user stated would be *false* there — not when the system would merely be better. Where the words can carry two needs (to take something off the screen, or to stop it being possible), the reviewer does not pick one and grade the build against it; that point goes to the user as *decided without you* (§7). A review that invents scope is as wrong as a build that drops it.
+**An obligation comes from the user's words, not from the reviewer's taste.** A place belongs on the list when the rule the user stated would be *false* there — not when the system would merely be better. Where the words can carry two needs (to take something off the screen, or to stop it being possible), the reviewer does not pick one and grade the build against it; that point goes to the user as *decided without you* (§8). A review that invents scope is as wrong as a build that drops it.
 
 **Rows are keyed by instruction and place**, in the order of the places table, so two runs on an unchanged build produce the same rows and can be compared line by line.
 
@@ -100,7 +100,7 @@ Given to Forward and Reverse with §2.
 
 ### Shared preamble for every reviewer
 
-> You are reviewing code you did not write, in a codebase you are seeing for the first time. You have: what the user asked for, in their own words (`## Instructions`), and their answers and decisions (`## Clarifications`); the plan that was approved; the diff of what was built; the project's standing rules; the kinds, places and states you will report in; and the repository to read. You have not been given the builder's account of the work, and you do not need it: the code is the only evidence of what was built. The user's words are the standard — not the plan, and not the diff — and their latest word on a point replaces an earlier one. Code the diff never touched is in scope whenever the ask depends on it. Read before you write. Every finding cites `path:line`. Every statement that something **is** in place cites the code that puts it there, and every statement that something is **absent** lists the searches you ran; without either, write `not examined`. Tag each finding Blocker, Major or Low, with a confidence. Do not propose rewrites; name the gap. Change nothing. "No findings" is a complete answer when it comes with what you opened. End with your coverage statement: the files, entry points and layers you opened, and what you did not.
+> You are reviewing code you did not write, in a codebase you are seeing for the first time. You have: what the user asked for, in their own words (`## Instructions`), and their answers and decisions (`## Clarifications`); the plan that was approved; the diff of what was built; the project's standing rules; the kinds, places and states you will report in; and the repository to read. You have not been given the builder's account of the work, and you do not need it: the code is the only evidence of what was built. The user's words are the standard — not the plan, and not the diff — and their latest word on a point replaces an earlier one. Code the diff never touched is in scope whenever the ask depends on it. Read before you write. Every finding cites `path:line`. Every statement that something **is** in place cites the code that puts it there, and every statement that something is **absent** lists the searches you ran; without either, write `not examined`. Tag each finding Blocker, Major or Low, with a confidence, and say whether the code it is about is in the diff or outside it. A problem you notice that the ask does not depend on gets one line under *noticed, not ours*; do not investigate it. Do not propose rewrites; name the gap. Change nothing. "No findings" is a complete answer when it comes with what you opened. End with your coverage statement: the files, entry points and layers you opened, and what you did not.
 
 ### intent
 
@@ -165,8 +165,6 @@ Read `## Build findings`, `## Decisions`, `## Changes`, `## Realign` and `## Ver
 
 A shortcut marked in the code with its ceiling and upgrade path (`core/SKILL.md › Implement`) is declared, not silent; it is a finding only when its ceiling breaks an obligation. Completion claims are not evidence in either direction: a ticked step proves nothing, and an unticked one is not a finding.
 
-A finding against code the feature did not touch and the ask does not depend on is a pre-existing problem: one line, `does not block` or `side work` (`core/SKILL.md › Every finding is triaged`), never a Blocker here.
-
 ## 6. Confirm — every Blocker, before it reaches the user
 
 Each Blocker carries a **prediction** a person could try, in the shape *doing this, as this caller, gives this result* — the refused request that succeeds, the input that stores the wrong record, the switch that changes nothing. Run it when that needs no change to the project's code and touches no shared environment: an existing test, a throwaway check under `.a/tmp/`, a local call.
@@ -179,7 +177,26 @@ Each Blocker carries a **prediction** a person could try, in the shape *doing th
 
 A Blocker without a prediction is not reported as one. Low-confidence Majors are checked against the code the same way before they get a verdict. *Considered and dropped* is shown to the user, so a real finding lost to one wrong refutation can still be caught; it is never given to a later round's reviewers.
 
-## 7. Verdict and report
+## 7. Sort — whose it is, what it shares, where it goes
+
+The review ends by sorting, not by fixing. Three passes over the confirmed findings (`flow.md › Whose finding is it`):
+
+**Origin.** *Ours* — the build added it or broke it: it is in the diff, or the diff made it wrong. *Exposed* — it was there before and the build never touched it, but an instruction cannot be true without it. *Pre-existing* — it was there before, and every instruction holds without it. Origin is read from the diff and the obligation table, never from the builder's account.
+
+**Group.** Findings that share an owner or a mechanism are one group, with one line saying what they share. A group is the sign that the cause sits upstream of the individual gaps.
+
+**Exit.** Each finding or group leaves by exactly one:
+
+| Exit | When | Next |
+| --- | --- | --- |
+| **Fix** | Ours, or exposed at an owner the build already changed; the cause is plain from the finding; one right place for it | A fix item at the owner |
+| **Decide** | It comes from a design choice or from words that carry two needs; or a group shares one origin; or it is exposed and lies outside what the build touched | A decision for the user; the plan changes only if they choose a different design |
+| **Diagnose** | The cause cannot be seen from the code: work that vanished, something that cannot happen | `/A.rootcause` on that finding or group, and nothing else |
+| **Later** | Pre-existing; and everything under *noticed, not ours* | One line on the board, shown at Close. Never in this feature's fixes. One that loses data or opens access is raised to the user at once as its own proposed feature |
+
+The review names the exit; it does not design the fix. What a fix is, exactly where it goes and what else it touches is the plan stage's work, done on the fix item with the callers read.
+
+## 8. Verdict and report
 
 One verdict, in these words, so two runs on the same build can be compared:
 
@@ -190,7 +207,7 @@ One verdict, in these words, so two runs on the same build can be compared:
 | **Shallow** | One or more obligations are `not held`, or held with no check: it looks finished and is not |
 | **Off target** | What was built answers a different ask than the user's. Goes to the user first, alone, as a decision; nothing else is resolved until they answer (`goldfish-lenses.md › A premise finding stops the round`) |
 
-The verdict always carries **Not examined**, even when that line says "nothing".
+Only obligations whose origin is *ours* or *exposed* count toward the verdict; pre-existing ones are listed and change nothing. The verdict always carries **Not examined**, even when that line says "nothing".
 
 The review is an item of the feature (`7.n · Build review (review)`), written with the report schema's headings and these in place of *Proposed change*:
 
@@ -199,19 +216,19 @@ The review is an item of the feature (`7.n · Build review (review)`), written w
 - **Verdict** — one of the four, and one plain sentence of why.
 - **Where each rule stands** — the obligation rows that are not `held`, in plain words with how, and the count that are; the full table goes to the detail file.
 - **Decided without you** — every silent decision, each in decision shape: what was unclear, the reading the build took, the other reading, what each means for you, suggested. The user confirms or changes each one; a confirmed one becomes a decision (dual write), a line in `## Clarifications` and an instruction in the ledger.
-- **Findings** — Blockers and Majors with CONFIRMED or LIKELY; Lows as a count.
+- **Findings** — Blockers and Majors with CONFIRMED or LIKELY, each with its origin; groups shown as one; Lows as a count.
 - **Considered and dropped** — one line each.
 - **Not examined.**
-- **Fixes proposed** — the FIX set grouped into steps with done-conditions, each fix of a `not held` row placed at the owner and carrying a check that is seen to go red on the gap before the fix and green after.
+- **Where each finding goes** — four short lists by exit: ours to fix now · yours to decide · needs its cause found · older problems noted for later. No fix is designed here.
 
 In chat, plain language first (`communication.md`): what it means for the user, in terms of what they can see or do — "it looks finished from the screen, but underneath it is only hidden, not prevented" — then the decisions, then where the detail is.
 
 ## Gate
 
-The review changes no code. It ends one of three ways:
+The review changes no code and writes no plan. It ends:
 
 - **Sound** → "Next: Verify. Say *go*."
-- **Sound once fixed** or **Shallow** → the FIX steps are a new item of the feature, at Gate; on the user's go, `/A.build` builds them and the review runs again on the new diff. A finding whose cause is the plan, not the code, is fixed in the plan first (`/A.plan.realign`), not patched in the code.
+- **Sound once fixed** or **Shallow** → by exit (§7). *Fix*: one item of the feature holding only ours and exposed findings, entering the spine at Evaluate — the callers read, each fix at the owner with a check seen to go red before it and green after, its quality stated (robust, tactical or quick fix), its tier from `sizing.md` over the fix set: S gets no plan review, M and above get `/A.review`. What the build added that it should not have — duplication, dead code — is a second item, built after the first is verified. *Decide*: to the user now. *Diagnose*: `/A.rootcause`; its cause then joins the fix item. *Later*: the board. A fix set that is feature-sized (`hierarchy.md`) is proposed as its own feature.
 - **Off target** → one decision to the user, alone, before anything else is resolved: keep and adjust, or go back to the plan (`/A.plan.realign`).
 
 At L and XL a build is not verified or closed without this review; the user may stop at the round cap, in their own words, with what is unreviewed stated.
@@ -226,9 +243,9 @@ Findings are answered with `resolve-protocol.md`. Three rules are tighter here, 
 
 - **The author does not rule on their own review.** A CONTEST needs `path:line` evidence the reviewer could have read. A contested or declined Blocker or Major is settled only with the user's agreement, shown with both sides.
 - **Severity is the reviewer's.** The author may contest a finding; it may not lower one.
-- **The review changes nothing.** FIX steps become a new item of the feature (`bugfix` or `change`), go through the gate, and are built by `/A.build`.
+- **The review changes nothing and plans nothing.** Fix items are planned by the plan stage, go through the gate, and are built by `/A.build`.
 
-After the fixes are built, two things happen. Every earlier Blocker's prediction is run again and must now fail — a fix is checked on purpose, not by the luck of a later reviewer raising it. And the review runs again on the new diff — fresh reviewers, told nothing of the earlier round — for the lanes whose obligation rows the fixes touched; a fix to an owner re-runs Reverse in full. Rounds, the clean-round rule, the cap and churn are as `goldfish-lenses.md › Rounds`. Stopping at the cap is the user's decision, stated with what is still unreviewed.
+After the fixes are built, two things happen. Every earlier Blocker's prediction is run again and must now fail — a fix is checked on purpose, not by the luck of a later reviewer raising it. And the review runs again on the new diff — fresh reviewers, told nothing of the earlier round — for the lanes whose obligation rows the fixes touched; a fix to an owner re-runs Reverse in full. Rounds, the clean-round rule, the cap and churn are as `goldfish-lenses.md › Rounds`. Stopping at the cap is the user's decision, stated with what is still unreviewed. What keeps this from becoming a loop is stated once, in `flow.md › What ends the loop`.
 
 ## Depth
 

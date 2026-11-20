@@ -15,8 +15,8 @@ Type `/A.` and keep typing: the picker filters on any word in a name (`/A.scope`
 |---|---|
 | `/A.plan <idea>` | Plan something new — or, from a root-cause report, plan the fix at the origin where the passes converged |
 | `/A.plan.realign <what>` | Realign the plan to what exists: continue or change built work; baseline, drift, remaining steps. Reopens a closed feature |
-| `/A.plan.scope_check_drift_check` | Scope check / drift check: has the work outgrown its type (promote or demote); has the plan drifted from the ask, or the code from the plan |
-| `/A.plan.lean_overcomplication_check` | Is the plan lean: duplication, speculative generality, reuse missed, hardcoding |
+| `/A.plan.scope_check_drift_check` | Runs on its own before every plan is shown and after every build, and always says its result. Scope check / drift check: has the work outgrown its type (promote or demote); has the plan drifted from the ask, or the code from the plan |
+| `/A.plan.lean_overcomplication_check` | Runs on its own before every plan is shown and after every build, and always says its result. Is the plan lean: duplication, speculative generality, reuse missed, hardcoding |
 
 ## review — fresh eyes before building
 

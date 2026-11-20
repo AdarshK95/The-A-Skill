@@ -6,8 +6,8 @@ disable-model-invocation: true
 
 # /A.build.review — is it really built, and is it what was asked
 
-**Place in the flow:** after the build, before verify; needs something built; produces a verdict (Sound · Sound once fixed · Shallow · Off target) with evidence; next: Verify, or the fixes as a new item at Gate. See `../core/references/flow.md`.
+**Place in the flow:** after the build, before verify; needs something built; produces a verdict (Sound · Sound once fixed · Shallow · Off target) with evidence, and findings that each say whose they are and where they go — never a fix and never a plan; next: Verify, or each finding by its exit (a fix item for the plan stage, a decision, a root cause, the board). See `../core/references/flow.md`.
 
 Runs the spine (`../core/SKILL.md`) with `../core/references/build-review.md` as its method — read it whole, it is the skill. Subject resolved chat-first (Start step 0): the feature built in this conversation, else a diff or code the user pointed at, else board features at Implement or Realign, offered by name. Plain `/A.build.review` chooses the depth itself: the tier is recomputed from what the build touched. `/A.build.review.s` (the quick check), `.m`, `.l`, `.xl` force the depth (recorded as `Tier: L (user)`).
 
-This file is this command's **Evaluate** step, and nothing more: run `build-review.md` §1–§7 in order, then its *Gate*, *Resolution and rounds* and *Without a plan* sections. `/A.review` reviews a plan; this reviews the build, and they are not interchangeable.
+This file is this command's **Evaluate** step, and nothing more: run `build-review.md` §1–§8 in order, then its *Gate*, *Resolution and rounds* and *Without a plan* sections. `/A.review` reviews a plan; this reviews the build, and they are not interchangeable.

@@ -25,7 +25,7 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 20. The reply states the agent's own read of each instruction it acted on — agree / caveat / disagree with alternative / possible misunderstanding — in one line each.
 21. `### Elements touched` names every system part the plan changes, with existing ids or a proposed new element; the type stated matches the signals or is raised as a proposal.
 22. A plan that fixes a wrong behaviour names the root-cause report it plans from, with the cause at CONFIRMED or LIKELY; the change sits at the origin, not at a cascade link or the symptom.
-23. The reground questions were answered at this boundary: the plan still serves the ask as stated at its current type, adds no structure the ask did not need, and nothing learned has changed the premise.
+23. The scope check and the lean check were both run in full on this plan and their one-line results are in the header and in the chat summary, clean or not; nothing they found is left untriaged.
 24. `### Instruction check` lists every instruction in `## Instructions` in force, each honoured, a proposed deviation with its decision, or a question; none missing, none resolved by the agent alone.
 25. The report is current state only, in plain words, readable in minutes; history, transcripts and tables are in the detail file in agent notation; every record the map, drift, resume or the conformance check reads (`logging.md › What is never minimized`) is present and complete.
 26. Every output another step consumes has a named valid shape and a named, visible failure state for its absence; no step returns an empty collection, `{}`, `unknown` or `none` where it should return a failure.

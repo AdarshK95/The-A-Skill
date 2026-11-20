@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # /A.rootcause — find the cause first
 
-**Place in the flow:** its own stage, before plan. Needs a reported wrong behaviour; produces a root-cause report at CONFIRMED or LIKELY, or an honest "not found" with what would find it; next: `/A.plan` from the report. See `../core/references/flow.md`.
+**Place in the flow:** its own stage, before plan. Needs a reported wrong behaviour — from the user, or a finding or group of findings that a review marked *diagnose*; produces a root-cause report at CONFIRMED or LIKELY, or an honest "not found" with what would find it; next: `/A.plan` from the report. See `../core/references/flow.md`.
 
 Runs the spine (`../core/SKILL.md`) with `../core/references/rootcause.md` as its method. Subject resolved chat-first (Start step 0). `/A.rootcause.m`, `.l`, `.xl` force the depth; plain `/A.rootcause` chooses from the signals and escalates when a shallower pass does not close.
 

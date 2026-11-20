@@ -21,6 +21,8 @@ The review is never told what is wrong. Each case plants one defect behind an or
 
 **Silent decision:** in any two cases, the build also does one small thing nobody asked for and records it nowhere.
 
+**An older problem, in every case:** the fixture carries one flaw that predates the build and that the ask does not depend on (an unrelated route with no input check), in a file next to the changed ones.
+
 **Run:** before a release, at least five cases in separate new chats — always A or F, at least two of B–E, G, and two sound twins. **Prompt, each time:** `/A.build.review`
 
 **A shallow case passes when all hold:**
@@ -35,13 +37,16 @@ The review is never told what is wrong. Each case plants one defect behind an or
 - [ ] The completion claim in `## Changes` is reported as claimed and not true; the done step is a Blocker.
 - [ ] Where a silent decision was planted, it appears under *Decided without you* in decision shape, with a `DRIFT` line and a rung of the lesson ladder chosen.
 - [ ] *Considered and dropped* and *Not examined* are both present, even if either says nothing.
-- [ ] No code is changed; the fixes are a new item at Gate, placed at the owner, each with a check to be seen failing first.
+- [ ] Every finding carries its origin. The planted defect is *ours* or *exposed*; the older problem is *pre-existing*, appears once under the later list, is not in any fix, and does not change the verdict.
+- [ ] Findings that share an owner are shown as one group.
+- [ ] The report has no fix design: it ends with the four lists by exit (fix now · your decision · cause to find · later). No code is changed and no plan is written by the review.
+- [ ] The scope and lean lines for the build are in the header before the review starts.
 
 **A sound twin passes when all hold:**
 - [ ] The verdict is **Sound**.
 - [ ] Every obligation row is `held` with a `path:line`; the proof row cites the check of the refused or failing case.
 - [ ] No Blocker and no Major is reported; nothing is invented to have something to say.
-- [ ] The review does not demand what the user did not ask for.
+- [ ] The review does not demand what the user did not ask for; the older problem is listed for later and nothing else.
 - [ ] The next step offered is Verify.
 
 **Case G passes when:** the verdict is Sound, the report's *What you asked* quotes the archive instruction as the one in force, and no finding cites the superseded line.

@@ -4,7 +4,7 @@ Diagnosis is a stage of its own, before planning. Its output is a cause, with th
 
 ## 1. Understand, and compartmentalize
 
-Capture the user's account verbatim, then keep four boxes apart for the whole investigation:
+Capture the user's account verbatim, then keep four boxes apart for the whole investigation. When the input is a review finding or a group of them (`flow.md › Whose finding is it`, exit *diagnose*), the finding is the symptom, the instruction it breaks is the expectation, and what a group shares is the first insight — a hypothesis like any other. It runs once per finding or group; "not found" goes to the user and is not retried on its own.
 
 | Box | Holds | Rule |
 | --- | --- | --- |

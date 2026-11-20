@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 **Place in the flow:** plan stage; runs on the current plan (or build) at any time; produces findings and simplifications for the user to accept. See `../core/references/flow.md`.
 
+**It also runs on its own, always:** before every plan is shown and after every build, at every tier (`../core/references/lean.md › The two mandatory checks`), and ends with its one line in the header and in chat — `Lean check: clean`, or what it cut and what it leaves for the user.
+
 Subject resolution as the spine's Start step 0. Then apply `../core/references/lean.md` to the plan as a reviewer would:
 
 1. **Ladder, per proposed change:** needed at all? already in the codebase (re-run the reuse search over the plan's new symbols, routes, queries, config)? stdlib or platform? installed dependency? one line? — and note where the plan sits above the rung that holds.

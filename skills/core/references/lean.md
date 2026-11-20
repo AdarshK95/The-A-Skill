@@ -45,15 +45,26 @@ An empty *Reuse candidates* section means the search was not run; the self-check
 - **Fewest files.** A new file needs a reason a reader would accept; a new folder needs two.
 - **Boring over clever.** Clever is what someone decodes at three in the morning.
 
-## Reground — the reflex, not the command
+## The two mandatory checks
 
-The two full checks (`/A.plan.scope_check_drift_check`, `/A.plan.lean_overcomplication_check`) exist for when something has gone wrong. What keeps things from going wrong is a reflex that fires at every stage boundary and costs nothing when the answer is yes:
+A silent reflex cannot be seen to have run, and a check that cannot be seen to have run is one that gets skipped when the work is long or the agent is confident. So the scope check and the lean check are not left to a reflex. They run **in full, at every tier, at two fixed points** of every feature and item:
+
+| When | Scope check looks at | Lean check looks at |
+| --- | --- | --- |
+| **Before a plan is shown** (end of Evaluate) | The plan against each instruction and answer; what the plan adds that nobody asked for; whether the type is still right | The ladder over every proposed change; the reuse search; speculative structure |
+| **After a build, before it is reviewed or verified** (Realign) | The code against the plan and the user's words; what exists that no approved step names; the origin of everything found on the way — ours, exposed, pre-existing | Duplication and complexity in what was added; the simplify pass |
+
+Each check ends with **one line, written to the header and said in chat, clean or not**: `Scope check: clean` · `Scope check: two things nobody asked for, moved to later` · `Lean check: one helper reused instead of the new one` · `Lean check: clean`. The line is the proof it ran: a plan without both is not at Gate, and a build without both is not reviewed, verified or closed. A finding from either check is triaged like any other — fixed now if it is ours, a decision if it changes the plan, the board if it is older than this work.
+
+## Reground — the reflex between the checks
+
+Between those two points, what keeps things from going wrong is a reflex that fires at every stage boundary and costs nothing when the answer is yes:
 
 1. **Scope** — does what I am about to do still serve the ask as stated? Is the type (`hierarchy.md`) still right for what this has become?
 2. **Lean** — is this the least structure that is still robust? Am I adding a path, a field, a state, a setting, a file that the ask did not need?
 3. **Premise** — has anything I learned since the start changed *why* we are doing this?
 
-All yes → silent. A no → one line ("this has grown past a fix — three elements now; scope check before I continue?") and then the full check, run by the agent when the answer is obvious, asked when it is not. Scope first when the type looks wrong; lean first when the plan looks heavy; both, in parallel, when a whole stage is in doubt. Fires at: the end of Evaluate, before Report, after each lens group's resolutions, per item in Build, before Realign, every auto advance.
+All yes → silent. A no → one line ("this has grown past a fix — three elements now; scope check before I continue?") and then the full check, run by the agent when the answer is obvious, asked when it is not. Scope first when the type looks wrong; lean first when the plan looks heavy; both, in parallel, when a whole stage is in doubt. Fires at: the end of Evaluate, after each lens group's resolutions, per item in Build, every auto advance.
 
 **Robust and lean are not opposites.** Robust is about correctness and failure handling: the cause addressed, every failure case handled with a clear message, a check that fails if it breaks. Lean is about not adding structure the ask did not need: no second path, no speculative setting, no one-implementation abstraction. The target is always the robust solution with the least code; when the two seem to pull apart, the plan has usually added structure in the name of robustness that robustness did not require.
 
