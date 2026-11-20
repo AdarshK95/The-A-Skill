@@ -209,7 +209,7 @@ One verdict, in these words, so two runs on the same build can be compared:
 
 Only obligations whose origin is *ours* or *exposed* count toward the verdict; pre-existing ones are listed and change nothing. The verdict always carries **Not examined**, even when that line says "nothing".
 
-The review is an item of the feature (`7.n · Build review (review)`), written with the report schema's headings and these in place of *Proposed change*:
+The review is an item of the feature (`7.n · Build review (review)`) in its own file in the feature's folder (`7.n-build-review-<slug>.md`, a tab on the feature's page), with its verdict and what needs the user copied as lines into the main file's user summary. It is written with the report schema's headings and these in place of *Proposed change*:
 
 - **What you asked** — the instructions, answers and decisions in force, quoted.
 - **What was built, read cold** — the intent reviewer's paraphrase of the build, unedited, directly under the user's words, so the two can be compared at a glance.

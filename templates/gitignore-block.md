@@ -3,6 +3,7 @@
 .a/mirror/
 .a/tmp/
 docs/map/map.html
+docs/pages/
 docs/map/observed.jsonl
 {{doc_paths}}
 # A-skill: end

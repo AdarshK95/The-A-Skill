@@ -40,7 +40,8 @@ The only file that knows anything about the project. The skill never contains a 
 | `gitignore` | `on`: `/A.project.start` adds `.a/` and the documentation paths it created to the project's `.gitignore` (marked block, removable); `off`: touches `.gitignore` never | `on` |
 | `tmp_folder` | Where the agent keeps scratch that must live inside the project (sampling output, fixtures); ignored by git, emptied at Close. Scratch that need not be in the project goes to the OS temp folder instead | `.a/tmp/` |
 | `reminders` | When `on`, every `/A.*` command first checks To do and Deferred for items due today or overdue and says so in one line | `on` |
-| `activity_naming` | File path pattern inside `activity_folder`; may contain `/` to create month and day folders on demand. Tokens: `{yyyy}` `{mm}` `{dd}` `{date}` (uses `filename_date_format`) `{seq}` (zero-padded per day) `{type}` `{slug}` `{feature}` | `{yyyy}-{mm}/{yyyy}-{mm}-{dd}/{seq}-{slug}.md` |
+| `activity_naming` | File path pattern inside `activity_folder` for a feature's main file; the folder part is the feature's folder, where its other files go with the same number (`logging.md › Activity file`). Tokens: `{feature}` `{slug}` `{yyyy}` `{mm}` `{dd}` `{date}` (uses `filename_date_format`) `{seq}` (zero-padded per day) `{type}`. Projects set up before 0.11.0 keep their dated pattern until they change it | `{feature}-{slug}/{feature}-{slug}.md` |
+| `pages_folder` | Where `.a/scripts/page_build.py` writes the project pages (`index.html` and one page per feature) — generated output, safe to delete | `docs/pages/` |
 | `tracker_label` | Name of the external work-item system shown in headers and ledgers (`Work item`, `ADO`, `Jira`, `Issue`); `none` hides the field | `Work item` |
 | `deferred_decisions_log` | Decisions deliberately put off, each with its reasoning and the condition that reopens it; consequential and read at Start for work touching the same area | `docs/deferred-decisions.md` |
 | `artifacts_folder` | Project-level evidence kept for reuse: probe matrices, baselines, dependency inventories, measured facts (`artifacts.md`) | `docs/artifacts/` |
@@ -103,7 +104,8 @@ activity_folder: documentation/Activity log/
 activity_template: documentation/Activity log/_template.md
 project_board: documentation/Activity log/BOARD.md
 areas: UI, Backend, API, Data, Infra
-activity_naming: "{yyyy}-{mm}/{yyyy}-{mm}-{dd}/{seq}-{slug}.md"
+activity_naming: "{feature}-{slug}/{feature}-{slug}.md"
+pages_folder: documentation/Pages/
 date_format: DD MMM YY
 time_format: 12h
 filename_date_format: YYYY-MM-DD

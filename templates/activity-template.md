@@ -1,4 +1,30 @@
-<!-- The status header is written above this by the skill. The file opens with the user's own words: what they asked, then what they answered. Then two readers: the Summary is for the user, in plain words; everything below it is for agents, fully technical. Nothing in this file is deleted or rewritten; corrections are new lines that point back. -->
+<!-- The status header is written above this by the skill. The first three sections are for the user and are what the project page shows on top: the user summary, the user's instructions, the questions and answers. Everything below them is for agents, fully technical. Nothing in this file is deleted; the six lines at the top of the user summary are rewritten in place, everything else is added to. -->
+
+## User summary
+
+**What this is:** <one line a stranger would understand>
+**What you asked, as I understand it:** <the agent's reading of the ask, in plain words, corrected the moment the user corrects it>
+**Now:** <the current step and what is happening in it>
+**Running:** <every agent or background job and what each is doing — or "nothing">
+**Next:** <the one next action, and whose it is>
+**Waiting on you:** <how many things and what — or "nothing">
+
+### What happened
+- <date time> · <step> — <what was done> · <what it means for you> · <why, when a choice was made>
+
+### What went wrong or needs your attention
+- <date time> — <the problem in plain words> · <what it means for you> · <fixed | being fixed | needs your decision>
+
+### Decided without you
+- <date time> — <what I chose> · <why> · <what to say to change it>
+
+### Changes of direction
+- <date time> — <what changed> · <why> · <which instruction or answer>
+
+### What you can check or test now
+- <what to do> → <what you should see>
+
+_(Sections with nothing in them are left out. Rules: `communication.md › The user summary`.)_
 
 ## Instructions
 
@@ -8,17 +34,16 @@ _The user's instructions for this feature, in their words, numbered as they arri
 
 ## Clarifications
 
-_Every question the agent asked about this feature and the user's answer, in their words, in order, at any stage (`clarify.md › The record`). An answer that changes the ask is also added to Instructions. Read by every reviewer with the instructions._
+_Every question the agent asked about this feature, at any stage, as a block with its context — and the user's answer in their words (`clarify.md › The record`). An answer that changes the ask is also added to Instructions. Read by every reviewer with the instructions._
 
-- Q1 · <date time> — "<the question as asked>" → "<the user's answer>" · <adds I-n | changes I-n | no change to the ask>
-
-## Summary (plain language)
-
-1. **The ask:** what the user wanted, in everyday words.
-2. **The situation:** what was found to be true, and what it stopped or risked, from the user's point of view.
-3. **What was decided and why:** one or two plain sentences.
-4. **What was done:** one or two plain sentences; no paths or names.
-5. **The result:** what works now that did not, or what no longer goes wrong. (Updated as the work progresses; the last line always reflects the current state.)
+### Q1 · <date time> · open
+**Question:** <one sentence a person can answer without opening a file>
+**Context:** <what came up, where we are, and why it matters to you — plain words>
+**Options:**
+- <option> — <what it means for you>
+- <option> — <what it means for you>
+**Suggested:** <option> — <the reason>
+**Answer:** "<the user's words>" · <adds I-n | changes I-n | no change to the ask>
 
 ## Context
 

@@ -14,6 +14,29 @@ Every instruction the user gives about a feature is written into the feature's `
 
 **Reviewers get the ledger.** Every lens receives `## Instructions` and `## Clarifications` (the questions asked and the user's answers, `clarify.md › The record`) with the plan and checks conformance first: a plan that does not honour an instruction in force, or honours it in form but not in substance, is a **Blocker** against the plan, whatever the lens's other findings. This is how the design the user gave stays the design: not because a rule names each way it could drift, but because every pass re-reads what the user actually said.
 
+## The user summary — what the user reads instead of asking
+
+The first section of every feature's main file and the top of its page (`logging.md › The pages`). It exists so the user never has to ask what happened, where things stand, or what a question means. Two audits of real sessions — 78 times the user had to ask or correct — set what it carries:
+
+| What the user had to ask for | Times | Where it now lives |
+| --- | --- | --- |
+| A correction: the ask, its scope or its priority was misread | 17 | *What you asked, as I understand it* — stated before work starts |
+| What is running, finished, verified | 12 | *Now* and *Running* |
+| Context for a question | 11 | The question block (`clarify.md › The record`) |
+| Plain words | 10 | Every line says what it means for the user |
+| The reason | 10 | Every choice carries its why |
+| The next step; where something is | 9 | *Next*; *What you can check or test now* |
+| A decision taken without them | 4 | *Decided without you*, at the moment it is taken |
+
+Rules:
+
+- **Six lines, always present, rewritten in place:** What this is · What you asked, as I understand it · Now · Running · Next · Waiting on you. *Running* names every agent or background job and what each is doing, or says "nothing". *Next* names one action and whose it is. *Waiting on you* is a count and what, or "nothing".
+- **The reading of the ask comes first.** It is written before any work, in the agent's own plain words, and corrected the moment the user corrects it. A misread ask caught here costs one line; caught at the build it costs the build.
+- **Trails are added to, never rewritten:** *What happened* (one dated line per step or round: what was done · what it means for you · why); *What went wrong or needs your attention* (the problem · what it means for you · its status); *Decided without you* (what was chosen · why · what to say to change it) — written when the choice is made, never saved up for a review; *Changes of direction* (what changed · why · which instruction); *What you can check or test now* (what to do → what you should see).
+- **Plain words.** No codes, no path unless the user must open that file, every term explained in the same line.
+- **Kept current.** Updated at every write point, before anything is said in chat; the chat then says less, not the same thing again.
+- **North star.** Any change to the plan, the scope or the design is a line here before it is a change anywhere else. If the work and this section disagree, the work has drifted.
+
 ## Do what was asked, or say it cannot be done
 
 The user's instruction is the task. When it can be done, do it as stated — not a nearby thing, not a reinterpretation, not the half you find easier. When it cannot be done, say so plainly ("I can't do X because Y"), and offer the closest thing you *can* do as a question, never as a substitute done silently. Three failures this rule exists to stop:
@@ -76,7 +99,7 @@ Rules for the block:
 - **Say where the changes live** so the user can open them: a version and a zip, a branch, a folder.
 - **Say what the user must do**, with the file or command, and what will happen when they do it. Never a chore the agent caused: no "delete the folder I left", no "fix the file I half-wrote". If the agent left something, it is not done.
 
-A turn that only analyzed says `Done: analysis only — no file was changed` and names where the analysis was written. The block is never omitted and never merged into prose; an answer that lays out findings and stops is not finished. The same block, as the Summary's last lines, closes every activity file at Close.
+A turn that only analyzed says `Done: analysis only — no file was changed` and names where the analysis was written. The block is never omitted and never merged into prose; an answer that lays out findings and stops is not finished. The same block, as the last line under *What happened* in the user summary, closes every feature at Close.
 
 ## Plain names, not codes, in anything a person reads
 

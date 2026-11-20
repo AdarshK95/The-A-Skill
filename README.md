@@ -29,6 +29,7 @@ This is a personal, experimental project, shared as is. Your agent acts on these
 | **Exact resume** | Every feature carries a pointer to the step it stopped at and the next concrete action. |
 | **Review that scales** | Small change, no ceremony. Shared callers or a contract change: fresh-eyes reviewers on the plan first. |
 | **Built, not just looking built** | After the build, `/A.build.review` checks the code against your own words, not the builder's account: every rule traced to where it is enforced and back from every way in. Catches work that is finished on the screen and open underneath, and decisions made without asking you. |
+| **A page, not a pile of markdown** | `docs/pages/index.html` shows every feature: what is happening, what is next, what waits on you, what changed since you last looked. Drawn by a script from the skill's own files, at no token cost. |
 | **Logs you own** | A plain-language summary for you and a timed, append-only event log for the agent, per feature; decisions with reasons; lessons from drift — all in your project's files, readable by any agent. |
 | **Lean by construction** | Searches for what already exists before proposing anything new; one path per purpose; nothing varying hardcoded; a behaviour-preserving simplify pass before close. |
 | **Many projects, one install** | Install once; `/A.project.start` gives each folder its own memory. Projects that work together declare it in their config; `/A.project.list` shows the map. Undeclared means independent. |

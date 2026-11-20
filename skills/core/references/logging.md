@@ -50,12 +50,22 @@ The overview is a map of parts and what depends on what, not a list of tasks. Wo
 
 ## Activity file
 
-One per feature, at the path `activity_naming` gives (month folder, day folder, zero-padded sequence per day, slug naming the work). Created at Start: the status header, then the body from the project's template or `templates/activity-template.md`. Sections and who they are for:
+**One folder per feature, and every file carries the feature's number** (`activity_naming`, default `{feature}-{slug}/{feature}-{slug}.md`):
+
+| File in `<activity_folder>/<n>-<slug>/` | Holds |
+| --- | --- |
+| `<n>-<slug>.md` | The main file: user summary, instructions, questions and answers, the plan, small items as sections |
+| `<n>.<m>-<type>-<slug>.md` | One file per item that produces its own document — a build review, a root-cause report, a fix item, a triage of reviewer comments — `m` being the item number (`7.2-build-review-…`) |
+| `<n>-<slug>.detail.md` | The agent's record: event log, transcripts, tables |
+
+Nothing about a feature lives outside its folder, and no file is created without its number, so a person can find everything for feature 11 in one place and the page shows each file as a tab. An agent reads the file or the section it needs, never the folder. Projects that keep dated folders keep working: the pages group files by their `Feature:` header.
+
+Created at Start: the folder, the main file with its status header and the body from the project's template or `templates/activity-template.md`. Sections and who they are for:
 
 | Section | Reader | Rule |
 | --- | --- | --- |
-| `## Instructions` · `## Clarifications` | Both | First in the file. The user's instructions, then every question asked and the user's answer, all in the user's words, in order (`communication.md`, `clarify.md › The record`). The standard every stage and every reviewer checks against |
-| `## Summary (plain language)` | User | Five points: the ask, the situation, what was decided and why, what was done, the result. No paths, no symbols. Kept current; the result line always reflects now. Written so it could become a work item on its own |
+| `## User summary` | User | First in the file. Six fixed lines (what this is, the ask as understood, now, running, next, waiting on you) and the dated trails below them (`communication.md › The user summary`). Plain words; kept current at every write point |
+| `## Instructions` · `## Clarifications` | Both | Second and third. The user's instructions in their words; every question as a block with its context, options, suggestion and the user's answer (`clarify.md › The record`). The standard every stage and every reviewer checks against |
 | `## Context` | Agent | Once at Start: binding rules, lessons, bearing decisions |
 | `## Report` | Both — chat summary for the user, full text for the agent | A revision is appended under a dated heading; earlier reports stay |
 | `## Items` · `## Findings` · `## Decisions` · `## Build findings` · `## Realign` · `## Verification` · `## Open items` | Agent | Current state of each; entries are added, never removed |
@@ -64,6 +74,17 @@ One per feature, at the path `activity_naming` gives (month folder, day folder, 
 | `## Event log` | Agent | **The backbone.** One line per step, `E<n> · <date>, <time> — …`, in the order it happened: the ask quoted, every file opened and what it showed, every command and output, every dead end and why, every change with path · symbol · line · before → after · reason, every doc updated, every validation and result. Nothing skipped. A correction is `E<m> … corrects E<n>`; a stopped drift is tagged `DRIFT` |
 
 Time is the ordering: the time the event happened, not the time it was written. If the exact minute is unknown, use the best available and keep it increasing. A later line never edits an earlier one; it supersedes it by reference, so a reader can see what was believed at E12 and why E20 overturned it.
+
+## The pages — what the user opens
+
+`.a/scripts/page_build.py` (standard-library Python, no network, no model tokens) draws `<pages_folder>/index.html` and one page per feature from these files. The markdown stays the source and stays what agents read; the pages are only a view of it.
+
+- **The home page** (`index.html`) is the one the user keeps open while the agent works, and it answers four questions without anyone being asked: *what do I need to do* — **Your next steps**, everything waiting on the user across all features, each open question by its text; *what just happened* — **Recent activity**, the dated lines of every feature's trails, newest first, problems and choices made alone marked as such; *what is in progress* — **Ongoing**, most recently worked on first, each with now, running and next; *where is the rest* — **Project documents** (board, decisions, deferred decisions, lessons, standing rules, the map), and finished features folded below. It reloads itself every 15 seconds unless the user switches *live* off.
+- **Feature page:** the user summary on top with the step trail; each instruction with whether it is honoured; each question as a card, open ones first, with a line to copy into the chat so the answer names its question; one tab per file of the feature; agent sections folded.
+- **What changed:** anything new since the user last pressed *Mark as read* is green, the batch before that light blue. The browser remembers it; the agent writes nothing for it.
+- **Format problems** are shown on the page in red and printed by the script, so the page is also the check that the fixed shape was followed.
+
+`--watch` rebuilds on every change to an activity file, including edits made by hand.
 
 ## Month ledger
 
@@ -88,6 +109,8 @@ Recording and writing are different things. Every event is **recorded** when it 
 - a **stage** changes;
 - **before asking the user** anything, and **before any long-running action** (a reviewer run, a build, a migration);
 - **before the turn ends**, always: a session can end at any moment and a resuming session reads the file, not your memory.
+
+At every write point the user summary is brought up to date first, and after the write `python .a/scripts/page_build.py` rebuilds the pages. Whatever it prints as `WARN` — a question with no context, a summary with no next step — is fixed before the turn ends.
 
 Between write points, hold the recorded events and write them together. The event log keeps the original timestamps, so a batch written at 05:40 still reads `E12 · 05:14 PM`, `E13 · 05:19 PM`, … in order. What is never deferred: decisions, blocking findings, the header's `Pointer` / `Next` when a turn is about to end.
 

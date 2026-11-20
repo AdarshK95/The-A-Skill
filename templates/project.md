@@ -21,7 +21,8 @@ code_out_of_scope:            # optional: named exclusions inside the scope, wit
 areas: General
 depends_on: []
 provides: []
-activity_naming: "{yyyy}-{mm}/{yyyy}-{mm}-{dd}/{seq}-{slug}.md"
+activity_naming: "{feature}-{slug}/{feature}-{slug}.md"
+pages_folder: docs/pages/
 ledger_pattern: "docs/activity/{yyyy}-{mm}/_ledger.md"
 date_format: DD MMM YY
 time_format: 12h

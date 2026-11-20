@@ -70,6 +70,18 @@ Before anything new is proposed, the agent searches the codebase for something t
 
 Each chat works on its own feature. They coordinate through `.a/shared/`: before editing a file a session claims the parts it will touch; a session that needs another's work writes a wait and carries on with other steps; when the work lands, the waiting session picks it up and clears the entry. Nothing finished stays there — an empty folder means nothing is in flight. If a chat is cut off mid-work, the next one that opens the project reads what was left and tells you.
 
+## The page you keep open
+
+Open `docs/pages/index.html` in a browser. It is redrawn from the skill's own files every time the agent writes, at no token cost, so you do not have to ask the agent what happened.
+
+- **The home page** is the one to keep open. At the top, *Your next steps*: everything waiting on you across all features, with each open question spelled out. Then *Recent activity*: what the agent did, what went wrong and what it decided without you, newest first. Then the features in progress, most recently worked on first, and links to the project's documents (board, decisions, lessons, standing rules, the map).
+- **A feature's page** starts with the user summary: what you asked as the agent understood it, the steps so far with the current one marked, what went wrong, what was decided without you, and what you can test. Below it are your instructions, each marked honoured or not, and every question with its context, options and suggestion.
+- **Tabs** hold the feature's other documents: reviews, the build review, the agent's detail.
+- **Colours:** what is new since you last pressed *Mark as read* is green; the batch before that is light blue.
+- **Red** means the agent left something out, such as a question with no context. It is told to fix those before it finishes.
+
+The page reloads itself every 15 seconds (the *live* switch turns that off). Run `python .a/scripts/page_build.py --watch` once and it also follows every file change by itself, so it stays current even if the agent forgets to rebuild it. On an open question, *copy reply line* gives you a line to paste into the chat so the agent knows which question you are answering.
+
 ## Where things stand
 
 | Ask | Command | You get |
