@@ -10,7 +10,10 @@ The home page (index.html) is the one to keep open while the agent works:
   - Recent activity: what happened, what went wrong, what was decided without you — newest first;
   - Ongoing features, most recently worked on first, each with what is happening now and what is next;
   - Project documents: decisions, lessons, standing rules, deferred decisions, the board, the map.
-It reloads itself (the "live" switch), so with --watch running it follows the agent without being asked.
+Opened through the server (--serve) it follows the agent by itself and has a Resync button that rebuilds in the
+background and shows "Syncing…" then "Synced 11:42"; opened as a file it reloads every 15 seconds.
+The server listens on this machine only (127.0.0.1), refuses requests from other web pages, and can do exactly
+two things: rebuild the pages and stop itself.
 
 What a feature's page adds that the markdown cannot:
   - the user summary always on top, with Now / Running / Next / Waiting on you as a strip, and the step trail;
@@ -21,15 +24,18 @@ What a feature's page adds that the markdown cannot:
   - format problems (a question with no context, a summary with no next step) shown on the page and printed
     here, so the agent that ran this script fixes them before its turn ends.
 
-Usage:  python .a/scripts/page_build.py              build what changed; writes <pages_folder>/index.html
-        python .a/scripts/page_build.py --watch      rebuild whenever an activity file changes (Ctrl+C stops)
+Usage:  python .a/scripts/page_build.py              build the pages once; writes <pages_folder>/index.html
+        python .a/scripts/page_build.py --serve      start the live server in the background (no window), print the address
+        python .a/scripts/page_build.py --stop       stop that server
+        python .a/scripts/page_build.py --watch      rebuild whenever a file changes, in this terminal (Ctrl+C stops)
+        python .a/scripts/page_build.py --install-startup | --remove-startup    (Windows) start the server at login, hidden
         python .a/scripts/page_build.py --root P --out D    another project root / output folder
         python .a/scripts/page_build.py --selftest   build a sample in a temp folder and check it
 
 Standard library only. No network. Safe to re-run.
 """
 from __future__ import annotations
-import argparse, hashlib, html, json, os, re, sys, tempfile, time
+import argparse, hashlib, html, http.server, urllib.error, json, os, re, socketserver, subprocess, sys, tempfile, threading, time, urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -80,7 +86,7 @@ def events(summary_body: str, fallback: datetime) -> list:
 
 def read_config(root: Path) -> dict:
     cfg = {"activity_folder": "docs/activity/", "pages_folder": "docs/pages/", "project_name": root.name,
-           "project_board": "docs/activity/BOARD.md", "decisions_log": "docs/decisions.md", "lessons_log": "docs/lessons.md",
+           "pages_server": "ask", "project_board": "docs/activity/BOARD.md", "decisions_log": "docs/decisions.md", "lessons_log": "docs/lessons.md",
            "constitution": "docs/constitution.md", "deferred_decisions_log": "docs/deferred-decisions.md",
            "implementation_log": "docs/implementation-log.md", "api_docs": "docs/api.md", "map_folder": "docs/map/"}
     p = root / ".a" / "project.md"
@@ -537,7 +543,21 @@ JS = r"""
       var y=sessionStorage.getItem(KEY+':y');if(y)window.scrollTo(0,+y)}catch(e){}
   var ar=document.getElementById('auto'),AK='a-pages:auto';
   function live(){try{return localStorage.getItem(AK)!=='0'}catch(e){return true}}
-  function arm(){if(live()){ar&&ar.classList.add('on');setTimeout(function(){try{sessionStorage.setItem(KEY+':y',window.scrollY)}catch(e){}location.reload()},15000)}}
+  var srv=/^https?:$/.test(location.protocol)&&/^(localhost|127\.0\.0\.1)$/.test(location.hostname),rs=document.getElementById('resync'),rev=null;
+  function stay(){try{sessionStorage.setItem(KEY+':y',window.scrollY)}catch(e){}}
+  function hhmm(){var d=new Date();return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+  function poll(){fetch('/status',{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){
+      if(rev===null){rev=j.rev;if(rs&&!rs.dataset.busy)rs.textContent='Resync'}
+      else if(j.rev!==rev){stay();location.reload()}
+    }).catch(function(){if(rs&&!rs.dataset.busy){rs.textContent='Server stopped';rs.title='Start it again: python .a/scripts/page_build.py --serve'}})}
+  function arm(){if(live()){ar&&ar.classList.add('on');
+    if(srv){poll();setInterval(poll,4000)}else{setTimeout(function(){stay();location.reload()},15000)}}}
+  if(rs){
+    if(!srv){rs.disabled=true;rs.textContent='Resync (server off)';rs.title='Open this page through the server to use Resync: python .a/scripts/page_build.py --serve'}
+    else rs.onclick=function(){rs.dataset.busy='1';rs.disabled=true;rs.textContent='Syncing…';
+      fetch('/resync',{method:'POST',headers:{'X-Resync':'1'}}).then(function(r){return r.json()}).then(function(j){
+        rs.textContent='Synced '+hhmm()+(j.warnings?' · '+j.warnings+' format problem(s)':'');setTimeout(function(){stay();location.reload()},500)
+      }).catch(function(){rs.textContent='Server not running';rs.title='Start it: python .a/scripts/page_build.py --serve';rs.disabled=false;delete rs.dataset.busy})}}
   if(ar)ar.onclick=function(){try{localStorage.setItem(AK,live()?'0':'1')}catch(e){}location.reload()};
   [].forEach.call(document.querySelectorAll('button.copy'),function(b){b.onclick=function(){
     var t=b.dataset.copy,done=function(){var o=b.textContent;b.textContent='copied';setTimeout(function(){b.textContent=o},1200)};
@@ -563,7 +583,8 @@ def shell(title: str, project: str, page: str, top: str, body: str) -> str:
             f'<header class="top">{top}'
             f'<span class="legend"><span id="newcount"></span><i style="background:var(--newb)"></i>new<i style="background:var(--prevb)"></i>the time before</span>'
             f'<button id="markread">Mark as read</button>'
-            f'<button id="auto" title="Reloads this page every 15 seconds so it follows the agent. Click to switch off.">live</button>'
+            f'<button id="resync" title="Rebuilds the pages from the files, in the background">Resync</button>'
+            f'<button id="auto" title="Follows the agent by itself. Click to switch off.">live</button>'
             f'<span class="meta">built {built}</span></header>'
             f"<main>{body}</main><script>{JS}</script></body></html>")
 
@@ -691,6 +712,157 @@ def signature(root: Path) -> tuple:
     return tuple(sorted((str(p), p.stat().st_mtime_ns) for p in files))
 
 
+
+# ---------------------------------------------------------------- the live server
+def pick_port(root: Path) -> int:
+    """The same project always gets the same port, so the address never changes; different projects rarely collide."""
+    return 8700 + int(hashlib.sha1(str(root).encode("utf-8")).hexdigest()[:4], 16) % 100
+
+
+class Live:
+    """Holds the project, rebuilds under a lock, and counts builds so pages know when to reload."""
+    def __init__(self, root: Path, out: Path):
+        self.root, self.out, self.rev, self.warns, self.at, self.lock = root, out, 0, 0, "", threading.Lock()
+        self.stop = threading.Event()
+
+    def rebuild(self) -> int:
+        with self.lock:
+            import io as _io, contextlib
+            with contextlib.redirect_stdout(_io.StringIO()):
+                self.warns = build(self.root, self.out, quiet=True)
+            self.rev += 1
+            self.at = datetime.now().strftime("%H:%M:%S")
+            return self.warns
+
+    def watch(self):
+        sig = signature(self.root)
+        while not self.stop.wait(2):
+            now = signature(self.root)
+            if now != sig:
+                sig = now
+                try:
+                    self.rebuild()
+                except Exception as e:  # a half-written file must not kill the server; the next change retries
+                    print("rebuild failed:", e, file=sys.stderr)
+
+
+def make_server(live: Live, port: int):
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def __init__(self, *a, **k):
+            super().__init__(*a, directory=str(live.out), **k)
+
+        def log_message(self, *a):
+            pass
+
+        def host_ok(self) -> bool:  # refuses DNS-rebinding: only our own address is accepted
+            host = (self.headers.get("Host") or "").split(":")[0]
+            return host in ("localhost", "127.0.0.1")
+
+        def reply(self, code: int, obj: dict):
+            data = json.dumps(obj).encode("utf-8")
+            self.send_response(code)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+
+        def do_GET(self):
+            if not self.host_ok():
+                return self.reply(403, {"error": "host"})
+            if self.path.split("?")[0] == "/status":
+                return self.reply(200, {"ok": True, "rev": live.rev, "at": live.at, "warnings": live.warns, "project": live.root.name})
+            self.path = self.path.split("?")[0]
+            return super().do_GET()
+
+        def do_POST(self):
+            # A page on another website cannot add this header without our consent (the browser asks first, and we never agree).
+            if not self.host_ok() or self.headers.get("X-Resync") != "1":
+                return self.reply(403, {"error": "refused"})
+            path = self.path.split("?")[0]
+            if path == "/resync":
+                return self.reply(200, {"ok": True, "warnings": live.rebuild(), "at": live.at})
+            if path == "/stop":
+                self.reply(200, {"ok": True})
+                live.stop.set()
+                threading.Thread(target=self.server.shutdown, daemon=True).start()
+                return None
+            return self.reply(404, {"error": "unknown"})
+
+    class Server(socketserver.ThreadingMixIn, http.server.HTTPServer):
+        daemon_threads = True
+        allow_reuse_address = False
+    return Server(("127.0.0.1", port), Handler)
+
+
+def call(port: int, path: str, post: bool = False, timeout: float = 4):
+    req = urllib.request.Request(f"http://127.0.0.1:{port}{path}", method="POST" if post else "GET", data=b"" if post else None,
+                                 headers={"X-Resync": "1"} if post else {})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return json.loads(r.read().decode("utf-8"))
+    except Exception:
+        return None
+
+
+def serve(root: Path, out: Path, port: int, foreground: bool) -> int:
+    url = f"http://localhost:{port}/index.html"
+    if call(port, "/status"):
+        print(f"already running: {url}")
+        return 0
+    if not foreground:  # start a hidden copy of ourselves and come back with the address
+        cmd = [sys.executable, str(Path(__file__).resolve()), "--serve", "--foreground", "--root", str(root), "--out", str(out), "--port", str(port)]
+        kw = {"stdin": subprocess.DEVNULL, "stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL, "close_fds": True}
+        if os.name == "nt":
+            pyw = Path(sys.executable).with_name("pythonw.exe")
+            if pyw.exists():
+                cmd[0] = str(pyw)
+            kw["creationflags"] = 0x00000008 | 0x08000000  # DETACHED_PROCESS | CREATE_NO_WINDOW: no window, survives this terminal
+        else:
+            kw["start_new_session"] = True
+        subprocess.Popen(cmd, **kw)
+        for _ in range(40):
+            time.sleep(0.25)
+            if call(port, "/status"):
+                print(f"running: {url}")
+                return 0
+        print(f"could not start the server on port {port}; is something else using it? Run with --foreground to see why.", file=sys.stderr)
+        return 1
+    live = Live(root, out)
+    live.rebuild()
+    try:
+        httpd = make_server(live, port)
+    except OSError as e:
+        print(f"port {port} is not available: {e}", file=sys.stderr)
+        return 1
+    threading.Thread(target=live.watch, daemon=True).start()
+    print(f"serving {url} - Ctrl+C or --stop to end")
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        live.stop.set()
+        httpd.server_close()
+    return 0
+
+
+def startup_file(root: Path, folder: Path = None) -> Path:
+    folder = folder or Path(os.environ.get("APPDATA", "")) / "Microsoft" / "Windows" / "Start Menu" / "Programs" / "Startup"
+    return folder / f"a-skill-pages-{re.sub(r'[^A-Za-z0-9]+', '-', root.name).strip('-').lower()}.vbs"
+
+
+def install_startup(root: Path, out: Path, port: int, folder: Path = None) -> Path:
+    """Windows: a hidden login entry that starts this server. One small file, removed by --remove-startup."""
+    f = startup_file(root, folder)
+    pyw = Path(sys.executable).with_name("pythonw.exe")
+    exe = pyw if pyw.exists() else Path(sys.executable)
+    args = f'""{exe}"" ""{Path(__file__).resolve()}"" --serve --foreground --root ""{root}"" --out ""{out}"" --port {port}'
+    f.parent.mkdir(parents=True, exist_ok=True)
+    f.write_text(f'CreateObject("WScript.Shell").Run "{args}", 0, False\r\n', encoding="utf-8")
+    return f
+
+
 SAMPLE = """---
 Feature: 11 · Usage report only for devs
 Phase: Gate
@@ -739,6 +911,16 @@ I1 — honoured (steps 1-3)
 """
 
 
+def _post_status(port: int, headers: dict, host: str) -> int:
+    req = urllib.request.Request(f"http://127.0.0.1:{port}/resync", method="POST", data=b"", headers={**headers, "Host": host})
+    try:
+        return urllib.request.urlopen(req, timeout=4).status
+    except urllib.error.HTTPError as e:
+        return e.code
+    except Exception:
+        return 0
+
+
 def selftest() -> int:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -771,6 +953,35 @@ def selftest() -> int:
             "open question has an anchor and a reply line to copy": 'id="Q1"' in page and "Feature 11 Q1" in page,
             "pages are live unless switched off": "!=='0'" in page,
         }
+        # the server, on a free port, in this process
+        live = Live(root, out)
+        live.rebuild()
+        httpd = make_server(live, 0)
+        port = httpd.server_address[1]
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        threading.Thread(target=live.watch, daemon=True).start()
+        try:
+            st = call(port, "/status")
+            checks["server: status answers"] = bool(st and st["ok"] and st["project"])
+            checks["server: a resync without the header is refused"] = urllib.request.urlopen is not None and _post_status(port, {}, "localhost") == 403
+            checks["server: a request for another host name is refused"] = _post_status(port, {"X-Resync": "1"}, "evil.example") == 403
+            r1 = st["rev"]
+            (folder / "11.2-note.md").write_text("## In short\n\nA new file.\n", encoding="utf-8")
+            rs = call(port, "/resync", post=True)
+            checks["server: resync rebuilds and bumps the revision"] = bool(rs and rs["ok"]) and call(port, "/status")["rev"] > r1
+            checks["server: serves the rebuilt page"] = b"A new file" in urllib.request.urlopen(f"http://127.0.0.1:{port}/f-f11.html").read()
+            (folder / "11.3-later.md").write_text("## In short\n\nWritten while watching.\n", encoding="utf-8")
+            deadline, seen = time.time() + 8, False
+            while time.time() < deadline and not seen:
+                time.sleep(0.5)
+                seen = b"Written while watching" in urllib.request.urlopen(f"http://127.0.0.1:{port}/f-f11.html").read()
+            checks["server: rebuilds by itself when a file changes"] = seen
+            checks["server: stop ends it"] = bool(call(port, "/stop", post=True)) and (time.sleep(0.8) or call(port, "/status") is None)
+        finally:
+            live.stop.set()
+            httpd.server_close()
+        vf = install_startup(root, out, 8765, folder=root / "startup")
+        checks["startup entry written, hidden, and removable"] = vf.exists() and ", 0, False" in vf.read_text(encoding="utf-8") and (vf.unlink() or not vf.exists())
         bad = [k for k, ok in checks.items() if not ok]
         for k, ok in checks.items():
             print(("ok   " if ok else "FAIL ") + k)
@@ -782,12 +993,35 @@ def main() -> int:
     ap.add_argument("--root", type=Path, default=ROOT)
     ap.add_argument("--out", type=Path)
     ap.add_argument("--watch", action="store_true")
+    ap.add_argument("--serve", action="store_true")
+    ap.add_argument("--foreground", action="store_true")
+    ap.add_argument("--stop", action="store_true")
+    ap.add_argument("--port", type=int)
+    ap.add_argument("--install-startup", action="store_true")
+    ap.add_argument("--remove-startup", action="store_true")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     root = a.root.resolve()
     out = (a.out or root / read_config(root)["pages_folder"]).resolve()
+    port = a.port or pick_port(root)
+    if a.stop:
+        print("stopped" if call(port, "/stop", post=True) else "not running")
+        return 0
+    if a.install_startup or a.remove_startup:
+        if os.name != "nt":
+            print("login startup is only set up on Windows; elsewhere start the server with --serve", file=sys.stderr)
+            return 1
+        if a.remove_startup:
+            f = startup_file(root)
+            f.unlink(missing_ok=True)
+            print(f"removed {f}")
+        else:
+            print(f"will start at login: {install_startup(root, out, port)}")
+        return 0
+    if a.serve:
+        return serve(root, out, port, a.foreground)
     build(root, out)
     if a.watch:
         print("watching for changes - Ctrl+C to stop")

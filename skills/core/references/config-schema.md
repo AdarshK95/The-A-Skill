@@ -42,6 +42,7 @@ The only file that knows anything about the project. The skill never contains a 
 | `reminders` | When `on`, every `/A.*` command first checks To do and Deferred for items due today or overdue and says so in one line | `on` |
 | `activity_naming` | File path pattern inside `activity_folder` for a feature's main file; the folder part is the feature's folder, where its other files go with the same number (`logging.md › Activity file`). Tokens: `{feature}` `{slug}` `{yyyy}` `{mm}` `{dd}` `{date}` (uses `filename_date_format`) `{seq}` (zero-padded per day) `{type}`. Projects set up before 0.11.0 keep their dated pattern until they change it | `{feature}-{slug}/{feature}-{slug}.md` |
 | `pages_folder` | Where `.a/scripts/page_build.py` writes the project pages (`index.html` and one page per feature) — generated output, safe to delete | `docs/pages/` |
+| `pages_server` | Whether the live page server (`page_build.py --serve`) is offered. `ask`: offered once, after the first page is built, and only if Python runs; the answer is written here (`on` or `off`). `on`: started in the background whenever it is not running. `off`: never offered, never started. Python missing → the skill documents exactly as before and says nothing about the server | `ask` |
 | `tracker_label` | Name of the external work-item system shown in headers and ledgers (`Work item`, `ADO`, `Jira`, `Issue`); `none` hides the field | `Work item` |
 | `deferred_decisions_log` | Decisions deliberately put off, each with its reasoning and the condition that reopens it; consequential and read at Start for work touching the same area | `docs/deferred-decisions.md` |
 | `artifacts_folder` | Project-level evidence kept for reuse: probe matrices, baselines, dependency inventories, measured facts (`artifacts.md`) | `docs/artifacts/` |
@@ -106,6 +107,7 @@ project_board: documentation/Activity log/BOARD.md
 areas: UI, Backend, API, Data, Infra
 activity_naming: "{feature}-{slug}/{feature}-{slug}.md"
 pages_folder: documentation/Pages/
+pages_server: ask
 date_format: DD MMM YY
 time_format: 12h
 filename_date_format: YYYY-MM-DD

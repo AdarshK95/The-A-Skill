@@ -2,6 +2,11 @@
 
 Version numbers follow the scale of the change, decided per release. **Third digit:** iteration on an existing capability — wording, rules, fixes, a redesign of something that already exists (a new layout for the map is still the map). **Second digit:** a new capability, or anything an installed copy must re-learn — a new or removed command or stage, a new script, a format change that breaks old files. **First digit:** a restructure that breaks existing projects (not before 1.0).
 
+## 0.11.1 — 20 Nov 26
+
+- **The live server and the Resync button** (`page_build.py --serve`): started hidden, one fixed address per project; the page follows the agent by itself; a **Resync** button rebuilds in the background and shows *Syncing…* / *Synced*; `--stop`; on Windows `--install-startup` starts it at login. It listens on this machine only and accepts only a rebuild and a stop, from this page. The skill detects Python: missing → no page step is offered or mentioned and documentation is unchanged; present → one offer, remembered in the new config key `pages_server`.
+- `page_build.py --selftest` now has 24 checks, including the server: a refused request without the header, a refused foreign host name, a rebuild on Resync, a rebuild by itself when a file changes, and a clean stop.
+
 ## 0.11.0 — 20 Nov 26
 
 Second-number release: a new script (`.a/scripts/page_build.py`), a new first section in the activity file, a new record shape for questions, a new default file layout. An installed copy needs `/A.skill.update`; an existing project gets the script on the next `/A.project.start` refresh and keeps its own file layout until its `activity_naming` is changed.
@@ -13,7 +18,7 @@ Two audits of real sessions counted 78 times the user had to ask for something o
 - **One folder per feature, every file numbered** (`logging.md › Activity file`): `<n>-<slug>/<n>-<slug>.md` for the main file, `<n>.<m>-<type>-<slug>.md` for an item with a document of its own (a build review, a root-cause report, a fix item), `<n>-<slug>.detail.md` for the agent's record. New default for `activity_naming`.
 - **The pages** (`logging.md › The pages`): `page_build.py`, standard-library Python, draws the pages from those files at no token cost. The **home page** (`docs/pages/index.html`) is the one to keep open: *Your next steps* (everything waiting on the user, across features, each open question by its text), *Recent activity* (every feature's dated trail lines, newest first), the ongoing features by most recent work, and the project's documents (board, decisions, deferred decisions, lessons, standing rules, the map); it reloads itself. A **feature's page** has the user summary and step trail on top, each instruction with whether it is honoured, each question as a card with open ones first, one tab per file, agent sections folded. What is new since the user last pressed *Mark as read* is green and the batch before that light blue, remembered in the browser. `--watch` keeps it live. New config key `pages_folder`.
 - **The page is also the check.** A question with no context, or a summary with no next step, is shown in red and printed by the build as `WARN`; the agent fixes it before its turn ends (self-check 31).
-- The build review is its own file in the feature's folder, with its verdict copied into the user summary. Test scenario 10; `page_build.py --selftest`.
+- The build review is its own file in the feature's folder, with its verdict copied into the user summary. Test scenario 10; `page_build.py --selftest` .
 
 ## 0.10.2 — 20 Nov 26
 

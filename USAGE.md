@@ -80,7 +80,7 @@ Open `docs/pages/index.html` in a browser. It is redrawn from the skill's own fi
 - **Colours:** what is new since you last pressed *Mark as read* is green; the batch before that is light blue.
 - **Red** means the agent left something out, such as a question with no context. It is told to fix those before it finishes.
 
-The page reloads itself every 15 seconds (the *live* switch turns that off). Run `python .a/scripts/page_build.py --watch` once and it also follows every file change by itself, so it stays current even if the agent forgets to rebuild it. On an open question, *copy reply line* gives you a line to paste into the chat so the agent knows which question you are answering.
+If Python is installed, the skill offers once to start a small live server for the pages (nothing leaves your machine). Opened through it, the page follows the agent by itself and has a **Resync** button: click it and it rebuilds in the background, showing *Syncing…* and then *Synced*. No window opens. `python .a/scripts/page_build.py --stop` ends it; on Windows it can also start at login (`--install-startup`). Without the server, the page reloads every 15 seconds and shows what was last built. On an open question, *copy reply line* gives you a line to paste into the chat so the agent knows which question you are answering.
 
 ## Where things stand
 

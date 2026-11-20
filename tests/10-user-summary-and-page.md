@@ -32,4 +32,13 @@ What two audits of real sessions found (78 times the user had to ask or correct)
 - [ ] The changed line is green. After *Mark as read* and another edit, the new edit is green and the earlier one light blue.
 - [ ] Removing the Context from an open question and rebuilding prints `WARN … has no Context` and shows it red on the page.
 
+**Prompt 4 (only on a machine with Python):** accept the offer to start the live server.
+
+**Pass when all hold:**
+- [ ] The offer was made once, after the first page existed, and the answer is in `pages_server` in `.a/project.md`; on a machine without Python it was never made or mentioned.
+- [ ] The server started with no window, and the address it printed opens the home page.
+- [ ] With the page open, a line the agent adds to the summary appears on the home page by itself within about 20 seconds.
+- [ ] *Resync* shows *Syncing…* then *Synced*, and the page is current afterwards.
+- [ ] `--stop` ends it; the button then says the server is not running instead of failing silently.
+
 **The count that matters:** over the whole scenario, the tester should not need to ask "what happened", "what is next", "what is running" or "what does this question mean". Each time they do is a fail, recorded with the question.

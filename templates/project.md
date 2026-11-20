@@ -23,6 +23,7 @@ depends_on: []
 provides: []
 activity_naming: "{feature}-{slug}/{feature}-{slug}.md"
 pages_folder: docs/pages/
+pages_server: ask          # ask: offer the live page server once · on: start it whenever it is not running · off: never
 ledger_pattern: "docs/activity/{yyyy}-{mm}/_ledger.md"
 date_format: DD MMM YY
 time_format: 12h

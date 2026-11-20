@@ -84,7 +84,9 @@ Time is the ordering: the time the event happened, not the time it was written. 
 - **What changed:** anything new since the user last pressed *Mark as read* is green, the batch before that light blue. The browser remembers it; the agent writes nothing for it.
 - **Format problems** are shown on the page in red and printed by the script, so the page is also the check that the fixed shape was followed.
 
-`--watch` rebuilds on every change to an activity file, including edits made by hand.
+**The live server** (`page_build.py --serve`, standard-library Python, started hidden — no window — and reachable at a fixed address per project, `http://localhost:87xx/index.html`, printed by the command). Opened through it, the page follows the agent by itself, a **Resync** button rebuilds in the background and says *Syncing…* then *Synced 11:42*, and the build's format warnings still reach the agent. Opened as a plain file, the page reloads every 15 seconds and the button is disabled with a note. The server listens on this machine only, refuses requests from other web pages and other host names, and can do exactly two things: rebuild, and stop itself (`--stop`).
+
+**Who starts it, and when.** The skill detects Python first (`python --version`, then `py -3 --version`). Missing → no page server is offered or mentioned and documentation is written exactly as before; the page can still be built wherever Python later appears. Present → at the first write that builds a page, with `pages_server: ask`, one question: "The pages are ready. Want me to start the live page server so you can watch changes in the browser? (yes / no)". Yes → `pages_server: on` is written to `.a/project.md` and the server started; no → `off`. With `on`, the agent starts it (`--serve` is safe to repeat: it says *already running*) at the first write of each session. At the same moment, on Windows and only with the user's yes, it may offer once to start it at login (`--install-startup`; `--remove-startup` undoes it). `--watch` remains for a user who prefers a terminal.
 
 ## Month ledger
 

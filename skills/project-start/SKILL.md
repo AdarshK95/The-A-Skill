@@ -42,6 +42,7 @@ If several folders could be the project (step 1 found siblings, or none at the r
 4. Append `../../templates/always-on.md` to each `always_on_files` entry (create if missing), `{{skills_root}}` filled with the real method path; skip files that already carry the marker.
 5. `.gitignore`: the marked block, unless `gitignore: off`.
 6. Add or refresh the row in `~/.a/projects.md`; redraw its dependency diagram.
+6a. Detect Python (`python --version`, else `py -3 --version`). Missing → skip every page step and say nothing about pages. Present → run `.a/scripts/page_build.py` once so the page exists, and add to the report: "Pages are ready at `docs/pages/index.html`. Want me to start the live page server so they follow the agent by themselves? (yes / no)" — the answer goes to `pages_server` in `.a/project.md` (`references/logging.md › The pages`).
 7. Write `E1` in a new activity file **only if the user asked for the setup to be logged**; otherwise the project's history starts with its first feature. Nothing is written in any other project's logs, ever.
 
 ## Step 4 — report, in the standard shape
