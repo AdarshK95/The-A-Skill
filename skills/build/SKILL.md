@@ -10,6 +10,19 @@ disable-model-invocation: true
 
 Runs the spine's **Implement** and **Realign** stages (`../core/SKILL.md`) on the current feature — subject resolved chat-first. Not approved → say which stage the feature is at; if the report has decisions with suggested answers, offer "take the suggested answers and approve" as one question. Realign is part of this command, not a separate one, and it always ends with the two mandatory checks on the build — the scope check (drift, what nobody asked for, whose each finding is) and the lean check (duplication, the simplify pass) — each saying its result in one line, clean or not.
 
+## Order and builders
+
+The approved plan gives every item a `Needs:` line. That line, never the item number, decides the order.
+
+- **Ready** means every item it needs is done **and that item's check has passed**. Only a ready item is started. A waiting item is not started at all: no builder exists for it, so nothing is assumed or built ahead on its behalf.
+- **At the same time** only for ready items that touch no file in common (their steps' file lists, plus anything the look-around adds). A shared file means one after the other.
+- **Builders.** A feature with one item is built by this session. With several, each ready item goes to a fresh builder where the host has fresh agents (`../core/references/hosts.md`; unlike a reviewer, a builder may edit and run commands), so each starts with a clean context; this session orchestrates. No fresh agents on this host → this session builds the items one by one in `Needs:` order.
+- **A builder's brief** is the item's section of the plan, `## Instructions`, `## Clarifications`, `## Context`, and the paths of `build-check.md` and `shared.md` to read first — never the conversation. It ends: build only this item; claim each file before editing it; if something this item needs is missing or is not as the plan describes, stop and report it — never build it, stub it or assume it.
+- **Done is decided here.** When a builder reports, this session reads the diff, runs the item's check itself, and only then marks the item done, releases its claims and starts what became ready. A builder's "done" is a claim.
+- **A failed or stopped item** holds back only the items that need it; the others continue. Its report goes to `## Build findings`.
+
+The feature's `Pointer` names the earliest unfinished item; each running item keeps its own.
+
 ## /A.build.resume — pick up an interrupted build
 
 For a build that stopped: session cut, tab closed, planning or realigning happened in between, or the user simply came back. Before writing anything:

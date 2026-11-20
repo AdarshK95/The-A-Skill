@@ -3,7 +3,7 @@
 ## User summary
 
 **What this is:** <one line a stranger would understand>
-**What you asked, as I understand it:** <the agent's reading of the ask, in plain words, corrected the moment the user corrects it>
+**What you asked, as I understand it:** <the ask in plain words · what it is for (marked inferred if you did not say) · what must be true for the result to serve that — corrected the moment the user corrects it>
 **Now:** <the current step and what is happening in it>
 **Running:** <every agent or background job and what each is doing — or "nothing">
 **Next:** <the one next action, and whose it is>
@@ -16,7 +16,7 @@
 - <date time> — <the problem in plain words> · <what it means for you> · <fixed | being fixed | needs your decision>
 
 ### Decided without you
-- <date time> — <what I chose> · <why> · <what to say to change it>
+- <date time> — <what I chose> · <why> · <what to say to change it> · Q<n>
 
 ### Changes of direction
 - <date time> — <what changed> · <why> · <which instruction or answer>
@@ -34,16 +34,29 @@ _The user's instructions for this feature, in their words, numbered as they arri
 
 ## Clarifications
 
-_Every question the agent asked about this feature, at any stage, as a block with its context — and the user's answer in their words (`clarify.md › The record`). An answer that changes the ask is also added to Instructions. Read by every reviewer with the instructions._
+_Every question the agent asked about this feature, at any stage, and every choice it made for the user, as a full block in the user's words (`clarify.md › The block`). An answer that changes the ask is also added to Instructions. Read by every reviewer with the instructions._
 
 ### Q1 · <date time> · open
-**Question:** <one sentence a person can answer without opening a file>
-**Context:** <what came up, where we are, and why it matters to you — plain words>
+**Question:** <one sentence the user can answer without opening a file>
+**What this is about:** <the part of the product or of the work, named as the user names it; where they would meet it>
+**Why it comes up:** <what was found or what happened that makes this a choice now>
 **Options:**
-- <option> — <what it means for you>
-- <option> — <what it means for you>
+- <option> — <what you would see, what it costs in time, what could go wrong>
+- <option> — <the same for this one>
 **Suggested:** <option> — <the reason>
+**To change it later:** <small | significant> — <what undoing it would involve>
 **Answer:** "<the user's words>" · <adds I-n | changes I-n | no change to the ask>
+
+### Q2 · <date time> · decided
+**Question:** <the choice that came up, in one sentence>
+**What this is about:** <as above>
+**Why it comes up:** <as above>
+**Options:**
+- <option> — <what it would have meant for you>
+- <option> — <the same for this one>
+**Decided:** <what was chosen> — <the reason>
+**What it changes for you:** <what you will see or get, what it costs, what it rules out>
+**To change it later:** <small | significant> — <what undoing it would involve>
 
 ## Context
 

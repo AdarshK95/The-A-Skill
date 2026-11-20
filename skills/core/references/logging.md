@@ -65,7 +65,7 @@ Created at Start: the folder, the main file with its status header and the body 
 | Section | Reader | Rule |
 | --- | --- | --- |
 | `## User summary` | User | First in the file. Six fixed lines (what this is, the ask as understood, now, running, next, waiting on you) and the dated trails below them (`communication.md › The user summary`). Plain words; kept current at every write point |
-| `## Instructions` · `## Clarifications` | Both | Second and third. The user's instructions in their words; every question as a block with its context, options, suggestion and the user's answer (`clarify.md › The record`). The standard every stage and every reviewer checks against |
+| `## Instructions` · `## Clarifications` | Both | Second and third. The user's instructions in their words; every question, and every choice made for the user, as a block (`clarify.md › The block`). The standard every stage and every reviewer checks against |
 | `## Context` | Agent | Once at Start: binding rules, lessons, bearing decisions |
 | `## Report` | Both — chat summary for the user, full text for the agent | A revision is appended under a dated heading; earlier reports stay |
 | `## Items` · `## Findings` · `## Decisions` · `## Build findings` · `## Realign` · `## Verification` · `## Open items` | Agent | Current state of each; entries are added, never removed |

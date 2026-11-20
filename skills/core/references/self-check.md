@@ -14,13 +14,13 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 13. Anything the plan asks the user to run or install has passed the ladder: an existing tool or a single standard command was considered first and named if it suffices.
 14. No step adds a second path to something an existing path already reaches, and no step introduces a literal that varies (URL, key, limit, path, label) outside config.
 8. The tier's signals each name a file or a decision.
-9. Assumptions and parked clarifications are listed, not buried.
-10. The chat summary fits one screen, names the decisions the user must make, and at L/XL says Review runs next — never offers to skip it.
+9. Choices made for the user and parked questions are listed, not buried.
+10. The chat summary shows every open question and every choice made for the user as its full block; everything else fits one screen; at L/XL it says Review runs next — never offers to skip it.
 14. The plan does what the user asked, as asked. Where it does not, the report says so and why, and asks — it does not substitute.
 15. Every path shown in chat is a full path from the root; every item has steps with done-conditions and the pointer's `N` is the real count; `## Requirements` is present at L/XL.
 16. This self-check was run and the line `Self-check: passed <date time>` was written to `## Log` before the report was shown.
 17. Nothing the agent created remains outside `$env:TEMP` / `.a/tmp/`; every temporary file is already deleted; *Your next step* contains no chore the agent caused.
-18. Every decision carries what came up and why, the options with what each means, and a suggested answer with its reason — readable without opening the file — and the list ends with the "say go" line; the report states the solution quality (robust / tactical / quick fix) and names the next step with its default.
+18. Every open point went through the filter (`clarify.md`): nothing asked that the user already answered or the agent could find out; everything beyond the task, outside `code_scope`, new in place of something existing, or significant is asked. Each question and each choice made for the user is a complete block in the user's words, and the round ends with the "say go" line. More than five questions in a round was met by splitting the work or asking the root questions first. The report states the solution quality (robust / tactical / quick fix) and names the next step with its default.
 19. Every step lists its failure cases and the two-layer message (plain English, then technical) each produces; verification covers them.
 20. The reply states the agent's own read of each instruction it acted on — agree / caveat / disagree with alternative / possible misunderstanding — in one line each.
 21. `### Elements touched` names every system part the plan changes, with existing ids or a proposed new element; the type stated matches the signals or is raised as a proposal.
@@ -32,6 +32,7 @@ Run on the finished report. A failed line is fixed before `Phase: Gate`. Record 
 27. Nothing a person will read names a thing by a code (D3, R-5, code-03, step 7b); decisions are named by their subject and their options are sentences.
 28. Every file the plan edits is inside `code_scope`; any path outside it appears only as a question to the user or a one-line "out of scope" note.
 29. Every finding in the report has a verdict (blocks / does not block / side work); every change outside `code_scope` is justified as unavoidable, owned to proof, and recorded as a decision; nothing we changed is handed over before it is shown working.
-30. Every question asked about this feature so far is in `## Clarifications` with the user's answer in their words; every point the plan settles that the user was not asked about is in *Assumptions*.
-31. The user summary is current: its six lines are filled (now, running, next and waiting on you never blank), the reading of the ask is stated, and every choice made alone is under *Decided without you*. Every open question has its context, options and a suggestion with a reason. The page build ran and printed no format problem.
+30. Every question asked about this feature so far is in `## Clarifications` with the user's answer in their words; every choice the plan makes for the user that had a real alternative is a `decided` block there.
+31. The user summary is current: its six lines are filled (now, running, next and waiting on you never blank), the reading of the ask states what it is for and what must be true, and every choice made alone has its line under *Decided without you*. The page build ran and printed no format problem.
 32. No item is left "to check" that the agent could settle with its own access; each remaining one names what blocks it (`communication.md › Finish the checks you can run`).
+33. Every item is a slice that can be shown working on its own and has a `Needs:` line; the build order line agrees with those lines; no two items offered as buildable at the same time touch the same file.

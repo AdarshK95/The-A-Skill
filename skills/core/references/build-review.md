@@ -11,7 +11,7 @@ It is a different review, not the same lenses pointed at code. A plan fails by d
 | Source | Is | Used as |
 | --- | --- | --- |
 | **The ask** | `## Instructions` and `## Clarifications` — the user's words, and their answers and decisions, in order | The standard. Never the plan's paraphrase of it |
-| **The plan** | The approved `## Report`: proposed change, requirements, assumptions | What was agreed — and itself checked against the ask |
+| **The plan** | The approved `## Report`: proposed change, requirements, the choices made for the user | What was agreed — and itself checked against the ask |
 | **The build** | The diff from the feature's baseline, and the repository around it, read from the files | The thing under review |
 | **The builder's account** | Summary, `## Changes` descriptions, `## Build findings`, `## Decisions`, `## Realign`, `## Verification`, the event log, the chat | **Claims.** Withheld from every reviewer; read only at Reconcile (step 5) |
 

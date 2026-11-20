@@ -19,6 +19,10 @@ Ideas this method absorbed, pinned to where they came from. The skill carries it
 | The lesson ladder: a check, then a standing rule, then a written lesson with the condition that retires it; often nothing | Compound Engineering (Every, MIT) | github.com/EveryInc/compound-engineering-plugin — skills/ce-compound | 19 Nov 26 |
 | A check is trusted only once seen to fail; the agent's own rulings listed for the user | Superpowers (Jesse Vincent, MIT) | github.com/obra/superpowers — skills/test-driven-development, skills/subagent-driven-development | 19 Nov 26 |
 | A finding caused by the plan is fixed in the plan, not patched in the code | BMAD-METHOD (MIT) | github.com/bmad-code-org/BMAD-METHOD — bmm-skills/ship/bmad-build | 19 Nov 26 |
+| Rounds of questions (everything answerable now, together); facts are the agent's to find, decisions the user's; slices that each work on their own; an item waits until what blocks it is done | Matt Pocock skills 1.3.2 (ideas only, own wording) | github.com/mattpocock/skills — skills/productivity/grilling, skills/engineering/to-tickets, implement-spec, productivity/writing-for-agents | 21 Nov 26 |
+| Disjoint files build in parallel, shared writes one after the other; the orchestrator, not the worker, decides done; a mechanical mistake gets a check | pstack (Cursor; ideas only, own wording) | github.com/cursor/plugins — pstack/skills/poteto-mode/playbooks/feature.md, skills/correct | 21 Nov 26 |
+
+Adopted in 0.13.0: the question filter, rounds and block, and the build order. What was compared, taken, held and declined is in `references/comparison-and-decisions.md` §8.
 
 Adopted in 0.10.0: the build review. Which lessons came from which upstream, and what is original, is in `references/build-review-lessons.md`; the full research, LLM reviews and decisions are indexed in `references/README.md` (maintainer documentation, outside the skill; not installed).
 

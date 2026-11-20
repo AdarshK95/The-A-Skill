@@ -22,7 +22,7 @@ The first section of every feature's main file and the top of its page (`logging
 | --- | --- | --- |
 | A correction: the ask, its scope or its priority was misread | 17 | *What you asked, as I understand it* — stated before work starts |
 | What is running, finished, verified | 12 | *Now* and *Running* |
-| Context for a question | 11 | The question block (`clarify.md › The record`) |
+| Context for a question | 11 | The question block (`clarify.md › The block`) |
 | Plain words | 10 | Every line says what it means for the user |
 | The reason | 10 | Every choice carries its why |
 | The next step; where something is | 9 | *Next*; *What you can check or test now* |
@@ -31,8 +31,8 @@ The first section of every feature's main file and the top of its page (`logging
 Rules:
 
 - **Six lines, always present, rewritten in place:** What this is · What you asked, as I understand it · Now · Running · Next · Waiting on you. *Running* names every agent or background job and what each is doing, or says "nothing". *Next* names one action and whose it is. *Waiting on you* is a count and what, or "nothing".
-- **The reading of the ask comes first.** It is written before any work, in the agent's own plain words, and corrected the moment the user corrects it. A misread ask caught here costs one line; caught at the build it costs the build.
-- **Trails are added to, never rewritten:** *What happened* (one dated line per step or round: what was done · what it means for you · why); *What went wrong or needs your attention* (the problem · what it means for you · its status); *Decided without you* (what was chosen · why · what to say to change it) — written when the choice is made, never saved up for a review; *Changes of direction* (what changed · why · which instruction); *What you can check or test now* (what to do → what you should see).
+- **The reading of the ask comes first.** It is in the agent's own plain words and has three parts. The ask, as an outcome the user would recognize, is written before any work. **What it is for** and **what must be true** are written after the code is read and before anything is planned, from what the project shows: what this part of the project does for the people who use it, what is already there, and how the new work will sit among it. What it is for is what the user will do with the result, marked *inferred* where they did not say. What must be true is what the result needs in order to serve that, including what nobody would think to say, in three to six lines. It is corrected the moment the user corrects it. When the user says a result missed the point, correct the reading and its what-must-be-true lines first, say which line was missing, then fix; never go straight to the code. A misread ask caught here costs one line; caught at the build it costs the build.
+- **Trails are added to, never rewritten:** *What happened* (one dated line per step or round: what was done · what it means for you · why); *What went wrong or needs your attention* (the problem · what it means for you · its status); *Decided without you* (what was chosen · why · what to say to change it · the `decided` block that carries it in full, `clarify.md › The block`) — written when the choice is made, never saved up for a review; *Changes of direction* (what changed · why · which instruction); *What you can check or test now* (what to do → what you should see).
 - **Plain words.** No codes, no path unless the user must open that file, every term explained in the same line.
 - **Kept current.** Updated at every write point, before anything is said in chat; the chat then says less, not the same thing again.
 - **North star.** Any change to the plan, the scope or the design is a line here before it is a change anywhere else. If the work and this section disagree, the work has drifted.
@@ -56,7 +56,7 @@ Whenever the user has to choose, check or decide, the agent fetches what the cho
 
 ## Questions: one confirmation, not an interview
 
-Setup and other multi-choice moments are not a series of questions. Infer everything inferable, fill the rest with defaults, show one summary of what will be done, and ask **one** question: "Proceed, or tell me what to change?" On yes, do all of it and report. Ask one question at a time only at a gate where the answer changes the design (Clarify, Approve, a mid-build fork).
+Setup and other multi-choice moments are not a series of questions. Infer everything inferable, fill the rest with defaults, show one summary of what will be done, and ask **one** question: "Proceed, or tell me what to change?" On yes, do all of it and report. A real choice about the work (Clarify, Approve, a mid-build fork) goes through `clarify.md`: its filter, its rounds, its block.
 
 ## Two channels: chat and the event log
 
@@ -126,19 +126,7 @@ The stance is grounded in the code, the constitution, a decision or the user's s
 
 ## Decisions arrive with their context, their options, and an answer
 
-A decision put to the user is never a bare question with a suggested answer. "Choose vanilla or chocolate" tells the user nothing if they do not know whether this is ice cream or a cake, which shop they are standing in, or why they left the house. The user reads the chat, not the file; the chat must carry enough for a proper decision. Every decision — in a report, at a gate, as an escalation from a review, as a build finding awaiting the user — has these parts, in this order, in plain language:
-
-1. **Where we are** (once, above the list): what the user set out to do, what has happened since, and why decisions are now needed at all.
-2. **What came up and why** — the situation that created this decision, in one or two sentences a person who has not read the file would follow.
-3. **The options and what each means** — each alternative with its consequence for the user's goal, not just its name.
-4. **Suggested** — the recommended option and the one-line reason, grounded in the code, the constitution, a logged decision or the user's stated theme. The reasoning starts from the **user's object** — what the user did, sees or gets — not from the system's internals: one comment on one answer is one record, however many components produced the answer; one click is one event, however many services it touches. A suggestion that only makes sense from inside the architecture is usually wrong.
-5. **What happens after you answer** (once, below the list).
-
-The list ends with: "Say **go** to take all suggested answers, or change any by number." If there is no basis to suggest, say so and name what would decide it. A table with columns *what came up and why · options and what each means · suggested* is the usual form. Never bury the choice; never make it for the user silently; never make the user open the file to understand the question.
-
-## Never stall on an answer you can default
-
-A question whose answer the code, the constitution, the decisions log or the user's stated theme makes clear is not asked; it is answered, stated in one line, and the user may object. Questions are reserved for choices with real alternatives and no basis to prefer one. Stalling the work to ask something defaultable costs the user more than a stated default they can reverse.
+"Choose vanilla or chocolate" tells the user nothing if they do not know whether this is ice cream or a cake, which shop they are standing in, or why they left the house. The user reads the chat, not the file. So every decision — in a report, at a gate, as an escalation from a review, as a build finding awaiting the user — is shown in chat as the full block of `clarify.md › The block`, in a round as `clarify.md › Rounds` lays it out; which points become decisions at all is `clarify.md › The filter`. The suggestion is grounded in the code, the constitution, a logged decision or the user's stated theme, and reasons from the **user's object** — what the user did, sees or gets: one comment on one answer is one record, however many components produced the answer. A suggestion that only makes sense from inside the architecture is usually wrong.
 
 ## Finish the checks you can run
 

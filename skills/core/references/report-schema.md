@@ -37,15 +37,15 @@ The reuse search (`lean.md`): one row per new need — candidate `path:symbol`, 
 ### Solution quality
 One line: *robust* / *tactical* / *quick fix*, with what a state-of-the-art team would do here and how this proposal compares (`communication.md › Solution-architect judgement`). If the user asked for a quick fix, say so and name the follow-up that would make it robust.
 
-### Assumptions
-Relevant points the ask did not settle and that were not asked (over the five-question cap, or inferable): one line each, so the user can object. Omit only if there are none.
+### Decided for you
+Each choice that had a real alternative and was not asked (`clarify.md › The filter`), named in one line; the choice itself is a `decided` block in `## Clarifications`. Omit only if there are none.
 
 ### Requirements
 _For every step that produces an output another step consumes, one requirement names the valid shape of that output and the visible failure state when it is absent or malformed (`build-check.md › Absence is a failure`)._ *(L and XL)*
 One checkable line per requirement, in the user's terms, `- [ ] R1 …`; ticked at Validate with evidence. See `clarify.md`.
 
 ### Proposed change
-What will be modified, file by file, and how. The rung of the ladder each change sits on. For a choice the user must make: the options, the trade-offs, and one line on which way you lean and why; the alternatives stay visible.
+What will be modified, file by file, and how. The rung of the ladder each change sits on. Each item is a slice that works on its own and carries `Needs:` — the items that must be finished and checked before it starts, or `nothing` (`../plan/SKILL.md`). Below the items, one **Build order** line a person can read: what starts first, what can be built at the same time, what waits for what.
 
 ### Impact *(detail file; the report keeps the consequences a person must know: what changes for users, what could break, what is reversible)*
 What else this change touches: callers, consumers, data already stored, caches, permissions, concurrent paths. For each: handled how, or accepted as a risk and why. What could break if this is wrong.
@@ -60,13 +60,12 @@ What the user or end user will see or experience afterwards, as a reference for 
 `S | M | L | XL` with the signals that chose it, one per line, each naming its file or decision; and the **type** the signals imply (`feature` / `change` / `fix`, `hierarchy.md`) — stated as a proposal when it differs from what the user called the work.
 
 ### Decisions needed
-_Each decision is named by its subject ("Where the delete confirmation gets its keyboard handling"), not numbered; its options are sentences; the user answers in words. Codes stay in the detail file (`communication.md › Plain names`)._ from you
-A short *where we are* paragraph, then a table — **what came up and why · the options and what each means · suggested (with reason)** — then *what happens after you answer*. Each row readable by someone who has not opened the file. End with: "Say **go** to take all suggested answers, or change any by number." The same shape is used when these decisions are shown in chat (`communication.md › Decisions arrive with their context`).
+The open questions, each named by its subject ("Where the delete confirmation gets its keyboard handling") in one line. The questions themselves are the `open` blocks in `## Clarifications` (`clarify.md › The block`); the report does not restate them.
 ```
 
 ## Chat version
 
-Per `communication.md`: what this means for the user; what was found, in plain words; what they must decide (the *Decisions needed* list, each in a line); what happens next. The tier in one phrase ("small change, no extra review" / "touches shared code, I'll have it reviewed first"). No path or symbol unless asked; point to the activity file for the detail. One screen at most.
+Per `communication.md`: what this means for the user; what was found, in plain words; the build order in one line; then the round — every open question and every choice made for the user as its **full block** (`clarify.md › Rounds`), never one line each and never left in the file to be looked up; what happens next. The tier in one phrase ("small change, no extra review" / "touches shared code, I'll have it reviewed first"). No path or symbol unless asked; point to the activity file for the detail. Everything except the blocks fits one screen.
 
 ## Revising
 

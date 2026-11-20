@@ -9,7 +9,7 @@
 - [ ] Trace table, caller inventory and boundary list are present or clearly folded into *What exists today*.
 - [ ] At least one alternative including a smaller version is offered.
 - [ ] Any architecture or scope choice is presented as options with trade-offs and no default.
-- [ ] Items and numbered steps with done-conditions exist; the tier is named with signals citing files.
+- [ ] Items and numbered steps with done-conditions exist; each item works on its own, has a `Needs:` line, and the build order is stated in one line; the tier is named with signals citing files.
 - [ ] The self-check line appears in `## Log`.
 - [ ] A board block appears under Planned in the right area; an overview node appears, grey.
 - [ ] Nothing is written to the code before the user says go.

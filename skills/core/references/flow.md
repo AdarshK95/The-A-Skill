@@ -48,7 +48,7 @@ Every path ends the same way — **the ending**:
 4. **The fix round.** Ours and exposed only, as an item sized like any other. Then the review re-checks only what the fixes touched.
 5. **`/A.verify`**, then **`/A.close`**, which shows the later list.
 
-**Something new.** 1. `/A.plan` — reads the code, asks up to five questions, records the user's words, runs the scope and lean checks on the plan, shows the plan with its options. 2. `/A.review` at M and above; corrections fold into the plan. 3. The ending.
+**Something new.** 1. `/A.plan` — reads the code, asks what passes the filter, in rounds (`clarify.md`), records the user's words, runs the scope and lean checks on the plan, shows the plan with its options. 2. `/A.review` at M and above; corrections fold into the plan. 3. The ending.
 
 **Changing something that exists.** 1. `/A.plan.realign` — what exists against what is wanted: what stays, what changes, what goes; the two checks. 2. `/A.review` by size. 3. The ending.
 
@@ -73,7 +73,7 @@ Every path ends the same way — **the ending**:
 | --- | --- | --- | --- |
 | `/A.rootcause` (`.m` `.l` `.xl`) | a reported wrong behaviour, or a finding or group a review marked *diagnose*; a project | a root-cause report: CONFIRMED / LIKELY with its condition, or not-found with coverage | `/A.plan` from the report (fix at the origin) |
 | `/A.plan` · `/A.plan.realign` | a request (chat or argument), or a root-cause report; a project | a report at Gate, with its scope and lean lines | Review (M+) → Approve → Implement |
-| Clarify (inside `/A.plan`) | an ask with open questions | answers / assumptions | the report |
+| Clarify (inside `/A.plan`) | an ask with open questions | answers / choices made for the user | the report |
 | `/A.review` (stage; `.m` `.l` `.xl` choose the effort) | something to review: a report or a plan (a build goes to `/A.build.review`) | findings resolved; a revised report | Approve, or back to the report if material |
 | `/A.review` with pasted comments | the comments and the change they refer to | verdicts per comment; FIX steps | Approve the FIX steps → Implement |
 | `/A.build` | an **approved** plan with steps | built steps, changes, build findings, the scope and lean lines for the build | Build review (M+) → Validate |

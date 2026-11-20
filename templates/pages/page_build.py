@@ -258,13 +258,19 @@ def parse_questions(body: str) -> list:
     qs = []
     for sec in re.split(r"^###\s+", body, flags=re.M)[1:]:
         head, _, rest = sec.partition("\n")
-        m = re.match(r"^(Q\d+)\s*(?:·\s*(.*?))?\s*(?:·\s*(open|answered|parked|unanswered))?\s*$", head.strip(), re.I)
+        m = re.match(r"^(Q\d+)\s*(?:·\s*(.*?))?\s*(?:·\s*(open|answered|parked|unanswered|decided))?\s*$", head.strip(), re.I)
         if not m:
             continue
         f = {k.strip(): v.strip() for k, v in re.findall(r"^\*\*(.+?):\*\*[ \t]*((?:.*)(?:\n(?!\*\*).*)*)", rest, re.M)}
         state = (m.group(3) or ("answered" if f.get("Answer") else "open")).lower()
         qs.append({"id": m.group(1), "when": m.group(2) or "", "state": state, "f": f})
     return qs
+
+
+Q_ABOUT, Q_WHY, Q_LATER, Q_EFFECT = "What this is about", "Why it comes up", "To change it later", "What it changes for you"
+Q_SLOTS = ("Context", Q_ABOUT, Q_WHY, "Options", "Suggested", "Decided", Q_EFFECT, Q_LATER, "Answer")
+Q_CODE = re.compile(r"\b(?:D|R|IR|BF|I|E|U)-?\d{1,3}\b|\([A-Z]\)|\bstep \d+[a-z]\b")  # agent notation: D3, R-5, (B), step 7b
+Q_NAME = re.compile(r"`[^`\n]+`|\b[a-z][a-z0-9]*_[a-z0-9_]+\b|\b[A-Za-z_]\w*=[^\s,;)]+|\b[a-z_]{3,}\.[a-z_]{3,}\b")  # `code`, snake_case, key=value, dotted.name
 
 
 def lint(doc: dict) -> list:
@@ -282,11 +288,35 @@ def lint(doc: dict) -> list:
           and not doc["path"].name.endswith(".detail.md") and not re.match(r"^\d+\.\d+-", doc["path"].name)):
         w.append("No '## User summary' section at the top")
     _, cl = find(secs, "clarifications", "questions and answers")
+    own = find(secs, "instructions")[1].lower()  # the user's own words: a term they used is theirs to read
     for q in parse_questions(cl):
-        need = ["Question", "Context"] + (["Options", "Suggested"] if q["state"] == "open" else ["Answer"] if q["state"] == "answered" else [])
+        f, st, qid = q["f"], q["state"], q["id"]
+        if st not in ("open", "decided"):  # settled blocks, and blocks written in the older shape, are left alone
+            for n in ["Question"] + (["Answer"] if st == "answered" else []):
+                if not f.get(n):
+                    w.append(f"{qid} has no {n}")
+            if not (f.get(Q_ABOUT) or f.get("Context")):
+                w.append(f"{qid} has no {Q_ABOUT}")
+            continue
+        need = ["Question", Q_ABOUT, Q_WHY, "Options"] + (["Suggested"] if st == "open" else ["Decided", Q_EFFECT]) + [Q_LATER]
         for n in need:
-            if not q["f"].get(n):
-                w.append(f"{q['id']} has no {n}")
+            if not f.get(n):
+                w.append(f"{qid} has no {n}")
+        for n in (Q_ABOUT, Q_WHY):
+            if f.get(n) and len(f[n].split()) < 8:
+                w.append(f"{qid}: '{n}' is too short to stand on its own")
+        opts = [o for o in f.get("Options", "").splitlines() if o.lstrip().startswith(("-", "*"))]
+        if f.get("Options") and len(opts) < 2:
+            w.append(f"{qid} has fewer than two options")
+        if any(not re.search(r"\s[—–-]\s|:\s", o.lstrip()[1:]) for o in opts):
+            w.append(f"{qid}: an option does not say what it means for you")
+        read = " ".join(v for k, v in f.items() if k != "Answer")
+        for m in sorted(set(Q_CODE.findall(read))):
+            if m.lower() not in own:
+                w.append(f"{qid} uses the code {m}; name the thing instead")
+        for m in sorted(set(x.strip("`") for x in Q_NAME.findall(read))):
+            if m.lower() not in own:
+                w.append(f"{qid} names {m}, a code name; say what it does instead")
     return w
 
 
@@ -474,24 +504,29 @@ def draw_questions(body: str, ref: str = "") -> str:
     if not qs:
         return md(body)
     out = []
-    for q in sorted(qs, key=lambda q: 0 if q["state"] == "open" else 1):
+    for q in sorted(qs, key=lambda q: {"open": 0, "decided": 1}.get(q["state"], 2)):
         f = q["f"]
-        cls = {"open": "wait", "answered": "ok", "parked": "old", "unanswered": "wait"}.get(q["state"], "")
+        must = {"open": ("Options", "Suggested"), "decided": ("Options", "Decided", Q_EFFECT), "answered": ("Answer",)}.get(q["state"], ())
+        if q["state"] in ("open", "decided"):
+            must = (Q_ABOUT, Q_WHY, Q_LATER) + must
+        elif not f.get("Context"):  # a settled block in the older shape keeps its Context
+            must = (Q_ABOUT,) + must
+        cls = {"open": "wait", "answered": "ok", "parked": "old", "unanswered": "wait", "decided": "ok"}.get(q["state"], "")
         whole = q["id"] + json.dumps(f, sort_keys=True)
         copy = (f'<button class="copy" data-copy="{html.escape(ref + " " + q["id"] + " — my answer: ", quote=True)}" title="Copies a line to paste into the chat, so the agent knows which question you are answering">copy reply line</button>'
                 if q["state"] == "open" else "")
         qw, _ = parse_when(q["when"])
         card = [f'<div class="q {q["state"]}" id="{q["id"]}"{f" data-ts=" + chr(34) + format(qw.timestamp(), ".0f") + chr(34) if qw else ""} data-h="{h(whole)}"><div class="qh"><span class="iid">{q["id"]}</span>{chip(q["state"], cls)}<span class="when">{html.escape(q["when"])}</span>{copy}</div>']
         card.append(f'<p class="qq">{inline(f.get("Question", "")) or "<i class=miss>no question written</i>"}</p>')
-        for k in ("Context", "Options", "Suggested", "Answer"):
+        for k in Q_SLOTS:
             v = f.get(k, "")
             if v:
                 inner = md(v) if "\n" in v or v.lstrip().startswith(("-", "*")) else f"<p>{inline(v)}</p>"
-                card.append(f'<div class="qf {k.lower()}"><b>{k}</b>{inner}</div>')
-            elif (k in ("Context",)) or (q["state"] == "open" and k in ("Options", "Suggested")) or (q["state"] == "answered" and k == "Answer"):
+                card.append(f'<div class="qf {k.lower().split()[0]}"><b>{k}</b>{inner}</div>')
+            elif k in must:
                 card.append(f'<div class="qf miss"><b>{k}</b><p><i>missing — the agent should have written this</i></p></div>')
         for k, v in f.items():
-            if k not in ("Question", "Context", "Options", "Suggested", "Answer"):
+            if k != "Question" and k not in Q_SLOTS:
                 card.append(f'<div class="qf"><b>{html.escape(k)}</b><p>{inline(v)}</p></div>')
         out.append("".join(card) + "</div>")
     return "".join(out)
@@ -1030,19 +1065,38 @@ Lean check: plan 20 Nov 26 — clean
 ## Instructions
 
 - I1 · 20 Nov 26, 04:10 PM — "Admins should no longer have access to the usage report. Only devs."
+- I2 · 20 Nov 26, 04:12 PM — "Leave the report_usage switch as it is."
 
 ## Clarifications
 
 ### Q1 · 20 Nov 26, 04:20 PM · open
 **Question:** What should an admin with a bookmark see?
-**Context:** Some admins have the page bookmarked. After the change the page will refuse them, and you decide how that looks.
+**What this is about:** Some admins have the page bookmarked and will still try to open the usage report that way.
+**Why it comes up:** After the change the page will refuse them, and you decide how that refusal looks to them.
 **Options:**
 - An error message — clearest, one line of code
 - A redirect to the home page — quieter, hides why
 **Suggested:** An error message — it tells the person what changed.
+**To change it later:** small — one line in one place.
 
 ### Q2 · 20 Nov 26, 04:21 PM · open
 **Question:** Keep the nightly export?
+
+### Q3 · 20 Nov 26, 04:25 PM · decided
+**Question:** Should the nightly export job follow the same rule as the page?
+**What this is about:** The nightly export job writes the same usage numbers to a file that admins can download.
+**Why it comes up:** Closing the page alone would leave the same numbers reachable through that file (D2), behind the report_usage switch.
+**Options:**
+- Close the export too — admins lose the file as well as the page
+- Leave the export — admins keep the numbers by another route
+**Decided:** Close the export too, by changing export_rows — it is the only way the rule you gave holds.
+**What it changes for you:** Admins who used the nightly file will no longer get it.
+**To change it later:** small — say "leave the export".
+
+### Q4 · 19 Nov 26, 02:00 PM · answered
+**Question:** Who counts as a dev?
+**Context:** The older shape, kept as it was written.
+**Answer:** "Anyone in the dev group."
 
 ## Report
 
@@ -1077,6 +1131,7 @@ def selftest() -> int:
         warns = build(root, out, quiet=True)
         page = (out / "f-f11.html").read_text(encoding="utf-8")
         index = (out / "index.html").read_text(encoding="utf-8")
+        warn_lines = lint(parse_file(folder / "11-usage-report.md"))
         no_btn = 'id="fplink"' not in page
         (root / ".a").mkdir()
         (root / ".a" / "project.md").write_text("floorplan_url: http://127.0.0.1:4378\nfloorplan_start: node C:/tools/fp.mjs map --keep\n", encoding="utf-8")
@@ -1093,7 +1148,11 @@ def selftest() -> int:
             "steps that did not run cannot be picked": 'data-label="Build" disabled' in page,
             "instruction shows honoured": ">honoured<" in page,
             "open question card with context": "Some admins have the page bookmarked" in page,
-            "question without context is flagged": "Q2 has no Context" in page and warns >= 3,
+            "question without context is flagged": "Q2 has no What this is about" in page and "Q2 has no Options" in page and warns >= 3,
+            "a complete question and an answered one in the older shape are not flagged": "Q1 " not in "".join(warn_lines) and "Q4 " not in "".join(warn_lines),
+            "a choice made for the user is drawn as a card with what it changes": 'class="q decided" id="Q3"' in page and "Admins who used the nightly file" in page,
+            "a code and a code name in a block are flagged": "Q3 uses the code D2" in page and "Q3 names export_rows" in page,
+            "a code name the user used themselves is not flagged": "names report_usage" not in page,
             "legacy file gets its own page": (out / "f-2026-11-2026-11-19-03-older-work.html").exists(),
             "html in markdown is escaped": "<script>alert(1)</script>" not in (out / "f-2026-11-2026-11-19-03-older-work.html").read_text(encoding="utf-8"),
             "home: your next steps lists the open questions": "Your next steps (1)" in index and 'href="f-f11.html#Q1"' in index and "What should an admin with a bookmark see?" in index,
