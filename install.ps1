@@ -31,11 +31,14 @@ if ($Global -and -not (Test-Path (Join-Path $Dest ".a\projects.md"))) { Copy-Ite
 if (-not (Test-Path (Join-Path $Dest ".a\settings.md"))) { Copy-Item "$Src\templates\settings.md" (Join-Path $Dest ".a\settings.md") }
 Get-ChildItem (Join-Path $Dest ".claude\commands") -Filter "A.*.md" -ErrorAction SilentlyContinue | Remove-Item -Force
 Get-ChildItem $CopilotDir -Filter "A.*.prompt.md" -ErrorAction SilentlyContinue | Remove-Item -Force
+# Every text read and write is UTF-8 (no byte-order mark) by name: Windows PowerShell 5.1 would otherwise read ANSI and PowerShell 7 UTF-8.
+function Read-Utf8([string]$Path) { [IO.File]::ReadAllText($Path, [Text.Encoding]::UTF8) }
+function Write-Utf8([string]$Path, [string]$Text) { [IO.File]::WriteAllText($Path, $Text, (New-Object Text.UTF8Encoding $false)) }
 Get-ChildItem "$Src\commands\claude" -Filter "A.*.md" | ForEach-Object {
-  (Get-Content $_.FullName -Raw) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot | Set-Content (Join-Path $Dest ".claude\commands\$($_.Name)") -NoNewline
+  Write-Utf8 (Join-Path $Dest ".claude\commands\$($_.Name)") ((Read-Utf8 $_.FullName) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot)
 }
 Get-ChildItem "$Src\commands\copilot" -Filter "A.*.prompt.md" | ForEach-Object {
-  (Get-Content $_.FullName -Raw) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot | Set-Content (Join-Path $CopilotDir $_.Name) -NoNewline
+  Write-Utf8 (Join-Path $CopilotDir $_.Name) ((Read-Utf8 $_.FullName) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot)
 }
 
 if (Get-ChildItem (Join-Path $Dest ".claude\commands"),$CopilotDir -Filter "A.*" -File | Select-String -Pattern "{{SKILLS_ROOT}}" -List) { throw "A command file still has an unfilled {{SKILLS_ROOT}}; install incomplete." }
@@ -45,15 +48,26 @@ if (Get-ChildItem (Join-Path $Dest ".claude\commands"),$CopilotDir -Filter "A.*"
 $HookNote = "not added (project-level install)"
 if ($Global) {
   $Pointer = (Join-Path $Dest ".a\auto-pointer.md") -replace "\\","/"
-  $PointerText = (Get-Content "$Src\templates\auto-pointer.md" -Raw) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot
-  [IO.File]::WriteAllText($Pointer, $PointerText)
+  $PointerTemplate = Read-Utf8 "$Src\templates\auto-pointer.md"
+  # The pointer is printed by a shell before every message; plain ASCII survives every shell's output encoding.
+  # ponytail: only the template is checked; a non-ASCII user folder name can still show garbled in the path on Windows PowerShell 5.1 (cosmetic; the instructions stay readable).
+  if ($PointerTemplate -match '[^\x00-\x7F]') { throw "templates\auto-pointer.md has non-ASCII characters; the hook output would be garbled on some shells." }
+  $PointerText = $PointerTemplate -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot
+  Write-Utf8 $Pointer $PointerText
   $CopilotInstr = Join-Path $Dest ".copilot\instructions"
   New-Item -ItemType Directory -Force -Path $CopilotInstr | Out-Null
-  [IO.File]::WriteAllText((Join-Path $CopilotInstr "a-skill.instructions.md"), "---`napplyTo: '**'`ndescription: The A Skill is the default workflow`n---`n`n$PointerText")
+  Write-Utf8 (Join-Path $CopilotInstr "a-skill.instructions.md") "---`napplyTo: '**'`ndescription: The A Skill is the default workflow`n---`n`n$PointerText"
+  # The hook names its shell: PowerShell exists on every Windows machine, Git Bash may not. Exits 0 either way;
+  # a missing pointer says so on every message instead of switching the skill off silently.
+  $HookCmd = "`$p = '$Pointer'; if (Test-Path -LiteralPath `$p) { Get-Content -LiteralPath `$p -Raw } else { 'The A Skill: pointer file missing (' + `$p + '). Run /A.skill.repair.' }"
   # Merge the hook into ~/.claude/settings.json. Never print that file: it can hold tokens.
   $Settings = Join-Path $Dest ".claude\settings.json"
+  New-Item -ItemType Directory -Force -Path (Split-Path $Settings) | Out-Null
   try {
-    $raw = if (Test-Path $Settings) { Get-Content $Settings -Raw } else { "" }
+    $raw = if (Test-Path $Settings) { Read-Utf8 $Settings } else { "" }
+    # PowerShell 7 parses // and /* */ comments and would drop them on write-back: leave such a file alone.
+    # ponytail: catches comments that start a line, not ones trailing a value; a strict JSON parser is the upgrade.
+    if ($raw -match '(?m)^\s*(//|/\*)') { throw "settings.json has comments" }
     $s = if ([string]::IsNullOrWhiteSpace($raw)) { [pscustomobject]@{} } else { $raw | ConvertFrom-Json }
     if (Test-Path $Settings) { Copy-Item -Force $Settings "$Settings.bak-a-skill" }
     if (-not $s.PSObject.Properties['hooks']) { $s | Add-Member -NotePropertyName hooks -NotePropertyValue ([pscustomobject]@{}) }
@@ -63,12 +77,13 @@ if ($Global) {
       $kept = @(@($g.hooks) | Where-Object { $_ -and ("$($_.command)" -notlike "*auto-pointer.md*") })
       if ($kept.Count) { $g.hooks = $kept; $groups += $g }
     }
-    $groups += [pscustomobject]@{ hooks = @([pscustomobject]@{ type = "command"; command = "cat `"$Pointer`"" }) }
+    $groups += [pscustomobject]@{ hooks = @([pscustomobject]@{ type = "command"; shell = "powershell"; command = $HookCmd }) }
     if ($s.hooks.PSObject.Properties['UserPromptSubmit']) { $s.hooks.UserPromptSubmit = $groups } else { $s.hooks | Add-Member -NotePropertyName UserPromptSubmit -NotePropertyValue $groups }
-    [IO.File]::WriteAllText($Settings, ($s | ConvertTo-Json -Depth 100))
+    Write-Utf8 $Settings ($s | ConvertTo-Json -Depth 100)
     $HookNote = "added (UserPromptSubmit in $Settings; backup $Settings.bak-a-skill)"
-  } catch { $HookNote = "NOT added: $Settings could not be read as JSON; add it by hand (SETUP.md)" }
+  } catch { $HookNote = "NOT added: $Settings could not be read as JSON (left untouched); add it by hand (SETUP.md)" }
 }
+$Detected = "PowerShell $($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) ($($PSVersionTable.PSEdition)); Python: not needed" + $(if ($Global) { "; hook shell: powershell" } else { "" })
 $nSkills  = (Get-ChildItem (Join-Path $Dest ".a\skills") -Recurse -Filter *.md -File).Count
 $nClaude  = (Get-ChildItem (Join-Path $Dest ".claude\commands") -Filter "A.*.md" -File).Count
 $nCopilot = (Get-ChildItem $CopilotDir -Filter "A.*.prompt.md" -File).Count
@@ -78,6 +93,7 @@ Write-Host "  $Dest\.a\skills                  $nSkills files   (the method)"
 Write-Host "  $Dest\.claude\commands\A.*.md    $nClaude files   (Claude Code: /A.plan, /A.bugfix, ...)"
 Write-Host "  $CopilotDir\A.*.prompt.md       $nCopilot files   (Copilot in VS Code)"
 Write-Host "  On by default (auto mode every message): Claude Code hook $HookNote"
+Write-Host "  Detected: $Detected"
 if ($Global) { Write-Host "                                   Copilot: $CopilotInstr\a-skill.instructions.md" }
 Write-Host ""
 if ($Global) {

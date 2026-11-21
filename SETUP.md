@@ -97,7 +97,7 @@ Plugin commands are namespaced by Claude Code: `/a:A.plan` instead of `/A.plan`.
 - `/A.project.list` lists the project.
 - **On by default, Claude Code:** in a new chat, type a plain request with no command (for example "add a CSV export"). The reply's first line says how auto classified it ("Treating this as a plan"). `/hooks` lists the `UserPromptSubmit` hook printing `auto-pointer.md`.
 - **On by default, Copilot:** run *Chat: Open Customizations* and confirm `a-skill.instructions.md` is listed under Instructions; then the same plain-request test. Not listed → your Copilot version does not read `~/.copilot/instructions/`; the per-project always-on block still applies.
-- **Hook by hand** (the installer says `NOT added` when `settings.json` is not plain JSON, or Python is missing on macOS/Linux): add `{"hooks": {"UserPromptSubmit": [{"hooks": [{"type": "command", "command": "cat \"<home>/.a/auto-pointer.md\""}]}]}}` to `~/.claude/settings.json`, merged with what is there.
+- **Hook by hand** (the installer says `NOT added` when `settings.json` has comments or is not plain JSON, or no working Python is found on macOS/Linux): merge one entry into `hooks.UserPromptSubmit` of `~/.claude/settings.json`. macOS/Linux: `{"hooks": [{"type": "command", "shell": "bash", "command": "cat \"<home>/.a/auto-pointer.md\" 2>/dev/null || echo \"The A Skill: pointer file missing. Run /A.skill.repair.\""}]}`. Windows: the same with `"shell": "powershell"` and `"command": "$p = '<home>/.a/auto-pointer.md'; if (Test-Path -LiteralPath $p) { Get-Content -LiteralPath $p -Raw } else { 'The A Skill: pointer file missing. Run /A.skill.repair.' }"`.
 
 ## Command names on your host
 

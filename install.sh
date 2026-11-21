@@ -35,13 +35,18 @@ if grep -rl "{{SKILLS_ROOT}}" "$DEST/.claude/commands" "$COPILOT_DIR" >/dev/null
 HOOK_NOTE="not added (project-level install)"
 if [ "$GLOBAL" = 1 ]; then
   POINTER="$DEST/.a/auto-pointer.md"
+  # The pointer is printed by a shell before every message; plain ASCII survives every shell's output encoding.
+  if LC_ALL=C grep -q '[^[:print:][:space:]]' "$SRC/templates/auto-pointer.md"; then echo "ERROR: templates/auto-pointer.md has non-ASCII characters; the hook output would be garbled on some shells."; exit 1; fi
   sed "s|{{SKILLS_ROOT}}|$SKILLS_ROOT|g" "$SRC/templates/auto-pointer.md" > "$POINTER"
   mkdir -p "$DEST/.copilot/instructions"
   { printf -- "---\napplyTo: '**'\ndescription: The A Skill is the default workflow\n---\n\n"; cat "$POINTER"; } > "$DEST/.copilot/instructions/a-skill.instructions.md"
   PY=""; for c in python3 python; do "$c" -c "" 2>/dev/null && PY="$c" && break; done   # skips stubs that exist but do not run
-  if [ -n "$PY" ]; then HOOK_NOTE="$("$PY" "$SRC/templates/settings_hook.py" "$DEST/.claude/settings.json" "cat \"$POINTER\"" || echo "NOT added: settings.json could not be updated; add it by hand (SETUP.md)")"
-  else HOOK_NOTE="NOT added: Python not found; add it by hand (SETUP.md)"; fi
-fi
+  # The hook names its shell (bash: this installer runs in it) and exits 0 either way; a missing pointer says so on every message.
+  HOOK_CMD="cat \"$POINTER\" 2>/dev/null || echo \"The A Skill: pointer file missing ($POINTER). Run /A.skill.repair.\""
+  if [ -n "$PY" ]; then HOOK_NOTE="$("$PY" "$SRC/templates/settings_hook.py" "$DEST/.claude/settings.json" "$HOOK_CMD" bash || echo "NOT added: settings.json could not be updated; add it by hand (SETUP.md)")"
+  else HOOK_NOTE="NOT added: no working Python (python3 or python) to merge settings.json; add it by hand (SETUP.md)"; fi
+  DETECTED="sh; Python: ${PY:-none}; hook shell: bash"
+else DETECTED="sh; no hook (project-level install)"; fi
 n_skills=$(find "$DEST/.a/skills" -type f -name '*.md' | wc -l | tr -d ' ')
 n_claude=$(ls "$DEST/.claude/commands"/A.*.md 2>/dev/null | wc -l | tr -d ' ')
 n_copilot=$(ls "$COPILOT_DIR"/A.*.prompt.md 2>/dev/null | wc -l | tr -d ' ')
@@ -50,6 +55,7 @@ echo "  $DEST/.a/skills                  $n_skills files   (the method)"
 echo "  $DEST/.claude/commands/A.*.md    $n_claude files   (Claude Code: /A.plan, /A.bugfix, ...)"
 echo "  $COPILOT_DIR/A.*.prompt.md       $n_copilot files   (Copilot in VS Code)"
 echo "  On by default (auto mode every message): Claude Code hook $HOOK_NOTE"
+echo "  Detected: $DETECTED"
 [ "$GLOBAL" = 1 ] && echo "                                   Copilot: $DEST/.copilot/instructions/a-skill.instructions.md"
 echo
 if [ "$GLOBAL" = 1 ]; then

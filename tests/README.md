@@ -19,4 +19,6 @@ How to run one: open the fixture project in the host, install the current build,
 
 `python templates/pages/page_build.py --selftest` checks the page builder itself in a second.
 
+`install-matrix.ps1` (run it with both `powershell` and `pwsh`) and `install-matrix.sh` run the real installers and uninstallers against throwaway home folders: `settings.json` missing, empty, full of other settings and non-English text, or not plain JSON; no working Python; the pointer file deleted. They check the hook is added once, names its shell, prints the pointer (or a "missing" line, exit 0) in every shell present, and that uninstall removes only it. Run them before every release that touches an installer.
+
 `check-spine.sh` is a one-second guard: it fails if any standing rule or required section is missing from `skills/core/SKILL.md`. Run it before every commit that touches the spine; editing scripts that search-and-replace can drop a block silently.
