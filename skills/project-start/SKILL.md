@@ -25,6 +25,7 @@ The method is installed once per machine; this command gives *one folder* its ow
    - `tracker_label`: `ADO` when `AB#` patterns appear in docs or commits, `Jira` for `[A-Z]+-\d+` keys, `Issue` when a `.github` folder exists, else `Work item`.
    - `depends_on` / `provides`: empty unless the index lists other projects **and** this folder's code references one of them (imports, URLs, package names); then propose the dependency.
    - `gitignore`: on; paths already tracked by git are excluded from the block.
+   - `simplification_markers`: `lean:` first, then every other shortcut-marker prefix already used in code comments (search at least `lean:` and `ponytail:`), so existing markers stay tracked without renaming a file.
 
 ## Step 2 — one summary, one question
 

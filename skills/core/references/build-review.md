@@ -163,7 +163,7 @@ Read `## Build findings`, `## Decisions`, `## Changes`, `## Realign` and `## Ver
 | An obligation `not held` | "done", "verified", "enforced" | The finding stands, tagged **claimed, not true**. A step marked done whose done-condition the code does not meet is a Blocker |
 | Nothing | A change the reviewers did not see | A coverage gap: back to step 4 for that file |
 
-A shortcut marked in the code with its ceiling and upgrade path (`core/SKILL.md › Implement`) is declared, not silent; it is a finding only when its ceiling breaks an obligation. Completion claims are not evidence in either direction: a ticked step proves nothing, and an unticked one is not a finding.
+A shortcut marked in the code (any prefix in `simplification_markers`) with its ceiling and upgrade path (`core/SKILL.md › Implement`) is declared, not silent; it is a finding only when its ceiling breaks an obligation. Completion claims are not evidence in either direction: a ticked step proves nothing, and an unticked one is not a finding.
 
 ## 6. Confirm — every Blocker, before it reaches the user
 

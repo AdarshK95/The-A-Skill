@@ -44,6 +44,7 @@ The only file that knows anything about the project. The skill never contains a 
 | `pages_folder` | Where `.a/scripts/page_build.py` writes the project pages (`index.html` and one page per feature) — generated output, safe to delete | `docs/pages/` |
 | `floorplan_url`, `floorplan_start` | Optional pair. Adds a **Code map** button to every page: it opens `floorplan_url` (the Floorplan code map) when something answers there, and otherwise shows `floorplan_start`, the command to run in a terminal, then asks to click again. The page never starts a program itself. Empty or absent: no button. |
 | `pages_server` | Whether the live page server (`page_build.py --serve`) is offered. `ask`: offered once, after the first page is built, and only if Python runs; the answer is written here (`on` or `off`). `on`: started in the background whenever it is not running. `off`: never offered, never started. Python missing → the skill documents exactly as before and says nothing about the server | `ask` |
+| `simplification_markers` | Comment prefixes that mark a deliberate shortcut with its ceiling (`lean.md › Marked simplifications`). New markers use the first; drift, the lean check and Realign search for all of them. `/A.project.start` fills it from the prefixes the code already uses | `["lean:"]` |
 | `tracker_label` | Name of the external work-item system shown in headers and ledgers (`Work item`, `ADO`, `Jira`, `Issue`); `none` hides the field | `Work item` |
 | `deferred_decisions_log` | Decisions deliberately put off, each with its reasoning and the condition that reopens it; consequential and read at Start for work touching the same area | `docs/deferred-decisions.md` |
 | `artifacts_folder` | Project-level evidence kept for reuse: probe matrices, baselines, dependency inventories, measured facts (`artifacts.md`) | `docs/artifacts/` |
@@ -109,6 +110,7 @@ areas: UI, Backend, API, Data, Infra
 activity_naming: "{feature}-{slug}/{feature}-{slug}.md"
 pages_folder: documentation/Pages/
 pages_server: ask
+simplification_markers: ["lean:", "ponytail:"]
 date_format: DD MMM YY
 time_format: 12h
 filename_date_format: YYYY-MM-DD

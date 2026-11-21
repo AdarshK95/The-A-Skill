@@ -74,7 +74,7 @@ Never simplified away: validation at a trust boundary (anything from a user, a n
 
 ## Marked simplifications
 
-Every deliberate shortcut carries a one-line comment naming its ceiling and its upgrade path, in the project's comment style (for example `// lean: single global lock; per-account locks if throughput matters`). Simple then reads as intent, not oversight. `/A.project.drift` lists these markers so ceilings are revisited.
+Every deliberate shortcut carries a one-line comment naming its ceiling and its upgrade path, in the project's comment style, starting with the first prefix in `simplification_markers` (config; default `lean:`), for example `// lean: single global lock; per-account locks if throughput matters`. Simple then reads as intent, not oversight. `/A.project.drift`, the lean check and Realign search the code for **every** prefix in that list, so shortcuts marked by other tools (`ponytail:`) stay tracked; `/A.project.drift` lists them so ceilings are revisited.
 
 ## Duplication and complexity check — at Realign
 

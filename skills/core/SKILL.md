@@ -126,7 +126,7 @@ Posture from `implement.posture` (default `full`): `full` enforces the ladder; `
 - Fix at the root: where several callers share a function, the fix lives where they all pass.
 - Reuse before writing: the *Reuse candidates* decisions are followed; a new need discovered mid-build gets its own reuse search before new code. No abstraction, config or scaffolding the plan does not name; nothing varying hardcoded; dependencies accepted, not created.
 - Never simplified away: trust-boundary validation, error handling that prevents data loss or a silent wrong answer, security, accessibility, anything explicitly asked for (`lean.md › When not to be lean`).
-- A deliberate simplification carries a one-line comment naming its ceiling and upgrade path.
+- A deliberate simplification carries a one-line comment naming its ceiling and upgrade path, prefixed with the first entry of `simplification_markers`.
 - An unanticipated fork → through the filter (`references/clarify.md`): a question stops the step and is asked as a block; a choice made for the user is recorded as a block and the step continues.
 
 **Build findings.** Anything discovered while building — a bug, an inconsistency, a surprise — goes under `## Build findings` as found: what · where (cited) · effect on this work · proposed handling (fix in this step / new item / new feature / leave). Blocking → ask now, as a block (`references/clarify.md`). Otherwise surfaced at Realign. Nothing fixed silently, nothing dropped silently.

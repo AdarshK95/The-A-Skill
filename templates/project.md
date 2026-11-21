@@ -31,6 +31,7 @@ date_format: DD MMM YY
 time_format: 12h
 filename_date_format: YYYY-MM-DD
 tracker_label: Work item
+simplification_markers: ["lean:"]   # comment prefixes that mark a deliberate shortcut; new ones use the first, drift searches all
 lessons_log: docs/lessons.md
 artifacts_folder: docs/artifacts/
 artifacts_ledger: docs/artifacts/ARTIFACTS.md
