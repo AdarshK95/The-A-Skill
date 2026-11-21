@@ -2,6 +2,18 @@
 
 Version numbers follow the scale of the change, decided per release. **Third digit:** iteration on an existing capability — wording, rules, fixes, a redesign of something that already exists (a new layout for the map is still the map). **Second digit:** a new capability, or anything an installed copy must re-learn — a new or removed command or stage, a new script, a format change that breaks old files. **First digit:** a restructure that breaks existing projects (not before 1.0).
 
+## 0.13.1 — 21 Nov 26
+
+Fixes from the first real install of 0.13.0 (`/A.skill.update` on Windows PowerShell 5.1). Update with `/A.skill.update`; it re-runs the installer, which replaces the old hook entry.
+
+- **The installer works the same on every machine.** It had only been tested with PowerShell 7, Git Bash and Python, and on Windows PowerShell 5.1 it garbled every dash in the pointer printed before each message. Every read and write now names UTF-8, the pointer is plain ASCII (both installers refuse a non-ASCII template), non-English text in `settings.json` survives install and uninstall, and a `settings.json` with comments is left untouched (PowerShell 7 would have dropped them). The installer prints what it detected: PowerShell version, hook shell, Python.
+- **The hook can no longer switch the skill off silently.** It names its shell (`powershell` from `install.ps1`, which every Windows machine has; `bash` from `install.sh`) and exits 0 either way: if the pointer file is missing, every message says "run `/A.skill.repair`". Repair runs the hook as configured and replaces an entry from 0.12.0–0.13.0.
+- **The project is found from the work, not the starting folder.** The pointer follows auto's Locate step: the project named, the nearest `.a/project.md` above the files involved, the conversation, the only one in the workspace or machine index. "No project here" is said once per conversation, and only when all of that finds none.
+- **`auto/SKILL.md` is read once per conversation**, again after a compaction, not on every message.
+- **".a/project.md wins" is limited to documents, logging and workflow.** Safety and permission rules in any instruction file still apply in full (pointer and always-on block).
+- **`simplification_markers`** (new config key, default `["lean:"]`): new shortcut markers use the first prefix; drift, the lean check and Realign search for all of them. `/A.project.start` fills it from the prefixes the code already uses, so `ponytail:` markers stay tracked without renaming files.
+- **Tests:** `tests/install-matrix.ps1` (passes on Windows PowerShell 5.1 and PowerShell 7, the hook run in both) and `tests/install-matrix.sh` (including a machine with no working Python) run the real installers against throwaway homes: `settings.json` missing, empty, full, not plain JSON; the pointer deleted.
+
 ## 0.13.0 — 21 Nov 26
 
 Second-number release: the question block has new parts, the page script checks more, and the always-printed pointer has one more line, so an installed copy must re-run the installer (`/A.skill.update`). Open questions written in the older shape are flagged until rewritten; answered ones are left as they are.
