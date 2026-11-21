@@ -1,5 +1,5 @@
 ---
-description: Scope check / drift check: has the work outgrown its type; has the plan drifted from the ask or the code from the plan.
+description: "Check the plan still matches your ask and the code"
 ---
 
 Run the `/A.plan.scope_check_drift_check` command of The A Skill.

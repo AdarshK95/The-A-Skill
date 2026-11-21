@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: The visual map of the system's elements and their connections, assembled after resolving name drift; or pull the thread on one element.
+description: "Draw the map of the system's parts"
 ---
 
 Run the `/A.project.map` command of The A Skill.

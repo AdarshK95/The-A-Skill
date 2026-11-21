@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Documents, decisions, elements and map versus the code.
+description: "Compare docs and decisions against the code"
 ---
 
 Run the `/A.project.drift` command of The A Skill.

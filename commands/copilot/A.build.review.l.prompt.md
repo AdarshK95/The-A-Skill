@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Build review at tier L regardless of the rubric.
+description: "Build review, deep"
 ---
 
 Run the `/A.build.review.l` command of The A Skill.

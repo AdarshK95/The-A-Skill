@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Open the project pages live: build them, start the page server, open the browser.
+description: "Open the project dashboard in your browser"
 ---
 
 Run the `/A.show` command of The A Skill.

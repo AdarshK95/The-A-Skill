@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Make this folder a project: config, docs, board, elements registry, always-on block, index row. One confirmation.
+description: "Initiate skill in current project"
 ---
 
 Run the `/A.project.start` command of The A Skill.

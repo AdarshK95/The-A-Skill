@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Bring this project up to the installed version of The A Skill; reports first, changes nothing until you say yes.
+description: "Repairs project to match the Skill update if needed"
 ---
 
 Run the `/A.project.repair` command of The A Skill.

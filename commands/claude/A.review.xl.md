@@ -1,5 +1,5 @@
 ---
-description: Review at tier XL regardless of the rubric.
+description: "Plan review at the deepest effort"
 ---
 
 Run the `/A.review.xl` command of The A Skill.

@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Plan something new: fit against the code, alternatives, steps, a report to approve.
+description: "Plan something new and stop for your approval"
 ---
 
 Run the `/A.plan` command of The A Skill.

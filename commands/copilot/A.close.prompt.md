@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Finish the feature: update the ledgers and element histories, move it to Finished.
+description: "Finish a feature and update the project records"
 ---
 
 Run the `/A.close` command of The A Skill.

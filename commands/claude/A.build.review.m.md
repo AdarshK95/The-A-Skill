@@ -1,5 +1,5 @@
 ---
-description: Build review at tier M regardless of the rubric.
+description: "Build review, medium"
 ---
 
 Run the `/A.build.review.m` command of The A Skill.

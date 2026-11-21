@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: All projects on this machine and how they depend on each other.
+description: "List every project on this machine"
 ---
 
 Run the `/A.project.list` command of The A Skill.

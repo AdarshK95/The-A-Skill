@@ -1,5 +1,6 @@
 ---
-description: Realign the plan to what exists: continue or change built work; baseline, drift, remaining steps. Reopens a closed feature.
+description: "Change or continue work that already exists"
+argument-hint: "[what to change]"
 ---
 
 Run the `/A.plan.realign` command of The A Skill.

@@ -1,5 +1,5 @@
 ---
-description: Quick build review (tier S) regardless of the rubric - one fresh reviewer, the places that matter most.
+description: "Build review, quick"
 ---
 
 Run the `/A.build.review.s` command of The A Skill.

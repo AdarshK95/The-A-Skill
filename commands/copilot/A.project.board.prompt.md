@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: The tracker: planned, in progress, finished, deferred, to do.
+description: "The board: planned, in progress, finished, deferred"
 ---
 
 Run the `/A.project.board` command of The A Skill.

@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Check for a newer release of The A Skill itself and, after you confirm, install it.
+description: "Update The A Skill to the latest release"
 ---
 
 Run the `/A.skill.update` command of The A Skill.

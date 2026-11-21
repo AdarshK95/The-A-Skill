@@ -1,5 +1,5 @@
 ---
-description: Review what was built against what you asked — shallow work, loopholes, wrong fixes, decisions taken without you. A verdict with evidence, never a fix.
+description: "Check what was built against what you asked"
 ---
 
 Run the `/A.build.review` command of The A Skill.

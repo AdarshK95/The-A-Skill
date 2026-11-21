@@ -1,5 +1,6 @@
 ---
-description: Fresh-eyes review of the current plan at the effort the rubric chooses; pasted reviewer comments are triaged. Built code goes to /A.build.review.
+description: "Fresh-eyes review of the plan, or triage pasted comments"
+argument-hint: "[pasted comments]"
 ---
 
 Run the `/A.review` command of The A Skill.

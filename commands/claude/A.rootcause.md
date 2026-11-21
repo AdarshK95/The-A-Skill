@@ -1,5 +1,6 @@
 ---
-description: Find why something went wrong before anything is planned: understand, observe, reverse + forward + zoom-out lanes in parallel, coverage check, reconcile, confirm by test. Output is a cause, never a fix.
+description: "Find why something broke, before planning a fix"
+argument-hint: "[what went wrong]"
 ---
 
 Run the `/A.rootcause` command of The A Skill.

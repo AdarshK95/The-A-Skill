@@ -1,5 +1,5 @@
 ---
-description: Root cause at depth XL regardless of the signals.
+description: "Root cause at the deepest depth"
 ---
 
 Run the `/A.rootcause.xl` command of The A Skill.

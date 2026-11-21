@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Root cause at depth L regardless of the signals.
+description: "Root cause at deep depth"
 ---
 
 Run the `/A.rootcause.l` command of The A Skill.

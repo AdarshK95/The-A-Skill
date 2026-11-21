@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Review at tier M regardless of the rubric.
+description: "Plan review at medium effort"
 ---
 
 Run the `/A.review.m` command of The A Skill.

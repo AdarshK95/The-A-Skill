@@ -1,5 +1,5 @@
 ---
-description: Remove the skill's own files after you confirm; never your projects' data.
+description: "Remove the skill; your projects stay untouched"
 ---
 
 Run the `/A.skill.uninstall` command of The A Skill.

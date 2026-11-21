@@ -1,5 +1,5 @@
 ---
-description: Pick up an interrupted build: read the tracker, verify done steps against the files, continue at the pointer.
+description: "Continue an interrupted build where it stopped"
 ---
 
 Run the `/A.build.resume` command of The A Skill.

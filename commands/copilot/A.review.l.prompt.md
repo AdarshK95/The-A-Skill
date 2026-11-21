@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Review at tier L regardless of the rubric.
+description: "Plan review at deep effort"
 ---
 
 Run the `/A.review.l` command of The A Skill.

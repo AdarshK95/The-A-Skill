@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Run the checks, tick the requirements with evidence, diff the build against the plan.
+description: "Run the checks and prove the build works"
 ---
 
 Run the `/A.verify` command of The A Skill.

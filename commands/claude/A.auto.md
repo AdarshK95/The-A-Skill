@@ -1,5 +1,6 @@
 ---
-description: Describe what you want; auto picks the right command and stage.
+description: "Auto pick right skill for the job"
+argument-hint: "[what you want]"
 ---
 
 Run the `/A.auto` command of The A Skill.

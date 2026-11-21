@@ -1,5 +1,5 @@
 ---
-description: Build the approved plan, step by step, with the look-around before and the wiring check after; realign and simplify inside.
+description: "Build the approved plan, step by step"
 ---
 
 Run the `/A.build` command of The A Skill.

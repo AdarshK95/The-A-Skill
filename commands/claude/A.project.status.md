@@ -1,5 +1,5 @@
 ---
-description: Where are we, what is pending, what is next — from the files, never from memory.
+description: "Where things stand and what is next"
 ---
 
 Run the `/A.project.status` command of The A Skill.

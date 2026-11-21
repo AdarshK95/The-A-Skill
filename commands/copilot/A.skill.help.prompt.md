@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Show the commands by stage.
+description: "List all commands by stage"
 ---
 
 Run the `/A.skill.help` command of The A Skill.

@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Lean / over-complication check on the plan: duplication, speculative generality, reuse missed, hardcoding.
+description: "Check the plan for over-engineering and duplication"
 ---
 
 Run the `/A.plan.lean_overcomplication_check` command of The A Skill.

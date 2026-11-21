@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Check the skill's own installed files against its release and, after you confirm, restore them.
+description: "Check and restore the skill's own files"
 ---
 
 Run the `/A.skill.repair` command of The A Skill.
