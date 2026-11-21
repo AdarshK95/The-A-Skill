@@ -18,7 +18,7 @@ Anything the user types that looks like a command but matches none (`/A.scopeche
 
 **0. Shared folder.** In a fresh conversation, read it first; non-empty means work is in flight — say what, in plain words, before locating anything.
 
-**1. Locate — this chat first.** Resolve the subject exactly as the spine's Start step 0: what the user pointed at; else what this conversation is doing (an activity opened here, else the latest substantive work in the chat); else fetch the board's candidates and offer them by name with their next action; if both chat and board are plausible, one question naming both. Then the project (named → files → conversation → only one → ask). Only then, within that project:
+**1. Locate — this chat first.** Resolve the subject exactly as the spine's Start step 0: what the user pointed at; else what this conversation is doing (an activity opened here, else the latest substantive work in the chat); else fetch the board's candidates and offer them by name with their next action; if both chat and board are plausible, one question naming both. Then the project (named → the nearest `.a/project.md` at or above the files involved → conversation → the only one in the workspace or the machine index → ask), never from the folder the session started in. Only when all of that finds none: say so once per conversation and offer `/A.project.start`. Only then, within that project:
 
 **2. Classify** a new request into one entry type, and say it in one line ("Treating this as a bug fix"):
 
