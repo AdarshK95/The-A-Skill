@@ -128,6 +128,14 @@ The stance is grounded in the code, the constitution, a decision or the user's s
 
 "Choose vanilla or chocolate" tells the user nothing if they do not know whether this is ice cream or a cake, which shop they are standing in, or why they left the house. The user reads the chat, not the file. So every decision — in a report, at a gate, as an escalation from a review, as a build finding awaiting the user — is shown in chat as the full block of `clarify.md › The block`, in a round as `clarify.md › Rounds` lays it out; which points become decisions at all is `clarify.md › The filter`. The suggestion is grounded in the code, the constitution, a logged decision or the user's stated theme, and reasons from the **user's object** — what the user did, sees or gets: one comment on one answer is one record, however many components produced the answer. A suggestion that only makes sense from inside the architecture is usually wrong.
 
+## Only verified facts reach the user
+
+Every statement shown to the user — a finding, a status line, a "decided for you", a cause, a file that exists or does not — was checked against the files, a command's output or the documentation **in this session, before it was written**. Memory of an earlier session, a plausible guess, or what a file "usually" contains is not a check. When a check is not possible, the statement says so in the same sentence ("not verified: <why>"). A claim found wrong after it was shown is corrected at once, plainly, with what was actually found.
+
+## Name every thing so it cannot be confused
+
+A thing named to the user carries enough context to be told apart from everything else with the same name: **whose it is** (the A Skill's own files — the method, its templates, its helper scripts under a project's `.a/` — versus the user's own code, scripts and documents), **its full path**, and **what it does**, in a few words. "The old copy of the script" fails all three; "the A Skill's helper script `D:\Code\App\.a\scripts\map_build.py` (draws the skill's project map), copied there by `/A.project.start` on 15 Nov" passes. The user's own code is never called by a name the skill's files also use.
+
 ## Finish the checks you can run
 
 Nothing is handed back as "to check", "needs verification" or "worth confirming" when the agent can settle it with the access it has: the code, an installed library's source, the docs, a command it may run. Check it, then answer. A check that remains names what blocks it: access the agent lacks, a live environment, or a decision that is the owner's.
