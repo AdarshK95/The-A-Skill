@@ -80,12 +80,14 @@ Open `docs/pages/index.html` in a browser. It is redrawn from the skill's own fi
 - **Colours:** what is new since you last pressed *Mark as read* is green; the batch before that is light blue.
 - **Red** means the agent left something out, such as a question with no context. It is told to fix those before it finishes.
 
-If Python is installed, the skill offers once to start a small live server for the pages (nothing leaves your machine). Opened through it, the page follows the agent by itself and has a **Resync** button: click it and it rebuilds in the background, showing *Syncing…* and then *Synced*. No window opens. `python .a/scripts/page_build.py --stop` ends it; on Windows it can also start at login (`--install-startup`). Without the server, the page reloads every 15 seconds and shows what was last built. On an open question, *copy reply line* gives you a line to paste into the chat so the agent knows which question you are answering.
+If Python is installed, the skill offers once to start a small live server for the pages (nothing leaves your machine). Opened through it, the page follows the agent by itself and has a **Resync** button: click it and it rebuilds in the background, showing *Syncing…* and then *Synced*. No window opens. `/A.show` starts it and opens the page; `python <method>/templates/pages/page_build.py --root <project> --stop` ends it; on Windows it can also start at login (`--install-startup`). Without the server, the page reloads every 15 seconds and shows what was last built. On an open question, *copy reply line* gives you a line to paste into the chat so the agent knows which question you are answering.
 
 ## Where things stand
 
 | Ask | Command | You get |
 | --- | --- | --- |
+| See the project in the browser | `/A.show` | Builds the pages, starts the live server, opens the browser; the page's Help section has every start/stop command |
+| A project set up with an older version | `/A.project.repair` | Shows what this version expects that the project lacks (config keys, the always-on block, old helper-script copies), fixes it after you say yes |
 | Where were we? What's pending? | `/A.project.status` | Every in-progress feature with its pointer and next action, what waits on you, what is due — read from the files |
 | Show me everything | `/A.project.board` | The board: Planned · In progress · Finished · Deferred · To do, per area |
 | How is the project shaped? | `/A.project.map` | The overview diagram: areas, parts, connections; grey planned, blue in progress, green finished, orange deferred |
@@ -117,4 +119,4 @@ Everything is plain markdown in your repository. Any agent, any model, any sessi
 
 ## Tuning
 
-`~/.a/settings.md` holds how the agent behaves everywhere: verbosity, when it may interrupt, whether it offers to record chat work, the highest review tier it may choose on its own, date formats. `.a/project.md` holds every path, your areas, which projects this one depends on, date and time formats, which ledgers close updates, the review floor, and project rules. `/A.project.start` writes it; edit it any time. Field reference: `.a/skills/core/references/config-schema.md`.
+`~/.a/settings.md` holds how the agent behaves everywhere: `always_on` (every message without a command runs auto mode, or only typed `/A.*` commands do), `pages_server` (when the project pages' live server starts: `off` only on `/A.show`, `session` also while the agent works, `login` also at Windows login), verbosity, when it may interrupt, whether it offers to record chat work, the highest review tier it may choose on its own, date formats. `.a/project.md` holds every path, your areas, which projects this one depends on, date and time formats, which ledgers close updates, the review floor, and project rules. `/A.project.start` writes it; edit it any time. Field reference: `.a/skills/core/references/config-schema.md`.

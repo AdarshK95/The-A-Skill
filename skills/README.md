@@ -16,15 +16,17 @@ Each folder holds one `SKILL.md`. Command wrappers in `../commands/` point at th
 | `project-drift/` | /A.project.drift — documents, decisions, elements and map vs code |
 | `project-list/` | /A.project.list — all projects on this machine |
 | `project-map/` | /A.project.map — the visual map, assembled after resolving name drift; pull the thread on an element |
+| `project-repair/` | /A.project.repair — bring a project up to the installed version; reports first, fixes after a yes |
 | `project-start/` | /A.project.start — make a folder a project |
 | `project-status/` | /A.project.status — where are we, from the files |
 | `rootcause/` | /A.rootcause (and .m .l .xl) — understand, observe, three parallel lanes, coverage check, reconcile, confirm; a cause, never a fix |
 | `review/` | /A.review (and .m .l .xl) — fresh-eyes review of a plan, or triage of pasted comments |
 | `build-review/` | /A.build.review (and .s .m .l .xl) — review of what was built against the user's words: intent, forward and reverse lanes; shallow work, loopholes, silent decisions; a verdict, never a fix |
+| `show/` | /A.show — open the project pages live: build, start the server, open the browser |
 | `skill-help/` | /A.skill.help · /A.help — commands by stage |
 | `skill-repair/` | /A.skill.repair — restore the skill's own files after confirmation |
 | `skill-uninstall/` | /A.skill.uninstall — remove the skill's own files; never the user's data |
 | `skill-update/` | /A.skill.update — update the skill after confirmation |
 | `verify/` | /A.verify — checks, requirements, build vs plan |
 
-Counts for verifying an install: **22 skill folders**, **22 reference files** in `core/references/`, **45 markdown files** under `skills/` including this one. The installer prints the number it copied.
+Counts for verifying an install: **24 skill folders**, **22 reference files** in `core/references/`, **47 markdown files** under `skills/` including this one. The installer prints the number it copied.

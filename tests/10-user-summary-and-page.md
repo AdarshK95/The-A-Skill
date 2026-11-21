@@ -4,7 +4,7 @@ What two audits of real sessions found (78 times the user had to ask or correct)
 
 **The script first (one command, no host needed):** `python templates/pages/page_build.py --selftest` prints `ok` on every line. It builds a sample feature and checks the tabs, the summary tiles, the step trail, the instruction status, a question with context, a question without context flagged, a choice made for the user, a code and a code name flagged, an older-format file, escaping, and the index.
 
-**Setup:** the fixture project with `.a/scripts/page_build.py` in place.
+**Setup:** the fixture project, with the A Skill installed (the page script runs from the install with `--root`).
 
 **Prompt 1:** `/A.plan add a CSV export to the orders page` — and answer the first question it asks.
 
@@ -38,7 +38,7 @@ What two audits of real sessions found (78 times the user had to ask or correct)
 **Prompt 4 (only on a machine with Python):** accept the offer to start the live server.
 
 **Pass when all hold:**
-- [ ] The offer was made once, after the first page existed, and the answer is in `pages_server` in `.a/project.md`; on a machine without Python it was never made or mentioned.
+- [ ] No question about the server was asked; with `pages_server: session` the server was running after the first write, and `/A.show` opened the page; on a machine without Python the server was never started or mentioned.
 - [ ] The server started with no window, and the address it printed opens the home page.
 - [ ] With the page open, a line the agent adds to the summary appears on the home page by itself within about 20 seconds.
 - [ ] *Resync* shows *Syncing…* then *Synced*, and the page is current afterwards.

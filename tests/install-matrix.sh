@@ -47,6 +47,30 @@ for case in missing empty full notjson nopython; do
   check "[$case] uninstall removes pointer and Copilot file" "$([ ! -e "$P" ] && [ ! -e "$H/.copilot/instructions/a-skill.instructions.md" ] && echo 1 || echo 0)"
   [ $case = full ] && check "[$case] after uninstall: other hook, token, non-English text intact" "$(q "print(int(s['env']['FAKE_TOKEN']=='keep-me' and s['env']['NOTE']=='café 日本 —' and len(s['hooks']['UserPromptSubmit'])==1))" "$S")"
 done
+# --- the machine: settings from an older version, always_on, and which projects need /A.project.repair
+H="$ROOT/machine"; mkdir -p "$H/.a"; SET="$H/.a/settings.md"
+printf -- '---\n# old settings\nverbosity: normal          # the user'"'"'s own value\nreview:\n  auto_tier: on\n---\n\n# About this file\n' > "$SET"
+for p in healthy stale; do mkdir -p "$H/$p/.a"; done
+cp "$REPO/templates/project.md" "$H/healthy/.a/project.md"
+{ sed 's|{{skills_root}}|/x/.a/skills|g' "$REPO/templates/always-on.md"; printf "\n# the project's own rules\n"; } > "$H/healthy/CLAUDE.md"
+printf -- '---\nproject_name: stale\ndocs_root: docs/\n---\n' > "$H/stale/.a/project.md"
+printf "# the project's own rules\n\n<!-- A-skill: begin (managed by /A.project.start) -->\nan old block\n<!-- A-skill: end -->\n" > "$H/stale/CLAUDE.md"
+mkdir -p "$H/stale/.a/scripts"; echo "# old copy" > "$H/stale/.a/scripts/map_build.py"
+printf '| Project | Path |\n| --- | --- |\n| healthy | %s |\n| stale | %s |\n| gone | %s |\n' "$(native "$H/healthy")" "$(native "$H/stale")" "$(native "$H/gone")" > "$H/.a/projects.md"
+LOG="$(HOME="$H" sh "$REPO/install.sh" 2>&1)"
+FRONT="$(awk '/^---[ \t]*$/ { n++; next } n == 1' "$SET")"
+check "[machine] new settings keys added inside the front matter" "$(echo "$FRONT" | grep -q '^always_on' && echo "$FRONT" | grep -q '^pages_server' && echo 1 || echo 0)"
+check "[machine] the user's own setting value kept" "$(grep -q '^verbosity: normal' "$SET" && echo 1 || echo 0)"
+check "[machine] installer says which settings it added" "$(echo "$LOG" | grep -q 'New settings added .*always_on' && echo 1 || echo 0)"
+check "[machine] stale project named with its findings" "$(echo "$LOG" | grep 'stale (' | grep -q 'config lacks' && echo "$LOG" | grep -q 'not at the top of CLAUDE.md' && echo "$LOG" | grep -q 'older version' && echo "$LOG" | grep -q "old copies of the A Skill's helper scripts" && echo 1 || echo 0)"
+check "[machine] missing project folder named" "$(echo "$LOG" | grep -q 'gone (.*no .a/project.md there any more' && echo 1 || echo 0)"
+check "[machine] healthy project not mentioned" "$(echo "$LOG" | grep -q '  healthy (' && echo 0 || echo 1)"
+sed -i 's/^always_on:[[:space:]]*on/always_on: off/' "$SET"; HOME="$H" sh "$REPO/install.sh" >/dev/null 2>&1
+check "[machine] always_on off: no A Skill hook, no Copilot file" "$(q "print(int(not [h for g in s.get('hooks',{}).get('UserPromptSubmit',[]) for h in g['hooks'] if 'auto-pointer.md' in h['command']]))" "$H/.claude/settings.json" | grep -q 1 && [ ! -e "$H/.copilot/instructions/a-skill.instructions.md" ] && echo 1 || echo 0)"
+sed -i 's/^always_on:[[:space:]]*off/always_on: on/' "$SET"; HOME="$H" sh "$REPO/install.sh" >/dev/null 2>&1
+check "[machine] always_on back on: hook and Copilot file back" "$(q "print(int(len([h for g in s['hooks']['UserPromptSubmit'] for h in g['hooks'] if 'auto-pointer.md' in h['command']])==1))" "$H/.claude/settings.json" | grep -q 1 && [ -e "$H/.copilot/instructions/a-skill.instructions.md" ] && echo 1 || echo 0)"
+LOG="$(HOME="$H" PATH="$STUB:$PATH" sh "$REPO/install.sh" 2>&1)"
+check "[machine] no working Python: project check says it was skipped" "$(echo "$LOG" | grep -q 'project check skipped' && echo 1 || echo 0)"
 rm -rf "$ROOT"
 [ $FAIL = 0 ] && echo "all checks passed on sh" || echo "$FAIL check(s) FAILED on sh"
 exit $FAIL

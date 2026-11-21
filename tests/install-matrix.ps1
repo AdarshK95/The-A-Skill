@@ -37,7 +37,7 @@ try {
     if ($null -ne $Cases[$case]) { Write-Utf8 $SetPath $Cases[$case] }
     $before = if (Test-Path $SetPath) { Read-Utf8 $SetPath } else { $null }
     $env:USERPROFILE = $H
-    $log = (& "$Repo\install.ps1" *>&1 | Out-String) + (& "$Repo\install.ps1" *>&1 | Out-String)   # twice: must not duplicate
+    $log = (& "$Repo\install.ps1" *>&1 | Out-String -Width 4096) + (& "$Repo\install.ps1" *>&1 | Out-String -Width 4096)   # twice: must not duplicate
     $env:USERPROFILE = $OldProfile
     $pointer = Join-Path $H ".a\auto-pointer.md"
     Check "[$case] pointer is plain ASCII" (-not ((Read-Utf8 $pointer) -match '[^\x00-\x7F]'))
@@ -69,6 +69,35 @@ try {
     Check "[$case] uninstall removes pointer and Copilot file" (-not (Test-Path $pointer) -and -not (Test-Path (Join-Path $H ".copilot\instructions\a-skill.instructions.md")))
     if ($case -like "*other hook*") { Check "[$case] after uninstall: other hook, token, non-English text intact" (($obj.env.NOTE -eq $Unicode) -and ($obj.env.FAKE_TOKEN -eq "keep-me") -and (@($obj.hooks.UserPromptSubmit).Count -eq 1)) }
   }
+  # --- the machine: settings from an older version, always_on, and which projects need /A.project.repair
+  $H = Join-Path $Root "machine"; New-Item -ItemType Directory -Force (Join-Path $H ".a") | Out-Null
+  $SetMd = Join-Path $H ".a\settings.md"
+  Write-Utf8 $SetMd "---`n# old settings`nverbosity: normal          # the user's own value`nreview:`n  auto_tier: on`n---`n`n# About this file`n"
+  $proj = { param($n) $p = Join-Path $H $n; New-Item -ItemType Directory -Force (Join-Path $p ".a") | Out-Null; $p }
+  $healthy = & $proj "healthy"; $stale = & $proj "stale"; $gone = Join-Path $H "gone"
+  Write-Utf8 (Join-Path $healthy ".a\project.md") (Read-Utf8 "$Repo\templates\project.md")
+  Write-Utf8 (Join-Path $healthy "CLAUDE.md") (((Read-Utf8 "$Repo\templates\always-on.md") -replace '\{\{skills_root\}\}', 'C:/x/.a/skills') + "`n# the project's own rules`n")
+  Write-Utf8 (Join-Path $stale ".a\project.md") "---`nproject_name: stale`ndocs_root: docs/`n---`n"
+  Write-Utf8 (Join-Path $stale "CLAUDE.md") "# the project's own rules`n`n<!-- A-skill: begin (managed by /A.project.start) -->`nan old block`n<!-- A-skill: end -->`n"
+  New-Item -ItemType Directory -Force (Join-Path $stale ".a\scripts") | Out-Null; Write-Utf8 (Join-Path $stale ".a\scripts\map_build.py") "# old copy`n"
+  Write-Utf8 (Join-Path $H ".a\projects.md") "| Project | Path |`n| --- | --- |`n| healthy | $healthy |`n| stale | $stale |`n| gone | $gone |`n"
+  $env:USERPROFILE = $H
+  $log = & "$Repo\install.ps1" *>&1 | Out-String -Width 4096
+  $env:USERPROFILE = $OldProfile
+  $set = Read-Utf8 $SetMd; $front = ($set -split "(?m)^---\s*$")[1]
+  Check "[machine] new settings keys added inside the front matter" (($front -match "(?m)^always_on\s*:") -and ($front -match "(?m)^pages_server\s*:"))
+  Check "[machine] the user's own setting value kept" ($set -match "(?m)^verbosity: normal")
+  Check "[machine] installer says which settings it added" ($log -match "New settings added .*always_on")
+  Check "[machine] stale project named with its findings" (($log -match "stale \(.*config lacks") -and ($log -match "always-on block not at the top of CLAUDE.md") -and ($log -match "older version") -and ($log -match "old copies of the A Skill's helper scripts"))
+  Check "[machine] missing project folder named" ($log -match "gone \(.*no .a/project.md there any more")
+  Check "[machine] healthy project not mentioned" (-not ($log -match "  healthy \("))
+  Write-Utf8 $SetMd ((Read-Utf8 $SetMd) -replace "(?m)^always_on\s*:\s*on", "always_on: off")
+  $env:USERPROFILE = $H; & "$Repo\install.ps1" *>&1 | Out-Null; $env:USERPROFILE = $OldProfile
+  $sj = Join-Path $H ".claude\settings.json"
+  Check "[machine] always_on off: no A Skill hook, no Copilot file" ((-not (Test-Path $sj) -or @(Get-OurHooks ((Read-Utf8 $sj) | ConvertFrom-Json)).Count -eq 0) -and -not (Test-Path (Join-Path $H ".copilot\instructions\a-skill.instructions.md")))
+  Write-Utf8 $SetMd ((Read-Utf8 $SetMd) -replace "(?m)^always_on\s*:\s*off", "always_on: on")
+  $env:USERPROFILE = $H; & "$Repo\install.ps1" *>&1 | Out-Null; $env:USERPROFILE = $OldProfile
+  Check "[machine] always_on back on: hook and Copilot file back" ((@(Get-OurHooks ((Read-Utf8 $sj) | ConvertFrom-Json)).Count -eq 1) -and (Test-Path (Join-Path $H ".copilot\instructions\a-skill.instructions.md")))
 } finally { $env:USERPROFILE = $OldProfile; Remove-Item -Recurse -Force $Root -ErrorAction SilentlyContinue }
 Write-Host $(if ($Fail) { "$Fail check(s) FAILED on PowerShell $Ver" } else { "all checks passed on PowerShell $Ver" })
 exit $Fail

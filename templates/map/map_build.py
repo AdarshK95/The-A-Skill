@@ -5,8 +5,9 @@ Source of truth: docs/map/elements.md (the registry), plus the board (feature ti
 decisions and deferred-decisions logs (entries that name an element). The Mermaid overview in the board is
 another view of the same registry; this script never reads it.
 
-Usage:  python .a/scripts/map_build.py            (reads .a/project.md for paths; writes docs/map/map.html)
-        python .a/scripts/map_build.py --out path/to/map.html
+Usage:  python ~/.a/templates/map/map_build.py --root <project>    (reads <project>/.a/project.md for paths; writes docs/map/map.html)
+        python ~/.a/templates/map/map_build.py --root <project> --out path/to/map.html
+Runs from the install; never copied into a project. Refuses a folder without .a/project.md.
 
 Standard library only. No network. Safe to re-run; the output is regenerated in full.
 """
@@ -14,7 +15,7 @@ from __future__ import annotations
 import argparse, html, json, re, sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]  # <project>/.a/scripts/map_build.py → <project>
+ROOT = Path(__file__).resolve().parents[2]  # default only; pass --root (an old copy at <project>/.a/scripts/ still resolves to <project>)
 
 def read_config():
     cfg = {"elements_registry": "docs/map/elements.md", "board_file": "docs/activity/BOARD.md", "observed_file": "docs/map/observed.jsonl", "trace_link": "",
@@ -457,9 +458,15 @@ def observe(path, els):
             "edges": dict(edges), "flows": flows, "unmapped": [{"name": n, "count": c} for n, c in unmapped.most_common(50)]}
 
 def main():
+    global ROOT
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=None)
+    ap.add_argument("--root", default=None, help="the project folder (default: two levels above this script)")
     args = ap.parse_args()
+    if args.root:  # run from the install: python ~/.a/templates/map/map_build.py --root <project>
+        ROOT = Path(args.root).resolve()
+    if not (ROOT / ".a" / "project.md").is_file():  # never write into a folder that is not a project (e.g. home, when run from the install without --root)
+        sys.exit(f"not a project of The A Skill: no .a/project.md in {ROOT}. Pass --root <project folder>.")
     cfg = read_config()
     reg = ROOT / cfg["elements_registry"]
     if not reg.exists():

@@ -3,6 +3,11 @@
 # Defaults are what the skill does on its own. Change any value; a project's .a/project.md may override any key for that project.
 # Precedence: project.md > this file > skill defaults.
 
+always_on: on             # on: every message without an /A.* command runs auto mode (a Claude Code hook + a Copilot instructions file)
+                          # off: only typed /A.* commands run the skill. Applied by the installer (/A.skill.update or /A.skill.repair)
+pages_server: session     # when the project pages' live server starts - off: only on /A.show | session: also whenever the agent writes
+                          # login: also at Windows login (startup entry set up by /A.project.repair). A project's .a/project.md may override
+
 verbosity: quiet          # quiet: decisions, stop points, answers only; everything else in the event log
                           # normal: plus one line at each stage boundary
                           # verbose: plus progress every few steps (for debugging the skill)

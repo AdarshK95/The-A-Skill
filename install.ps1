@@ -4,6 +4,9 @@
 # Idempotent: re-running updates the method and commands, never a project's documents or config.
 param([string]$Project = "")
 $ErrorActionPreference = "Stop"
+# Every text read and write is UTF-8 (no byte-order mark) by name: Windows PowerShell 5.1 would otherwise read ANSI and PowerShell 7 UTF-8.
+function Read-Utf8([string]$Path) { [IO.File]::ReadAllText($Path, [Text.Encoding]::UTF8) }
+function Write-Utf8([string]$Path, [string]$Text) { [IO.File]::WriteAllText($Path, $Text, (New-Object Text.UTF8Encoding $false)) }
 # Where this repository is: the script's folder, or the current folder when run as a script block (managed machines).
 $Src = if ($PSScriptRoot) { $PSScriptRoot } elseif ($MyInvocation.MyCommand.Path) { Split-Path -Parent $MyInvocation.MyCommand.Path } else { (Get-Location).Path }
 if (-not (Test-Path (Join-Path $Src "skills\core\SKILL.md"))) { throw "Run this from the cloned The-A-Skill folder (skills\core\SKILL.md not found under $Src)." }
@@ -28,12 +31,26 @@ $scope = if ($Global) { "global" } else { "project" }
 $commit = "unknown"; try { $commit = (git -C $Src rev-parse HEAD 2>$null).Trim(); if (-not $commit) { $commit = "unknown" } } catch {}
 "repository: https://github.com/AdarshK95/The-A-Skill`ninstalled: $(Get-Date -Format 'dd MMM yy, hh:mm tt')`nscope: $scope`ncommit: $commit" | Set-Content (Join-Path $Dest ".a\SOURCE")
 if ($Global -and -not (Test-Path (Join-Path $Dest ".a\projects.md"))) { Copy-Item "$Src\templates\projects.md" (Join-Path $Dest ".a\projects.md") }
-if (-not (Test-Path (Join-Path $Dest ".a\settings.md"))) { Copy-Item "$Src\templates\settings.md" (Join-Path $Dest ".a\settings.md") }
+$SettingsMd = Join-Path $Dest ".a\settings.md"
+if (-not (Test-Path $SettingsMd)) { Copy-Item "$Src\templates\settings.md" $SettingsMd }
+# Settings a newer version adds reach an existing settings.md: each missing top-level key is inserted with its default and
+# comment lines before the closing ---; a value the user set is never changed.
+# ponytail: top-level keys only; a key added later under an existing block (review:) is not merged. A YAML-aware merge is the upgrade.
+$have = Read-Utf8 $SettingsMd; $tpl = (Read-Utf8 "$Src\templates\settings.md") -split "`r?`n"; $add = @(); $newKeys = @(); $take = $false
+foreach ($l in $tpl) {
+  if ($l -match '^([a-z_]+)\s*:') { $k = $Matches[1]; $take = $have -notmatch "(?m)^$k\s*:"; if ($take) { $newKeys += $k; $add += $l } }
+  elseif ($take -and $l -match '^\s+(#|[a-z_]+\s*:)') { $add += $l }
+  else { $take = $false }
+}
+if ($add.Count) {
+  $lines = $have -split "`r?`n"; $close = @(0..($lines.Count - 1) | Where-Object { $lines[$_] -match '^---\s*$' })[1]
+  $ins = @("# Added by the installer ($((Read-Utf8 "$Src\VERSION").Trim())): new settings with their defaults") + $add
+  $lines = if ($null -ne $close) { $lines[0..($close - 1)] + $ins + $lines[$close..($lines.Count - 1)] } else { $lines + $ins }
+  Write-Utf8 $SettingsMd ($lines -join "`n")
+}
+$AlwaysOn = -not ((Read-Utf8 $SettingsMd) -match '(?m)^always_on\s*:\s*off\b')
 Get-ChildItem (Join-Path $Dest ".claude\commands") -Filter "A.*.md" -ErrorAction SilentlyContinue | Remove-Item -Force
 Get-ChildItem $CopilotDir -Filter "A.*.prompt.md" -ErrorAction SilentlyContinue | Remove-Item -Force
-# Every text read and write is UTF-8 (no byte-order mark) by name: Windows PowerShell 5.1 would otherwise read ANSI and PowerShell 7 UTF-8.
-function Read-Utf8([string]$Path) { [IO.File]::ReadAllText($Path, [Text.Encoding]::UTF8) }
-function Write-Utf8([string]$Path, [string]$Text) { [IO.File]::WriteAllText($Path, $Text, (New-Object Text.UTF8Encoding $false)) }
 Get-ChildItem "$Src\commands\claude" -Filter "A.*.md" | ForEach-Object {
   Write-Utf8 (Join-Path $Dest ".claude\commands\$($_.Name)") ((Read-Utf8 $_.FullName) -replace "\{\{SKILLS_ROOT\}\}", $SkillsRoot)
 }
@@ -56,7 +73,8 @@ if ($Global) {
   Write-Utf8 $Pointer $PointerText
   $CopilotInstr = Join-Path $Dest ".copilot\instructions"
   New-Item -ItemType Directory -Force -Path $CopilotInstr | Out-Null
-  Write-Utf8 (Join-Path $CopilotInstr "a-skill.instructions.md") "---`napplyTo: '**'`ndescription: The A Skill is the default workflow`n---`n`n$PointerText"
+  $CopilotFile = Join-Path $CopilotInstr "a-skill.instructions.md"
+  if ($AlwaysOn) { Write-Utf8 $CopilotFile "---`napplyTo: '**'`ndescription: The A Skill is the default workflow`n---`n`n$PointerText" } else { Remove-Item -Force $CopilotFile -ErrorAction SilentlyContinue }
   # The hook names its shell: PowerShell exists on every Windows machine, Git Bash may not. Exits 0 either way;
   # a missing pointer says so on every message instead of switching the skill off silently.
   $HookCmd = "`$p = '$Pointer'; if (Test-Path -LiteralPath `$p) { Get-Content -LiteralPath `$p -Raw } else { 'The A Skill: pointer file missing (' + `$p + '). Run /A.skill.repair.' }"
@@ -77,11 +95,45 @@ if ($Global) {
       $kept = @(@($g.hooks) | Where-Object { $_ -and ("$($_.command)" -notlike "*auto-pointer.md*") })
       if ($kept.Count) { $g.hooks = $kept; $groups += $g }
     }
-    $groups += [pscustomobject]@{ hooks = @([pscustomobject]@{ type = "command"; shell = "powershell"; command = $HookCmd }) }
-    if ($s.hooks.PSObject.Properties['UserPromptSubmit']) { $s.hooks.UserPromptSubmit = $groups } else { $s.hooks | Add-Member -NotePropertyName UserPromptSubmit -NotePropertyValue $groups }
+    if ($AlwaysOn) { $groups += [pscustomobject]@{ hooks = @([pscustomobject]@{ type = "command"; shell = "powershell"; command = $HookCmd }) } }
+    if ($groups.Count) {
+      if ($s.hooks.PSObject.Properties['UserPromptSubmit']) { $s.hooks.UserPromptSubmit = $groups } else { $s.hooks | Add-Member -NotePropertyName UserPromptSubmit -NotePropertyValue $groups }
+    } else { $s.hooks.PSObject.Properties.Remove('UserPromptSubmit') }
+    if (-not @($s.hooks.PSObject.Properties).Count) { $s.PSObject.Properties.Remove('hooks') }
     Write-Utf8 $Settings ($s | ConvertTo-Json -Depth 100)
-    $HookNote = "added (UserPromptSubmit in $Settings; backup $Settings.bak-a-skill)"
+    $HookNote = if ($AlwaysOn) { "added (UserPromptSubmit in $Settings; backup $Settings.bak-a-skill)" } else { "removed: always_on is off in $SettingsMd" }
   } catch { $HookNote = "NOT added: $Settings could not be read as JSON (left untouched); add it by hand (SETUP.md)" }
+}
+# Projects that need /A.project.repair - only those are named; a healthy project is not mentioned.
+# Same checks as templates/project_check.py (used by install.sh); keep the two in step.
+$Repair = @()
+$Index = Join-Path $Dest ".a\projects.md"
+if ($Global -and (Test-Path $Index)) {
+  $tplKeys = @([regex]::Matches((Read-Utf8 "$Src\templates\project.md"), '(?m)^([a-z_]+):') | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique)
+  $blockTpl = ((Read-Utf8 "$Src\templates\always-on.md") -replace '\s+', ' ').Trim()
+  $blockRx = '^' + ([regex]::Escape($blockTpl).Replace([regex]::Escape('{{skills_root}}'), '.+?')) + '$'
+  foreach ($row in ((Read-Utf8 $Index) -split "`r?`n")) {
+    $cells = @($row.Trim().Trim('|').Split('|') | ForEach-Object { $_.Trim() })
+    if (-not $row.StartsWith('|') -or $cells.Count -lt 2 -or $cells[1] -notmatch '^([A-Za-z]:[\\/]|/|~)') { continue }
+    $name = $cells[0]; $path = $cells[1]; $found = @()
+    $cfgFile = Join-Path $path ".a\project.md"
+    if (-not (Test-Path $cfgFile)) { $Repair += "  $name ($path): no .a/project.md there any more (moved or deleted?); see /A.project.list"; continue }
+    $cfg = Read-Utf8 $cfgFile
+    $miss = @($tplKeys | Where-Object { $cfg -notmatch "(?m)^$_\s*:" })
+    if ($miss.Count) { $found += "config lacks $($miss -join ', ')" }
+    $names = if ($cfg -match '(?m)^always_on_files\s*:\s*(.+)$') { @($Matches[1].Split(',') | ForEach-Object { $_.Trim() }) } else { @('CLAUDE.md', 'AGENTS.md', '.github/copilot-instructions.md') }
+    $withBlock = @($names | ForEach-Object { Join-Path $path $_ } | Where-Object { (Test-Path $_) -and ((Read-Utf8 $_) -match 'A-skill: begin') })
+    if (-not $withBlock.Count) { $found += "no always-on block in $($names -join ', ')" }
+    foreach ($f in $withBlock) {
+      $t = Read-Utf8 $f; $leaf = Split-Path $f -Leaf
+      if (-not ($t -replace '(?s)\A---\r?\n.*?\r?\n---\r?\n', '').TrimStart().StartsWith('<!-- A-skill: begin')) { $found += "always-on block not at the top of $leaf" }
+      $span = [regex]::Match($t, '(?s)<!-- A-skill: begin.*?A-skill: end -->')
+      if ($span.Success -and (($span.Value -replace '\s+', ' ').Trim() -notmatch $blockRx)) { $found += "always-on block in $leaf is from an older version" }
+    }
+    $old = @('page_build.py', 'map_build.py' | Where-Object { Test-Path (Join-Path $path ".a\scripts\$_") })
+    if ($old.Count) { $found += "old copies of the A Skill's helper scripts in .a/scripts/ ($($old -join ', '); they now run from the install)" }
+    if ($found.Count) { $Repair += "  $name ($path): $($found -join '; ')" }
+  }
 }
 $Detected = "PowerShell $($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) ($($PSVersionTable.PSEdition)); Python: not needed" + $(if ($Global) { "; hook shell: powershell" } else { "" })
 $nSkills  = (Get-ChildItem (Join-Path $Dest ".a\skills") -Recurse -Filter *.md -File).Count
@@ -90,11 +142,12 @@ $nCopilot = (Get-ChildItem $CopilotDir -Filter "A.*.prompt.md" -File).Count
 $ver = (Get-Content (Join-Path $Dest ".a\VERSION")).Trim()
 Write-Host "Installed (version $ver, commit $($commit.Substring(0, [Math]::Min(7, $commit.Length)))):"
 Write-Host "  $Dest\.a\skills                  $nSkills files   (the method)"
-Write-Host "  $Dest\.claude\commands\A.*.md    $nClaude files   (Claude Code: /A.plan, /A.bugfix, ...)"
+Write-Host "  $Dest\.claude\commands\A.*.md    $nClaude files   (Claude Code: /A.plan, /A.show, ...)"
 Write-Host "  $CopilotDir\A.*.prompt.md       $nCopilot files   (Copilot in VS Code)"
 Write-Host "  On by default (auto mode every message): Claude Code hook $HookNote"
 Write-Host "  Detected: $Detected"
-if ($Global) { Write-Host "                                   Copilot: $CopilotInstr\a-skill.instructions.md" }
+if ($Global) { Write-Host "                                   Copilot: $(if ($AlwaysOn) { "$CopilotInstr\a-skill.instructions.md" } else { 'off (always_on: off)' })" }
+if ($newKeys.Count) { Write-Host "  New settings added to $SettingsMd with their defaults: $($newKeys -join ', ')" }
 Write-Host ""
 if ($Global) {
   Write-Host "INSTALLATION COMPLETE. The A Skill $ver is installed for this machine (global)."
@@ -109,6 +162,11 @@ if ($Global) {
   Write-Host ""
   Write-Host "The skill remembers work PER PROJECT: in any folder you want to work in, run /A.project.start once."
   Write-Host "Everything done there (board, logs, decisions) becomes that project's memory, separate from every other project. /A.project.list shows them all."
+  if ($Repair.Count) {
+    Write-Host ""
+    Write-Host "PROJECTS TO BRING UP TO DATE - open each one and run /A.project.repair (it shows what it will change and asks first):"
+    $Repair | ForEach-Object { Write-Host $_ }
+  }
 } else {
   Write-Host "This was a PROJECT-LEVEL install into $Dest`: the commands are read from this folder, so it must be the workspace root for them to appear (the global install has no such limit)."
   Write-Host "Open this folder, start a new chat, and run /A.project.start (required; nothing is remembered without it)."

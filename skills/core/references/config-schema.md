@@ -41,9 +41,9 @@ The only file that knows anything about the project. The skill never contains a 
 | `tmp_folder` | Where the agent keeps scratch that must live inside the project (sampling output, fixtures); ignored by git, emptied at Close. Scratch that need not be in the project goes to the OS temp folder instead | `.a/tmp/` |
 | `reminders` | When `on`, every `/A.*` command first checks To do and Deferred for items due today or overdue and says so in one line | `on` |
 | `activity_naming` | File path pattern inside `activity_folder` for a feature's main file; the folder part is the feature's folder, where its other files go with the same number (`logging.md › Activity file`). Tokens: `{feature}` `{slug}` `{yyyy}` `{mm}` `{dd}` `{date}` (uses `filename_date_format`) `{seq}` (zero-padded per day) `{type}`. Projects set up before 0.11.0 keep their dated pattern until they change it | `{feature}-{slug}/{feature}-{slug}.md` |
-| `pages_folder` | Where `.a/scripts/page_build.py` writes the project pages (`index.html` and one page per feature) — generated output, safe to delete | `docs/pages/` |
+| `pages_folder` | Where the page script (`<method>/templates/pages/page_build.py`) writes the project pages (`index.html` and one page per feature) — generated output, safe to delete | `docs/pages/` |
 | `floorplan_url`, `floorplan_start` | Optional pair. Adds a **Code map** button to every page: it opens `floorplan_url` (the Floorplan code map) when something answers there, and otherwise shows `floorplan_start`, the command to run in a terminal, then asks to click again. The page never starts a program itself. Empty or absent: no button. |
-| `pages_server` | Whether the live page server (`page_build.py --serve`) is offered. `ask`: offered once, after the first page is built, and only if Python runs; the answer is written here (`on` or `off`). `on`: started in the background whenever it is not running. `off`: never offered, never started. Python missing → the skill documents exactly as before and says nothing about the server | `ask` |
+| `pages_server` | When the live page server starts. `off`: only when the user runs `/A.show`. `session`: also whenever the agent writes to a feature (safe to repeat; *already running* otherwise). `login`: also at Windows login, through a startup entry `/A.project.repair` sets up (Windows only; elsewhere it acts as `session`). Set machine-wide in `~/.a/settings.md`; a project overrides it only by setting it in `.a/project.md`. Older values: `on` and `ask` count as `session`. Python missing → nothing is started or mentioned | `session` (from `~/.a/settings.md`) |
 | `simplification_markers` | Comment prefixes that mark a deliberate shortcut with its ceiling (`lean.md › Marked simplifications`). New markers use the first; drift, the lean check and Realign search for all of them. `/A.project.start` fills it from the prefixes the code already uses | `["lean:"]` |
 | `tracker_label` | Name of the external work-item system shown in headers and ledgers (`Work item`, `ADO`, `Jira`, `Issue`); `none` hides the field | `Work item` |
 | `deferred_decisions_log` | Decisions deliberately put off, each with its reasoning and the condition that reopens it; consequential and read at Start for work touching the same area | `docs/deferred-decisions.md` |
@@ -109,7 +109,7 @@ project_board: documentation/Activity log/BOARD.md
 areas: UI, Backend, API, Data, Infra
 activity_naming: "{feature}-{slug}/{feature}-{slug}.md"
 pages_folder: documentation/Pages/
-pages_server: ask
+pages_server: session
 simplification_markers: ["lean:", "ponytail:"]
 date_format: DD MMM YY
 time_format: 12h

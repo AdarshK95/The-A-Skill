@@ -46,7 +46,9 @@ Type `/A.` and keep typing: the picker filters on any word in a name (`/A.scope`
 | Command | Does |
 |---|---|
 | `/A.project.start` | Make this folder a project (one confirmation) |
-| `/A.project.status` | Where are we, what is pending, what is next — from the files. The same answer is always open as a page: `docs/pages/index.html`, rebuilt every time the skill writes (`python .a/scripts/page_build.py --watch` keeps it live) |
+| `/A.project.status` | Where are we, what is pending, what is next — from the files. The same answer is always open as a page: `docs/pages/index.html`, rebuilt every time the skill writes (`/A.show` opens it live) |
+| `/A.show` | Open the project pages live: builds them, starts the page server, opens the browser. Stop: the command it prints; the page's **Help** section has every start/stop command and the address |
+| `/A.project.repair` | Bring this project up to the installed version: missing config keys, the always-on block, old helper-script copies; reports first, fixes after you confirm |
 | `/A.project.board` | The tracker: planned, in progress, finished, deferred, to do |
 | `/A.project.map` | The visual map of the system's elements and connections, with state; `/A.project.map <element>` pulls the thread: everything that happened to it, in order |
 | `/A.project.drift` | Documents, decisions, elements and map versus the code |

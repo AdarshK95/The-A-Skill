@@ -12,7 +12,7 @@ For a person, or for an agent asked to "install this repo into my project". Step
 | --- | --- | --- |
 | `~/.a/skills/`, `~/.a/templates/`, `~/.a/registry.md`, `~/.a/VERSION`, `~/.a/SOURCE` | The method, templates, command list, version, origin | One copy; `/A.skill.update` keeps it current |
 | `~/.a/projects.md` | Index of every project on this machine and their dependencies | `/A.project.list`; read at the start of every piece of work |
-| `~/.a/settings.md` | Your behaviour settings: verbosity, interrupts, review tier limits, date formats | Edit any time; projects may override |
+| `~/.a/settings.md` | Your behaviour settings: `always_on`, `pages_server`, verbosity, interrupts, review tier limits, date formats | Edit any time; projects may override. An update adds settings a new version introduces, with their defaults, and never changes a value you set; `always_on` takes effect at the next `/A.skill.update` or `/A.skill.repair` |
 | `~/.claude/commands/A.*.md` | One file per command | Claude Code shows `/A.rootcause`, `/A.plan`, … in every folder |
 | `~/.a/commands/copilot/A.*.prompt.md` | One file per command | Copilot in VS Code, after adding that folder to `chat.promptFilesLocations` |
 | `~/.a/auto-pointer.md` + one `UserPromptSubmit` hook in `~/.claude/settings.json` | A short pointer printed in front of every message | **On by default**: a message with no `/A.*` command runs auto mode. The installer backs up `settings.json` to `settings.json.bak-a-skill` and touches no other key |
@@ -120,6 +120,8 @@ The web uploader takes at most 100 files per commit and refuses files or folders
 ## Upgrade
 
 Run `/A.skill.update`. It compares the **commit** recorded at install (`.a/SOURCE`) with the repository's current `main` — so fixes that did not change the version number are still found — shows the commits in between, re-runs the installer after you say yes, and proposes any new config keys without writing them. Or do the same by hand: re-run the install script from a fresh clone and compare `.a/VERSION` before and after.
+
+An update never changes a project. It ends by naming only the registered projects that lack something the new version expects (config keys, the always-on block, old copies of the A Skill's helper scripts) — one line each, with what is missing. Open each and run `/A.project.repair`: it shows what it will change and asks first. A project that is up to date is not mentioned.
 
 ## Repair
 

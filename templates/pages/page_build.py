@@ -24,13 +24,14 @@ What a feature's page adds that the markdown cannot:
   - format problems (a question with no context, a summary with no next step) shown on the page and printed
     here, so the agent that ran this script fixes them before its turn ends.
 
-Usage:  python .a/scripts/page_build.py              build the pages once; writes <pages_folder>/index.html
-        python .a/scripts/page_build.py --serve      start the live server in the background (no window), print the address
-        python .a/scripts/page_build.py --stop       stop that server
-        python .a/scripts/page_build.py --watch      rebuild whenever a file changes, in this terminal (Ctrl+C stops)
-        python .a/scripts/page_build.py --install-startup | --remove-startup    (Windows) start the server at login, hidden
-        python .a/scripts/page_build.py --root P --out D    another project root / output folder
-        python .a/scripts/page_build.py --selftest   build a sample in a temp folder and check it
+Usage:  (run from the install, never copied into a project; every form takes --root <project>, and --out D for another output folder)
+        python ~/.a/templates/pages/page_build.py --root P              build the pages once; writes <pages_folder>/index.html
+        python ~/.a/templates/pages/page_build.py --root P --serve      start the live server in the background (no window), print the address
+        python ~/.a/templates/pages/page_build.py --root P --stop       stop that server
+        python ~/.a/templates/pages/page_build.py --root P --status     print the address and whether the server is running (changes nothing)
+        python ~/.a/templates/pages/page_build.py --root P --watch      rebuild whenever a file changes, in this terminal (Ctrl+C stops)
+        python ~/.a/templates/pages/page_build.py --root P --install-startup | --remove-startup    (Windows) start the server at login, hidden
+        python ~/.a/templates/pages/page_build.py --selftest   build a sample in a temp folder and check it
 
 Standard library only. No network. Safe to re-run.
 """
@@ -39,7 +40,7 @@ import argparse, hashlib, html, http.server, urllib.error, json, os, re, sockets
 from datetime import datetime
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]  # <project>/.a/scripts/page_build.py -> <project>
+ROOT = Path(__file__).resolve().parents[2]  # default only; pass --root (an old copy at <project>/.a/scripts/ still resolves to <project>)
 STEPS = ["Root cause", "Plan", "Plan review", "Approved", "Build", "Build review", "Verify", "Closed"]
 PHASE_STEP = {"root cause": 0, "start": 1, "read": 1, "evaluate": 1, "clarify": 1, "gate": 1, "review": 2,
               "approved": 3, "implement": 4, "realign": 4, "build review": 5, "verified": 6, "closed": 7}
@@ -581,7 +582,7 @@ a{color:var(--acc)}main{max-width:1000px;margin:0 auto;padding:16px}
 header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 header.top h1{font-size:17px;margin:0;flex:1;min-width:200px}header.top .meta{color:var(--mut);font-size:12px}
 button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:6px;padding:4px 10px;cursor:pointer}
-#fpnote{margin:8px 16px;padding:10px 12px;border:1px solid var(--line);background:var(--card);border-radius:6px}#fpnote p{margin:0 0 6px}#fpnote code{user-select:all;word-break:break-all}
+.top .helplink{font-size:13px;white-space:nowrap}#fpnote{margin:8px 16px;padding:10px 12px;border:1px solid var(--line);background:var(--card);border-radius:6px}#fpnote p{margin:0 0 6px}#fpnote code{user-select:all;word-break:break-all}
 button.on{border-color:var(--acc);color:var(--acc)}
 .chip{display:inline-block;box-sizing:border-box;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:0 8px;margin-left:6px;color:var(--mut);white-space:nowrap}
 .chip.ok,.chip.done{color:var(--ok);border-color:var(--ok)}.chip.bad,.chip.stop{color:var(--bad);border-color:var(--bad)}.chip.wait{color:var(--wait);border-color:var(--wait)}.chip.run{color:var(--acc);border-color:var(--acc)}.chip.old{opacity:.6}
@@ -662,15 +663,15 @@ JS = r"""
   function poll(){fetch('/status',{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){
       if(rev===null){rev=j.rev;boot=j.boot;if(rs&&!rs.dataset.busy)rs.textContent='Resync'}
       else if(j.rev!==rev||j.boot!==boot){stay();location.reload()}
-    }).catch(function(){if(rs&&!rs.dataset.busy){rs.textContent='Server stopped (reconnects by itself)';rs.title='It restarts itself after the builder script changes. If it does not come back, start it again: python .a/scripts/page_build.py --serve'}})}
+    }).catch(function(){if(rs&&!rs.dataset.busy){rs.textContent='Server stopped (reconnects by itself)';rs.title='It restarts itself after the builder script changes. If it does not come back, start it again with /A.show, or: '+document.body.dataset.serve}})}
   function arm(){if(live()){ar&&ar.classList.add('on');
     if(srv){poll();setInterval(poll,4000)}else{setTimeout(function(){stay();location.reload()},15000)}}}
   if(rs){
-    if(!srv){rs.disabled=true;rs.textContent='Resync (server off)';rs.title='Open this page through the server to use Resync: python .a/scripts/page_build.py --serve'}
+    if(!srv){rs.disabled=true;rs.textContent='Resync (server off)';rs.title='Open this page through the server to use Resync: /A.show, or: '+document.body.dataset.serve}
     else rs.onclick=function(){rs.dataset.busy='1';rs.disabled=true;rs.textContent='Syncing…';
       fetch('/resync',{method:'POST',headers:{'X-Resync':'1'}}).then(function(r){return r.json()}).then(function(j){
         rs.textContent='Synced '+hhmm()+(j.warnings?' · '+j.warnings+' format problem(s)':'');setTimeout(function(){stay();location.reload()},500)
-      }).catch(function(){rs.textContent='Server not running';rs.title='Start it: python .a/scripts/page_build.py --serve';rs.disabled=false;delete rs.dataset.busy})}}
+      }).catch(function(){rs.textContent='Server not running';rs.title='Start it with /A.show, or: '+document.body.dataset.serve;rs.disabled=false;delete rs.dataset.busy})}}
   if(ar)ar.onclick=function(){try{localStorage.setItem(AK,live()?'0':'1')}catch(e){}location.reload()};
   var ph=document.getElementById('phases');
   if(ph){var bs=[].slice.call(ph.querySelectorAll('button')),pn=document.getElementById('phasenote'),PK=KEY+':phase';
@@ -703,6 +704,11 @@ JS = r"""
     if(n){var b=document.createElement('span');b.className='badge';b.textContent=n+' new';a.querySelector('h3').appendChild(b)}});
   paint();
 })();
+(function(){  // home page: no live server -> land on Help (moved to the top, opened, with a banner); server running -> the project view
+  var hp=document.getElementById('help'),nt=document.getElementById('srvnote');if(!hp||!nt)return;
+  function off(){var m=document.querySelector('main');nt.hidden=false;hp.open=true;m.insertBefore(hp,m.firstChild);m.insertBefore(nt,m.firstChild);window.scrollTo(0,0)}
+  if(!/^https?:$/.test(location.protocol)){off();return}
+  fetch('/status',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){if(!j||!j.ok)off()}).catch(off)})();
 """
 
 
@@ -710,8 +716,8 @@ def shell(title: str, project: str, page: str, top: str, body: str) -> str:
     built = datetime.now().strftime("%d %b %y, %I:%M %p")
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
             f"<title>{html.escape(title)}</title><style>{CSS}</style></head>"
-            f'<body data-project="{html.escape(project, quote=True)}" data-page="{html.escape(page, quote=True)}">'
-            f'<header class="top">{top}'
+            f'<body data-project="{html.escape(project, quote=True)}" data-page="{html.escape(page, quote=True)}" data-serve="{html.escape(HELP["serve"], quote=True)}">'
+            f'<header class="top">{top}<a class="helplink" href="index.html#help" title="How to start, stop and open these pages">Help</a>'
             f'<span class="legend"><span id="newcount"></span><i style="background:var(--newb)"></i>new<i style="background:var(--prevb)"></i>the time before</span>'
             f'<button id="markread">Mark as read</button>'
             f'<button id="resync" title="Rebuilds the pages from the files, in the background">Resync</button>'
@@ -801,16 +807,47 @@ def index_page(feats: list, project: str, links: list) -> str:
     for name, group in (("Finished", done), ("Other documents", other)):
         if group:
             body.append(f"<details class='sec'><summary>{name} ({len(group)})</summary><div class='grid'>{''.join(card(f) for f in group)}</div></details>")
+    body.insert(0, '<div class="warn" id="srvnote" hidden><b>The live server is not running</b>, so this page will not follow the agent '
+                   'and Resync is off. Start it with <code>/A.show</code> in a chat about this project, or with the command under Start below.</div>')
+    body.append(help_section())
     top = f"<h1>{html.escape(project)} — where things stand</h1>"
     return shell(project, project, "index.html", top, "".join(body))
 
 
 CODEMAP = {"url": "", "start": ""}  # the optional link to the code map (Floorplan); set by build() from .a/project.md
+HELP = {"serve": "", "stop": "", "build": "", "login": "", "unlogin": "", "url": ""}  # this project's real commands; set by build()
+
+
+def commands(root: Path) -> dict:
+    """The exact commands for this project: this script (wherever it is installed) with --root, and the fixed address."""
+    run = f'python "{Path(__file__).resolve()}" --root "{root}"'
+    return {"serve": run + " --serve", "stop": run + " --stop", "build": run, "login": run + " --install-startup",
+            "unlogin": run + " --remove-startup", "url": f"http://localhost:{pick_port(root)}/index.html"}
+
+
+def help_section() -> str:
+    c = {k: html.escape(v) for k, v in HELP.items()}
+    return ('<details class="sec" id="help"><summary>Help: these pages and the live server</summary>'
+            '<p><b>What these pages are.</b> A view of this project&#39;s A Skill files (the board, each feature&#39;s file, decisions, lessons), '
+            'rebuilt from them. Nothing here is edited by hand; the files stay the source.</p>'
+            '<p><b>Open them live:</b> type <code>/A.show</code> in a chat about this project. It builds the pages, starts the live server '
+            f'and opens this page at <a href="{c["url"]}">{c["url"]}</a> (the same address every time for this project).</p>'
+            '<p><b>Or from a terminal:</b></p><ul>'
+            f'<li>Start the live server: <code>{c["serve"]}</code></li>'
+            f'<li>Stop it: <code>{c["stop"]}</code></li>'
+            f'<li>Build the pages once, no server: <code>{c["build"]}</code></li>'
+            f'<li>Windows, start it at every login: <code>{c["login"]}</code> (undo: <code>{c["unlogin"]}</code>)</li></ul>'
+            '<p><b>When it starts by itself:</b> the setting <code>pages_server</code> in <code>~/.a/settings.md</code> (or in this project&#39;s '
+            '<code>.a/project.md</code>, which wins): <code>off</code> only on <code>/A.show</code>; <code>session</code> also while the agent works '
+            '(the default); <code>login</code> also at Windows login.</p>'
+            '<p><b>Without the server</b> (this page opened as a file) the page reloads every 15 seconds and Resync is off. A web page cannot start '
+            'a program on your computer, so the server is always started by <code>/A.show</code> or the command above.</p></details>')
 
 
 def build(root: Path, out: Path, quiet=False) -> int:
     cfg = read_config(root)
     CODEMAP.update(url=cfg["floorplan_url"], start=cfg["floorplan_start"])
+    HELP.update(commands(root.resolve()))
     out.mkdir(parents=True, exist_ok=True)
     feats = collect(root, cfg, out.resolve())
     warns = 0
@@ -1203,10 +1240,31 @@ def selftest() -> int:
             httpd.server_close()
         vf = install_startup(root, out, 8765, folder=root / "startup")
         checks["startup entry written, hidden, and removable"] = vf.exists() and ", 0, False" in vf.read_text(encoding="utf-8") and (vf.unlink() or not vf.exists())
+        checks["help: the home page carries this project's real start and stop commands and its address"] = (
+            'id="help"' in index and "--serve" in index and "--stop" in index and "localhost:" in index and html.escape(str(Path(__file__).resolve())) in index)
+        checks["help: with no server the home page lands on Help with a banner"] = 'id="srvnote" hidden' in index and "insertBefore(hp" in index
+        checks["every page links to Help and carries the start command for its hints"] = 'href="index.html#help"' in page and 'data-serve="python' in page
+        import webbrowser
+        opened, real_open, argv = [], webbrowser.open, sys.argv
+        webbrowser.open = lambda u, *a, **k: opened.append(u) or True
+        try:
+            sys.argv = ["page_build.py", "--root", str(root), "--out", str(out), "--open"]
+            rc_open = main()
+            sys.argv = ["page_build.py", "--root", str(root / "docs")]
+            rc_bad = main()
+        finally:
+            sys.argv, webbrowser.open = argv, real_open
+        checks["--open opens the built page"] = rc_open == 0 and len(opened) == 1 and opened[0].endswith("index.html")
+        checks["refuses a folder that is not a project (never writes pages there)"] = rc_bad == 2 and not (root / "docs" / "docs").exists()
         bad = [k for k, ok in checks.items() if not ok]
         for k, ok in checks.items():
             print(("ok   " if ok else "FAIL ") + k)
         return 1 if bad else 0
+
+
+def open_page(url: str) -> None:
+    import webbrowser  # standard library; uses the default browser on Windows, macOS and Linux
+    print(f"opening {url}" if webbrowser.open(url) else f"could not open a browser here; open {url} yourself")
 
 
 def main() -> int:
@@ -1221,12 +1279,20 @@ def main() -> int:
     ap.add_argument("--install-startup", action="store_true")
     ap.add_argument("--remove-startup", action="store_true")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--status", action="store_true", help="print the address and whether the server is running; changes nothing")
+    ap.add_argument("--open", action="store_true", help="open the page in the browser afterwards (the live address with --serve)")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     root = a.root.resolve()
+    if not (root / ".a" / "project.md").is_file():  # never write pages into a folder that is not a project (e.g. home, when run from the install without --root)
+        print(f"not a project of The A Skill: no .a/project.md in {root}. Pass --root <project folder>.", file=sys.stderr)
+        return 2
     out = (a.out or root / read_config(root)["pages_folder"]).resolve()
     port = a.port or pick_port(root)
+    if a.status:
+        print(f"{'running' if call(port, '/status') else 'not running'}: http://localhost:{port}/index.html")
+        return 0
     if a.stop:
         print("stopped" if call(port, "/stop", post=True) else "not running")
         return 0
@@ -1242,8 +1308,13 @@ def main() -> int:
             print(f"will start at login: {install_startup(root, out, port)}")
         return 0
     if a.serve:
-        return serve(root, out, port, a.foreground)
+        rc = serve(root, out, port, a.foreground)
+        if rc == 0 and a.open:
+            open_page(f"http://localhost:{port}/index.html")
+        return rc
     build(root, out)
+    if a.open:
+        open_page((out / "index.html").as_uri())
     if a.watch:
         print("watching for changes - Ctrl+C to stop")
         sig = signature(root)

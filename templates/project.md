@@ -23,7 +23,7 @@ depends_on: []
 provides: []
 activity_naming: "{feature}-{slug}/{feature}-{slug}.md"
 pages_folder: docs/pages/
-pages_server: ask          # ask: offer the live page server once · on: start it whenever it is not running · off: never
+# pages_server: session    # optional: overrides ~/.a/settings.md for this project - off: only /A.show | session: also while the agent works | login: also at Windows login
 # floorplan_url: http://127.0.0.1:4378                      # optional: adds a "Code map" button to every page; it opens this address if something answers
 # floorplan_start: node <path to>/fp.mjs map --keep # ...and otherwise shows this command to run (the page never starts anything itself)
 ledger_pattern: "docs/activity/{yyyy}-{mm}/_ledger.md"
